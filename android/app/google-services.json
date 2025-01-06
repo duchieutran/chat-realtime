@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "841425823490",
+    "project_id": "instagram-3d6bf",
+    "storage_bucket": "instagram-3d6bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841425823490:android:42b4170c5959655342c41b",
+        "android_client_info": {
+          "package_name": "com.example.chatting"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7OQLUwaM12JtvTtt5e5__x87tY_3ZVx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
