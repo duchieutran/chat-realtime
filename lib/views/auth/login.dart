@@ -6,10 +6,10 @@ import 'package:chatting/view_models/auths/auth_service.dart';
 import 'package:chatting/views/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
+import 'widgets/changeMode.dart';
 import 'widgets/land.dart';
 import 'widgets/rounded_text_field.dart';
 import 'widgets/sun.dart';
-import 'widgets/tabs.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -47,8 +47,8 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
-  void changeMood(int activeTabNum) {
-    if (activeTabNum == 0) {
+  void changeMood(bool change) {
+    if (change) {
       setState(() {
         isDayMood = true;
       });
@@ -109,11 +109,12 @@ class _LoginState extends State<Login> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         const SizedBox(height: 50),
-                        Tabs(
-                          press: (value) {
-                            changeMood(value);
-                          },
-                        ),
+                        // Tabs(
+                        //   press: (value) {
+                        //     changeMood(value);
+                        //   },
+                        // ),
+
                         const SizedBox(height: 25),
                         Text(
                           "Login",
@@ -130,18 +131,21 @@ class _LoginState extends State<Login> {
                           style: TextStyle(color: Colors.white),
                         ),
                         const SizedBox(height: 50),
-                        RoundedTextField(
-                          hintText: "Email",
-                          controller: email,
-                        ),
                         const SizedBox(height: 25),
                         RoundedTextField(
+                          hintText: "email",
+                          controller: email,
+                        ),
+                        RoundedTextField(
                           obscureText: true,
-                          hintText: "Password",
+                          hintText: "password",
                           controller: password,
                         ),
+
                         const SizedBox(height: 35),
                         AppButton(
+                          title: "Login",
+                          color: AppColors.light,
                           onTap: () => login(),
                         ),
                         const SizedBox(height: 20),
@@ -164,7 +168,16 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-              )
+              ),
+              Positioned(
+                bottom: 30,
+                left: 30,
+                child: IconChangeMode(
+                  onPressed: (bool value) {
+                    changeMood(value);
+                  },
+                ),
+              ),
             ],
           ),
         ),

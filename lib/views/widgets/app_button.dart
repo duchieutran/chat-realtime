@@ -2,8 +2,15 @@ import 'package:chatting/data_sources/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
-  const AppButton({super.key, required this.onTap});
   final VoidCallback onTap;
+  final String? title;
+  final Color color, backgroundColors;
+  const AppButton(
+      {super.key,
+      required this.onTap,
+      this.title,
+      this.color = AppColors.dark,
+      this.backgroundColors = AppColors.brandOrange50});
 
   @override
   Widget build(BuildContext context) {
@@ -12,20 +19,17 @@ class AppButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
-            color: AppColors.light,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(12),
-            ),
-            border: Border.all(
-              width: 2,
-            )),
-        child: const Center(
+          color: backgroundColors,
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
+          border: Border.all(width: 2, color: backgroundColors),
+        ),
+        child: Center(
           child: Text(
-            "Button",
+            title ?? "",
             style: TextStyle(
               fontSize: 25,
-              color: AppColors.dark,
-              fontWeight: FontWeight.w500,
+              color: color,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),

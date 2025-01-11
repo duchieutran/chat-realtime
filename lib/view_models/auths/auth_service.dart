@@ -12,11 +12,6 @@ class AuthService extends ChangeNotifier {
     try {
       UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
-
-      firestore
-          .collection("Users")
-          .doc(userCredential.user!.uid)
-          .set({'uid': userCredential.user!.uid, 'email': email});
       return userCredential;
     } catch (e) {
       return null;
@@ -24,18 +19,25 @@ class AuthService extends ChangeNotifier {
   }
 
   // Đăng kí tài khoản
-  Future<UserCredential?> register(
-      {required String email, required String password}) async {
+  Future<UserCredential?> register({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
     try {
       // create user
       UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
 
       // save user
-      firestore
-          .collection("Users")
-          .doc(userCredential.user!.uid)
-          .set({'uid': userCredential.user!.uid, 'email': email});
+      firestore.collection("Users").doc(userCredential.user!.uid).set({
+        'uid': userCredential.user!.uid,
+        'name': name,
+        'email': email,
+        'urlAvatar': '',
+        'isOnline': false,
+        'friends': []
+      });
 
       return userCredential;
     } on FirebaseAuthException catch (e) {

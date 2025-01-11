@@ -31,6 +31,13 @@ class _HomeState extends State<Home> {
         ),
         centerTitle: true,
         backgroundColor: AppColors.grey40,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRouters.initUpdate);
+              },
+              icon: const Icon(Icons.next_plan))
+        ],
       ),
       drawer: const DrawerHome(),
       body: _buildUserList(),

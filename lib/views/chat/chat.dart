@@ -91,6 +91,7 @@ class ChatPage extends StatelessWidget {
           crossAxisAlignment:
               isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
+            // style messagemessage
             ChatBubble(message: data["message"], isCurrentUser: isCurrentUser)
           ],
         ));
@@ -120,7 +121,7 @@ class ChatPage extends StatelessWidget {
               onPressed: sendMessage,
               icon: const Icon(
                 Icons.arrow_upward,
-                color: AppColors.brandBlue30,
+                color: AppColors.light,
                 size: 30,
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  static const Color translate = Color.fromARGB(0, 255, 255, 255);
   static const Color light = Color(0xFFFFFFFF);
   static const Color dark = grey90;
 

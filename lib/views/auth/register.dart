@@ -6,10 +6,10 @@ import 'package:chatting/view_models/auths/auth_service.dart';
 import 'package:chatting/views/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
+import 'widgets/changeMode.dart';
 import 'widgets/land.dart';
 import 'widgets/rounded_text_field.dart';
 import 'widgets/sun.dart';
-import 'widgets/tabs.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -22,11 +22,13 @@ class _RegisterState extends State<Register> {
   bool isFullSun = false;
   bool isDayMood = true;
   final Duration _duration = const Duration(seconds: 1);
+  late TextEditingController name;
   late TextEditingController email;
   late TextEditingController password;
 
   @override
   void initState() {
+    name = TextEditingController();
     email = TextEditingController();
     password = TextEditingController();
     super.initState();
@@ -39,13 +41,14 @@ class _RegisterState extends State<Register> {
 
   @override
   void dispose() {
+    name.dispose();
     email.dispose();
     password.dispose();
     super.dispose();
   }
 
-  void changeMood(int activeTabNum) {
-    if (activeTabNum == 0) {
+  void changeMood(bool change) {
+    if (change) {
       setState(() {
         isDayMood = true;
       });
@@ -105,11 +108,6 @@ class _RegisterState extends State<Register> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         const SizedBox(height: 50),
-                        Tabs(
-                          press: (value) {
-                            changeMood(value);
-                          },
-                        ),
                         const SizedBox(height: 25),
                         Text(
                           "Register",
@@ -127,16 +125,24 @@ class _RegisterState extends State<Register> {
                         ),
                         const SizedBox(height: 50),
                         RoundedTextField(
+                          hintText: "Name",
+                          controller: name,
+                        ),
+                        const SizedBox(height: 20),
+                        RoundedTextField(
                           hintText: "Email",
                           controller: email,
                         ),
                         const SizedBox(height: 25),
                         RoundedTextField(
+                          obscureText: true,
                           hintText: "Password",
                           controller: password,
                         ),
                         const SizedBox(height: 35),
                         AppButton(
+                          title: "Register",
+                          color: AppColors.light,
                           onTap: register,
                         ),
                         const SizedBox(height: 20),
@@ -160,7 +166,16 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
-            )
+            ),
+            Positioned(
+              bottom: 30,
+              left: 30,
+              child: IconChangeMode(
+                onPressed: (bool value) {
+                  changeMood(value);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -170,8 +185,10 @@ class _RegisterState extends State<Register> {
   register() {
     final auth = AuthService();
     try {
-      auth.register(email: email.text, password: password.text);
-      Navigator.pushNamed(context, AppRouters.home);
+      auth.register(
+          name: name.text, email: email.text, password: password.text);
+      Navigator.pushNamedAndRemoveUntil(
+          context, AppRouters.initUpdate, (Route<dynamic> route) => false);
     } catch (e) {
       if (mounted) {
         showDialog(

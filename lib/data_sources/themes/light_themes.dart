@@ -10,3 +10,13 @@ ThemeData lightMode = ThemeData(
     inversePrimary: AppColors.grey90,
   ),
 );
+
+ThemeData darkMode = ThemeData(
+  colorScheme: const ColorScheme.dark(
+    surface: AppColors.grey30,
+    primary: AppColors.grey50,
+    secondary: AppColors.grey20,
+    tertiary: AppColors.light,
+    inversePrimary: AppColors.grey90,
+  ),
+);

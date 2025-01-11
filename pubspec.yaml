@@ -41,6 +41,8 @@ dependencies:
   provider: ^6.1.2
   google_fonts: ^6.2.1
   cloud_firestore: ^5.6.1
+  firebase_storage: ^12.4.0
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
