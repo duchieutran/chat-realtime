@@ -1,6 +1,6 @@
+import 'package:chatting/data_sources/app_routers.dart';
+import 'package:chatting/views/auth/auth_gate.dart';
 import 'package:flutter/material.dart';
-
-import 'auth/login_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -14,7 +14,9 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      onGenerateRoute: AppRouters.onGenerateRoute,
+      // initialRoute: AppRouters.login,
+      home: const AuthGate(),
     );
   }
 }

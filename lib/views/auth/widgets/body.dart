@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chatting/data_sources/app_colors.dart';
 import 'package:chatting/views/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
@@ -8,19 +9,30 @@ import 'rounded_text_field.dart';
 import 'sun.dart';
 import 'tabs.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class BodyAuths extends StatefulWidget {
+  const BodyAuths(
+      {super.key,
+      required this.onTapSubmit,
+      required this.title,
+      required this.onTapNextPage,
+      required this.titleNextPage,
+      required this.email,
+      required this.pass});
+  final VoidCallback onTapSubmit;
+  final VoidCallback onTapNextPage;
+  final String title;
+  final String titleNextPage;
+  final TextEditingController email;
+  final TextEditingController pass;
 
   @override
-  _LoginState createState() => _LoginState();
+  _BodyAuthsState createState() => _BodyAuthsState();
 }
 
-class _LoginState extends State<Login> {
+class _BodyAuthsState extends State<BodyAuths> {
   bool isFullSun = false;
   bool isDayMood = true;
   final Duration _duration = const Duration(seconds: 1);
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
 
   @override
   void initState() {
@@ -30,14 +42,10 @@ class _LoginState extends State<Login> {
         isFullSun = true;
       });
     });
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
 
@@ -91,48 +99,65 @@ class _LoginState extends State<Login> {
         children: [
           Sun(duration: _duration, isFullSun: isFullSun),
           const Land(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(height: 50),
-                  Tabs(
-                    press: (value) {
-                      changeMood(value);
-                    },
+          SingleChildScrollView(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(height: 50),
+                      Tabs(
+                        press: (value) {
+                          changeMood(value);
+                        },
+                      ),
+                      const SizedBox(height: 25),
+                      Text(
+                        widget.title,
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall
+                            ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Enter your Information's below",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      const SizedBox(height: 50),
+                      RoundedTextField(
+                        hintText: "Email",
+                        controller: widget.email,
+                      ),
+                      const SizedBox(height: 25),
+                      RoundedTextField(
+                        hintText: "Password",
+                        controller: widget.pass,
+                      ),
+                      const SizedBox(height: 35),
+                      AppButton(
+                        onTap: widget.onTapSubmit,
+                      ),
+                      const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: widget.onTapNextPage,
+                        child: Center(
+                          child: Text(
+                            widget.titleNextPage,
+                            style: const TextStyle(
+                              color: AppColors.dark,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  Text(
-                    "Good Morning",
-                    style: Theme.of(context)
-                        .textTheme
-                        .displaySmall
-                        ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Enter your Information's below",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 50),
-                  RoundedTextField(
-                    hintText: "Email",
-                    controller: emailController,
-                  ),
-                  const SizedBox(height: 25),
-                  RoundedTextField(
-                    hintText: "Password",
-                    controller: passwordController,
-                  ),
-                  const SizedBox(height: 25),
-                  AppButton(
-                    onTap: () {
-                      print(emailController.text);
-                      print(passwordController.text);
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
           )
