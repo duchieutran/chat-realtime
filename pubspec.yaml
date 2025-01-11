@@ -43,6 +43,8 @@ dependencies:
   cloud_firestore: ^5.6.1
   firebase_storage: ^12.4.0
   image_picker: ^1.1.2
+  rive_animated_icon: ^2.0.3
+  rive: ^0.13.20
 
 dev_dependencies:
   flutter_test:
@@ -72,7 +74,11 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - assets/images/backgrounds/
+    - assets/images/logos/
+    - assets/images/topics/
     - assets/icons/
+    - assets/rive/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

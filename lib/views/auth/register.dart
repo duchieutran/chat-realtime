@@ -188,7 +188,7 @@ class _RegisterState extends State<Register> {
       auth.register(
           name: name.text, email: email.text, password: password.text);
       Navigator.pushNamedAndRemoveUntil(
-          context, AppRouters.initUpdate, (Route<dynamic> route) => false);
+          context, AppRouters.home, (Route<dynamic> route) => false);
     } catch (e) {
       if (mounted) {
         showDialog(

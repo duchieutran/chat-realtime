@@ -5,15 +5,15 @@ import 'package:chatting/view_models/profile/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class InitUpdateProfile extends StatefulWidget {
-  const InitUpdateProfile({super.key});
+class UpdateProfile extends StatefulWidget {
+  const UpdateProfile({super.key});
 
   @override
-  State<InitUpdateProfile> createState() => _InitUpdateProfileState();
+  State<UpdateProfile> createState() => _UpdateProfileState();
 }
 
-class _InitUpdateProfileState extends State<InitUpdateProfile> {
-  final UpdateProfile updateProfile = UpdateProfile();
+class _UpdateProfileState extends State<UpdateProfile> {
+  final UpdateProfileSer updateProfile = UpdateProfileSer();
   late File image;
   final ImagePicker picker = ImagePicker();
   String? imageUrl; // Lưu trữ URL của ảnh
@@ -110,6 +110,7 @@ class _InitUpdateProfileState extends State<InitUpdateProfile> {
         String? url = await updateProfile.getURLAvatar();
         setState(() {
           imageUrl = url;
+          print(imageUrl);
         });
       }
     } catch (e) {

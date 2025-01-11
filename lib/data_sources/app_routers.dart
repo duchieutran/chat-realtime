@@ -1,8 +1,8 @@
 import 'package:chatting/views/auth/login.dart';
 import 'package:chatting/views/auth/register.dart';
-import 'package:chatting/views/chat/chat.dart';
-import 'package:chatting/views/home/home.dart';
-import 'package:chatting/views/updates/init_update.dart';
+import 'package:chatting/views/chat/chat_message.dart';
+import 'package:chatting/views/chat/chat_screen.dart';
+import 'package:chatting/views/updates/update_profile.dart';
 import 'package:flutter/material.dart';
 
 class AppRouters {
@@ -26,9 +26,9 @@ class AppRouters {
       case register:
         return const Register();
       case home:
-        return const Home();
-      case initUpdate:
-        return const InitUpdateProfile();
+        return const ChatScreen();
+      case updateProfile:
+        return const UpdateProfile();
       case chat:
         if (arguments is Map<String, dynamic>) {
           return ChatPage(
@@ -45,6 +45,6 @@ class AppRouters {
   static const String register = '/register';
   static const String login = '/';
   static const String home = '/home';
-  static const String initUpdate = '/initUpdate';
+  static const String updateProfile = '/updateProfile';
   static const String chat = '/chat';
 }
