@@ -1,4 +1,4 @@
-import 'package:chatting/models/tab_item.dart';
+import 'package:chatting/models/entitys/tab_item.dart';
 import 'package:flutter/material.dart';
 
 class MenuItemModel {

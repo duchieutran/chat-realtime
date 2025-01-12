@@ -1,5 +1,5 @@
 import 'package:chatting/models/entitys/menu_item.dart';
-import 'package:chatting/views/home/widgets/assets.dart' as app_assets;
+import 'package:chatting/data_sources/assets.dart' as app_assets;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';

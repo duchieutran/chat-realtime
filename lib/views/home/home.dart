@@ -1,11 +1,12 @@
 import 'dart:math' as math;
 
+import 'package:chatting/data_sources/assets.dart' as app_assets;
 import 'package:chatting/data_sources/themes/themes.dart';
 import 'package:chatting/views/home/on_broading/onboarding_view.dart';
-import 'package:chatting/views/home/widgets/assets.dart' as app_assets;
 import 'package:chatting/views/home/widgets/custom_tab_bar.dart';
 import 'package:chatting/views/home/widgets/home_tab_view.dart';
 import 'package:chatting/views/home/widgets/slide_menu.dart';
+import 'package:chatting/views/updates/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
@@ -49,7 +50,7 @@ class _RiveAppHomeState extends State<RiveAppHome>
     commonTabScene("Search"),
     commonTabScene("Timer"),
     commonTabScene("Bell"),
-    commonTabScene("User"),
+    const UpdateProfile()
   ];
 
   final springDesc = const SpringDescription(

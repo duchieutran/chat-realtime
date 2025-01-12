@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:chatting/models/users/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class UpdateProfileSer {
+class ProfileService {
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -20,8 +21,7 @@ class UpdateProfileSer {
         // Nếu file tồn tại, xóa đi
         await ref.delete();
       } catch (e) {
-        // Nếu file không tồn tại, không làm gì cả
-        print("File không tồn tại, tạo mới.");
+        rethrow;
       }
       // put file
       UploadTask uploadTask = ref.putFile(image);
@@ -35,7 +35,6 @@ class UpdateProfileSer {
         'urlAvatar': imageURL,
       });
     } catch (e) {
-      print(e.toString());
       rethrow;
     }
   }
@@ -51,10 +50,26 @@ class UpdateProfileSer {
         String? urlAvatar = documentSnapshot.get('urlAvatar') as String?;
         return urlAvatar;
       }
-    } on FirebaseFirestore catch (e) {
-      print(e.toString());
+    } catch (E) {
       rethrow;
     }
     return null;
+  }
+
+  // get name data từ firebase theo id
+  Future<Users?> getUsers() async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> doc = await firebaseFirestore
+          .collection("Users")
+          .doc(firebaseAuth.currentUser!.uid)
+          .get();
+      if (doc.exists) {
+        return Users.fromJson(doc.data()!);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

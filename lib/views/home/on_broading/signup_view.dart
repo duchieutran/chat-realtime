@@ -1,28 +1,38 @@
 import 'package:chatting/data_sources/assets.dart' as app_assets;
 import 'package:chatting/data_sources/themes/themes.dart';
-import 'package:chatting/views/home/on_broading/signup_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart' hide LinearGradient, Image;
 
-class SignInView extends StatefulWidget {
-  const SignInView({super.key, this.closeModal});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key, this.closeModal});
 
   final Function? closeModal;
 
   @override
-  State<SignInView> createState() => _SignInViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
+class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
+  AnimationController? _signInAnimController;
 
   late SMITrigger _successAnim;
   late SMITrigger _errorAnim;
   late SMITrigger _confettiAnim;
 
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _signInAnimController = AnimationController(
+        duration: const Duration(milliseconds: 350),
+        upperBound: 1,
+        vsync: this);
+  }
 
   @override
   void dispose() {
@@ -229,15 +239,79 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GestureDetector(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const SignUpView(),
-                                    )),
-                                child: Image.asset(app_assets.logoEmail)),
+                            Image.asset(app_assets.logoEmail),
                           ],
                         ),
+                        RepaintBoundary(
+                          child: AnimatedBuilder(
+                            animation: _signInAnimController!,
+                            builder: (context, child) {
+                              return Stack(
+                                children: [
+                                  Positioned(
+                                      top: 100 -
+                                          (_signInAnimController!.value * 200),
+                                      right: 20,
+                                      child: SafeArea(
+                                        child: CupertinoButton(
+                                          padding: EdgeInsets.zero,
+                                          borderRadius:
+                                              BorderRadius.circular(36 / 2),
+                                          minSize: 36,
+                                          child: Container(
+                                            width: 36,
+                                            height: 36,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(36 / 2),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.3),
+                                                    blurRadius: 10,
+                                                    offset: const Offset(0, 10))
+                                              ],
+                                            ),
+                                            child: const Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            widget.closeModal!();
+                                          },
+                                        ),
+                                      )),
+                                  Positioned.fill(
+                                    child: IgnorePointer(
+                                      ignoring: true,
+                                      child: Opacity(
+                                        opacity:
+                                            0.4 * _signInAnimController!.value,
+                                        child: Container(
+                                            color: RiveAppTheme.shadow),
+                                      ),
+                                    ),
+                                  ),
+                                  Transform.translate(
+                                    offset: Offset(
+                                      0,
+                                      -MediaQuery.of(context).size.height *
+                                          (1 - _signInAnimController!.value),
+                                    ),
+                                    child: child,
+                                  ),
+                                ],
+                              );
+                            },
+                            child: SignUpView(
+                              closeModal: () {
+                                _signInAnimController?.reverse();
+                              },
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),

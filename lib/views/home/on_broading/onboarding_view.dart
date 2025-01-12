@@ -1,8 +1,8 @@
 import 'dart:ui';
 
+import 'package:chatting/data_sources/assets.dart' as app_assets;
 import 'package:chatting/data_sources/themes/themes.dart';
 import 'package:chatting/views/home/on_broading/singin_view.dart';
-import 'package:chatting/views/home/widgets/assets.dart' as app_assets;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
@@ -101,13 +101,13 @@ class _OnBoardingViewState extends State<OnBoardingView>
                             width: 260,
                             padding: const EdgeInsets.only(bottom: 16),
                             child: const Text(
-                              "Learn design & code",
+                              "Trần Đức Hiếu",
                               style: TextStyle(
                                   fontFamily: "Poppins", fontSize: 60),
                             ),
                           ),
                           Text(
-                            "Don’t skip design. Learn design and code, by building real apps with React and Swift. Complete courses about the best tools.",
+                            "Khu vực này đang phát triển và cũng chưa biết phát triển chức năng gì nên tạm thời để đây nhé !",
                             style: TextStyle(
                                 color: Colors.black.withOpacity(0.7),
                                 fontFamily: "Inter",

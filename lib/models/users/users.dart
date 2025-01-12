@@ -6,29 +6,40 @@ class Users {
   final String name;
   final String urlAvatar;
   final bool isOnline;
-  final Timestamp lastSeen;
-  final List<String> friends;
+  final Timestamp? lastSeen;
+  List<String>? friends;
 
   Users({
-    required this.uid,
-    required this.email,
-    required this.name,
-    required this.urlAvatar,
-    required this.isOnline,
-    required this.lastSeen,
-    required this.friends,
+    this.uid = '',
+    this.email = '',
+    this.name = '',
+    this.urlAvatar = '',
+    this.isOnline = false,
+    this.lastSeen,
+    this.friends,
   });
 
-  // func convert model to Map
-  Map<String, dynamic> toMap() {
+  // Chuyển từ JSON trong Firestore thành Users
+  factory Users.fromJson(Map<String, dynamic> json) {
+    return Users(
+        uid: json['uid'] ?? '',
+        name: json['name'] ?? 'No Name',
+        email: json['email'] ?? '',
+        urlAvatar: json['urlAvatar'] ?? '',
+        isOnline: json['isOnline'] ?? false,
+        friends: List<String>.from(json['friends'] ?? []),
+        lastSeen: json['lastSeen']);
+  }
+
+  // Chuyển UserModel thành JSON để lưu vào Firestore
+  Map<String, dynamic> toJson() {
     return {
       'uid': uid,
-      'email': email,
       'name': name,
-      'url': urlAvatar,
+      'email': email,
+      'urlAvatar': urlAvatar,
       'isOnline': isOnline,
-      'lastSeen': lastSeen,
-      'friend': friends
+      'friends': friends,
     };
   }
 }

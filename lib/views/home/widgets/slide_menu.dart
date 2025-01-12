@@ -1,7 +1,7 @@
 import 'package:chatting/data_sources/themes/themes.dart';
-import 'package:chatting/views/home/components/menu_row.dart';
+import 'package:chatting/views/home/widgets/menu_row.dart';
 import 'package:chatting/models/entitys/menu_item.dart';
-import 'package:chatting/views/home/widgets/assets.dart' as app_assets;
+import 'package:chatting/data_sources/assets.dart' as app_assets;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
