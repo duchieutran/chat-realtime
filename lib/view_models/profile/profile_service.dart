@@ -13,28 +13,45 @@ class ProfileService {
   // cập nhật avatar
   void updateAvatar(File image) async {
     try {
+      // Lấy UID của người dùng hiện tại
       String fileName = firebaseAuth.currentUser!.uid;
       Reference ref = firebaseStorage.ref().child('profiles/$fileName');
-      // Kiểm tra xem file đã tồn tại chưa
+
+      // Kiểm tra và xóa file nếu đã tồn tại
       try {
-        await ref.getDownloadURL(); // Nếu file tồn tại, sẽ không ném lỗi
-        // Nếu file tồn tại, xóa đi
+        // Kiểm tra xem file có tồn tại không bằng cách lấy URL
+        await ref.getDownloadURL();
+        // Nếu tồn tại, xóa file cũ
         await ref.delete();
-      } catch (e) {
-        rethrow;
+        print('File cũ đã được xóa thành công.');
+      } on FirebaseException catch (e) {
+        // Nếu file không tồn tại, bỏ qua lỗi này
+        if (e.code == 'object-not-found') {
+          print('Không có file cũ để xóa.');
+        } else {
+          // Ném lại các lỗi khác
+          print('Lỗi kiểm tra file: ${e.message}');
+          rethrow;
+        }
       }
-      // put file
+
+      // Tải file mới lên Firebase Storage
       UploadTask uploadTask = ref.putFile(image);
-      // Lấy URL ảnh
+      // Chờ hoàn thành tải lên và lấy URL
       String imageURL = await (await uploadTask).ref.getDownloadURL();
-      // cập nhật filestore
+      print('File mới đã được tải lên: $imageURL');
+
+      // Cập nhật URL avatar trong Firestore
       await firebaseFirestore
           .collection("Users")
           .doc(firebaseAuth.currentUser!.uid)
           .update({
         'urlAvatar': imageURL,
       });
+      print('URL avatar đã được cập nhật trong Firestore.');
     } catch (e) {
+      // Xử lý các lỗi khác (nếu có)
+      print('Đã xảy ra lỗi: $e');
       rethrow;
     }
   }
@@ -63,6 +80,21 @@ class ProfileService {
           .collection("Users")
           .doc(firebaseAuth.currentUser!.uid)
           .get();
+      if (doc.exists) {
+        return Users.fromJson(doc.data()!);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //get name data từ firebase theo id param
+  Future<Users?> getUsersParam({required String uid}) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> doc =
+          await firebaseFirestore.collection("Users").doc(uid).get();
       if (doc.exists) {
         return Users.fromJson(doc.data()!);
       } else {

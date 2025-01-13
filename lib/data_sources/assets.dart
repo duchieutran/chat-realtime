@@ -1,9 +1,5 @@
 const String spline = 'assets/images/backgrounds/spline.png';
-const String topic_1 = 'assets/images/topics/topic_1.png';
-const String topic_2 = 'assets/images/topics/topic_2.png';
-const String logoEmail = 'assets/images/logos/logo_email.png';
-const String logoApple = 'assets/images/logos/logo_apple.png';
-const String logoGoogle = 'assets/images/logos/logo_google.png';
+const String star = 'assets/icons/star.png';
 
 // Rive assets
 const String iconsRiv = 'assets/rive/icons.riv';

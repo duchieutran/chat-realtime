@@ -1,6 +1,5 @@
 import 'package:chatting/data_sources/assets.dart' as app_assets;
 import 'package:chatting/data_sources/themes/themes.dart';
-import 'package:chatting/views/home/on_broading/signup_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart' hide LinearGradient, Image;
@@ -230,12 +229,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GestureDetector(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const SignUpView(),
-                                    )),
-                                child: Image.asset(app_assets.logoEmail)),
+                              onTap: () {},
+                            ),
                           ],
                         ),
                       ],

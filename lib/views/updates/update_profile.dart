@@ -3,25 +3,12 @@ import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chatting/data_sources/app_colors.dart';
 import 'package:chatting/data_sources/themes/themes.dart';
+import 'package:chatting/models/entitys/friend_entity.dart';
 import 'package:chatting/models/users/users.dart';
 import 'package:chatting/view_models/profile/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
-List<Color> colorListText = [
-  AppColors.blue60,
-  AppColors.red60,
-  AppColors.green60,
-  AppColors.violet60,
-  AppColors.blue60,
-  AppColors.red60,
-  AppColors.green60,
-  AppColors.violet60,
-  AppColors.blue60,
-  AppColors.red60,
-  AppColors.green60,
-  AppColors.violet60,
-];
+import 'package:shimmer/shimmer.dart';
 
 class UpdateProfile extends StatefulWidget {
   const UpdateProfile({super.key});
@@ -34,9 +21,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
   final ProfileService updateProfile = ProfileService();
   late File image;
   final ImagePicker picker = ImagePicker();
-  String? imageUrl; // Lưu trữ URL của ảnh
+  String? imageUrl;
   late Users users;
+  late List<FriendEntity> friend;
   bool isLoading = false;
+  bool isLoadAvatar = false; // update avatar
 
   @override
   void initState() {
@@ -65,7 +54,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
             width: MediaQuery.of(context).size.width,
             child: Stack(
               children: [
-                // background name
+                // background view trend
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 90),
@@ -113,10 +102,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               borderRadius: BorderRadius.circular(55)),
                           child: CircleAvatar(
                             backgroundColor: AppColors.grey10,
-                            backgroundImage: imageUrl !=
-                                    null // Kiểm tra nếu có URL
-                                ? NetworkImage(imageUrl!) // Hiển thị ảnh từ URL
-                                : null, // Không có ảnh, hiển thị ảnh mặc định
+                            backgroundImage: isLoading
+                                ? null
+                                : (imageUrl == ''
+                                    ? null
+                                    : NetworkImage(imageUrl!)),
                             radius: 50,
                           ),
                         ),
@@ -138,51 +128,67 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           ),
                         ),
                       ]),
-                      const SizedBox(width: 20),
+                      const SizedBox(height: 20),
                       isLoading
                           ? const CircularProgressIndicator() // Hiển thị khi đang tải
-                          : AnimatedTextKit(
-                              animatedTexts: [
-                                ColorizeAnimatedText(
-                                  users.name.isNotEmpty
-                                      ? users.name
-                                      : "No Name",
-                                  textStyle: const TextStyle(
-                                    fontSize: 35.0,
-                                    fontWeight: FontWeight.w900,
+                          : Column(
+                              children: [
+                                Shimmer.fromColors(
+                                  baseColor: Colors.red,
+                                  highlightColor: Colors.yellow,
+                                  child: Text(
+                                    users.name.isNotEmpty
+                                        ? users.name
+                                        : "No Name",
+                                    style: const TextStyle(
+                                      fontSize: 35.0,
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
-                                  colors: colorListText,
+                                ),
+                                Text(
+                                  "📩 : ${users.name.isNotEmpty ? users.email : "No email"}",
+                                  style: TextStyle(
+                                      color: AppColors.dark.withOpacity(1),
+                                      fontSize: 20,
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.w400),
+                                  maxLines: 1,
                                 ),
                               ],
-                              repeatForever: true,
-                            ),
-                      isLoading
-                          ? const CircularProgressIndicator() // Hiển thị khi đang tải
-                          : Text(
-                              "📩 : ${users.name.isNotEmpty ? users.email : "No email"}",
-                              style: TextStyle(
-                                  color: AppColors.dark.withOpacity(1),
-                                  fontSize: 20,
-                                  fontFamily: "Inter",
-                                  fontWeight: FontWeight.w400),
-                              maxLines: 1,
                             ),
                       const SizedBox(height: 10),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Divider(
-                            thickness: 2,
-                            color: AppColors.grey70,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Shimmer.fromColors(
+                            baseColor: AppColors.dark,
+                            highlightColor: AppColors.light,
+                            child: const Divider(
+                              thickness: 2,
+                              color: AppColors.grey70,
+                            ),
                           ),
                         ),
                       ),
-                      if (users.friends != null &&
-                          users.friends!.isNotEmpty) ...[
-                        const SingleChildScrollView() // TODO : xử lý chỗ này
-                      ] else
-                        ...[]
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.only(
+                            left: 2, right: 2, bottom: 80),
+                        width: MediaQuery.of(context).size.width - 10,
+                        height: 400,
+                        child: ListView(
+                          children: const [
+                            // LoadingFriends(),
+                            // LoadingFriends(),
+                            // LoadingFriends(),
+                            // LoadingFriends(),
+                            // LoadingFriends(),
+                            // LoadingFriends(),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -203,13 +209,23 @@ class _UpdateProfileState extends State<UpdateProfile> {
     try {
       String? url = await updateProfile.getURLAvatar();
       Users? user = await updateProfile.getUsers();
+      if (user != null) {
+        users = user;
+        List<String> friendService = user.friends ?? [];
+        for (var i = 0; i < friendService.length; i++) {
+          Users? tmp = await updateProfile.getUsers();
+          if (tmp != null) {
+            FriendEntity friendEntity = FriendEntity(
+                email: tmp.email, name: tmp.name, urlAvatar: tmp.urlAvatar);
+            friend.add(friendEntity);
+          }
+        }
+      }
+
+      print(url);
       setState(() {
         imageUrl = url;
-        if (user != null) {
-          users = user;
-        }
-        isLoading = false; // Kết thúc tải
-        print(users.friends);
+        isLoading = false;
       });
     } catch (e) {
       setState(() {
