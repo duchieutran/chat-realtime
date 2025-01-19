@@ -1,5 +1,5 @@
 import 'package:chatting/views/auth/login.dart';
-import 'package:chatting/views/auth/register.dart';
+import 'package:chatting/views/auth/signup.dart';
 import 'package:chatting/views/chat/chat_message.dart';
 import 'package:chatting/views/chat/chat_screen.dart';
 import 'package:chatting/views/updates/update_profile.dart';
@@ -16,15 +16,14 @@ class AppRouters {
     );
   }
 
-  static makeRoute(
-      {required String nameRouters,
-      required BuildContext context,
-      Object? arguments}) {
+  static makeRoute({required String nameRouters, required BuildContext context, Object? arguments}) {
     switch (nameRouters) {
+      case splash: // TODO : test
+        return const Login();
       case login:
         return const Login();
-      case register:
-        return const Register();
+      case signup:
+        return const SignUp();
       case home:
         return const ChatScreen();
       case updateProfile:
@@ -42,8 +41,10 @@ class AppRouters {
     }
   }
 
+  static const String splash = '/';
   static const String register = '/register';
-  static const String login = '/';
+  static const String login = '/login';
+  static const String signup = '/signup';
   static const String home = '/home';
   static const String updateProfile = '/updateProfile';
   static const String chat = '/chat';

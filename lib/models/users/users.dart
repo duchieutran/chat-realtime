@@ -8,16 +8,17 @@ class Users {
   final bool isOnline;
   final Timestamp? lastSeen;
   List<String>? friends;
+  List<String>? friendRequests;
 
-  Users({
-    this.uid = '',
-    this.email = '',
-    this.name = '',
-    this.urlAvatar = '',
-    this.isOnline = false,
-    this.lastSeen,
-    this.friends,
-  });
+  Users(
+      {this.uid = '',
+      this.email = '',
+      this.name = '',
+      this.urlAvatar = '',
+      this.isOnline = false,
+      this.lastSeen,
+      this.friends,
+      this.friendRequests});
 
   // Chuyển từ JSON trong Firestore thành Users
   factory Users.fromJson(Map<String, dynamic> json) {
@@ -28,6 +29,7 @@ class Users {
         urlAvatar: json['urlAvatar'] ?? '',
         isOnline: json['isOnline'] ?? false,
         friends: List<String>.from(json['friends'] ?? []),
+        friendRequests: List<String>.from(json['friendRequests'] ?? []),
         lastSeen: json['lastSeen']);
   }
 
@@ -40,6 +42,7 @@ class Users {
       'urlAvatar': urlAvatar,
       'isOnline': isOnline,
       'friends': friends,
+      'friendRequests': friendRequests,
     };
   }
 }

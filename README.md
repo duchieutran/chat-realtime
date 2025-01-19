@@ -1,22 +1,20 @@
-# chatting
 
-A new Flutter project.
 
-## Getting Started
+# kiến thức cần học :
+    - ClipPath dùng để làm gì ?
+        + ClipPath dùng để cắt widget theo ý muốn (kế thừa và sử dụng CustomClipper) --> Đang tìm hiểu 
 
-This project is a starting point for a Flutter application.
+# Công việc chính cần làm :
+1. Xử lý handle SingIn và SingUp ở cả 2 file để có thể đăng nhập và đăng kí.
+   - deadline: hết ngày 20 / 01 / 2025 
+   - - Xem chi tiết tại: [login.dart - dòng 36, 37](./lib/views/auth/login.dart)[và](./lib/views/auth/signup.dart)
+    
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# Công việc làm bảo trì app :
+1. Tạo viền cho icon Email thành hình lục giác (login.dart)
+    - Lý do hoãn: Chưa cần thiết, ưu tiên chức năng vì đây là giao diện.
+    - Xem chi tiết tại: [login.dart - dòng 141](./lib/views/auth/login.dart)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# chatting_app_by_TDH" 
 
-# kiến thức cần học 
-    - RepaintBoundary
-    - AnimatedBuilder
     

@@ -6,6 +6,7 @@ import 'package:chatting/data_sources/themes/themes.dart';
 import 'package:chatting/models/entitys/friend_entity.dart';
 import 'package:chatting/models/users/users.dart';
 import 'package:chatting/view_models/profile/profile_service.dart';
+import 'package:chatting/views/widgets/loading_friends.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
@@ -42,13 +43,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
         width: MediaQuery.of(context).size.width,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: RiveAppTheme.background,
+          color: AppColors.dark,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Padding(
-          padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-              bottom: MediaQuery.of(context).padding.bottom),
+          padding:
+              EdgeInsets.only(top: MediaQuery.of(context).padding.top, bottom: MediaQuery.of(context).padding.bottom),
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -56,14 +56,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
               children: [
                 // background view trend
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 90),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 90),
                   width: double.infinity,
                   height: 310,
                   decoration: const BoxDecoration(
-                      color: Colors.black,
-                      borderRadius:
-                          BorderRadius.only(bottomRight: Radius.circular(230))),
+                      color: Colors.black, borderRadius: BorderRadius.only(bottomRight: Radius.circular(230))),
                   child: SizedBox(
                     width: 250.0,
                     child: DefaultTextStyle(
@@ -73,14 +70,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       ),
                       child: AnimatedTextKit(
                         animatedTexts: [
-                          TypewriterAnimatedText('Xin Chào, ',
-                              textStyle: const TextStyle(fontSize: 40)),
-                          TypewriterAnimatedText(
-                              'Bạn có từng nghĩ đây là ứng dụng tuyệt vời không ?'),
-                          TypewriterAnimatedText(
-                              'Nếu bạn nghĩ là có thì bạn đúng rồi đó !!!'),
-                          TypewriterAnimatedText(
-                              'Trải nghiệm ứng dụng và nêu ý kiến góc phải nhé !!!'),
+                          TypewriterAnimatedText('Xin Chào, ', textStyle: const TextStyle(fontSize: 40)),
+                          TypewriterAnimatedText('Bạn có từng nghĩ đây là ứng dụng tuyệt vời không ?'),
+                          TypewriterAnimatedText('Nếu bạn nghĩ là có thì bạn đúng rồi đó !!!'),
+                          TypewriterAnimatedText('Trải nghiệm ứng dụng và nêu ý kiến góc phải nhé !!!'),
                         ],
                       ),
                     ),
@@ -97,16 +90,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         Container(
                           decoration: BoxDecoration(
                               color: AppColors.blue30,
-                              border:
-                                  Border.all(width: 5, color: AppColors.blue30),
+                              border: Border.all(width: 5, color: AppColors.blue30),
                               borderRadius: BorderRadius.circular(55)),
                           child: CircleAvatar(
                             backgroundColor: AppColors.grey10,
-                            backgroundImage: isLoading
-                                ? null
-                                : (imageUrl == ''
-                                    ? null
-                                    : NetworkImage(imageUrl!)),
+                            backgroundImage: isLoading ? null : (imageUrl == '' ? null : NetworkImage(imageUrl!)),
                             radius: 50,
                           ),
                         ),
@@ -137,9 +125,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                   baseColor: Colors.red,
                                   highlightColor: Colors.yellow,
                                   child: Text(
-                                    users.name.isNotEmpty
-                                        ? users.name
-                                        : "No Name",
+                                    users.name.isNotEmpty ? users.name : "No Name",
                                     style: const TextStyle(
                                       fontSize: 35.0,
                                       fontWeight: FontWeight.w900,
@@ -174,15 +160,14 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       ),
                       const SizedBox(height: 10),
                       Container(
-                        padding: const EdgeInsets.only(
-                            left: 2, right: 2, bottom: 80),
+                        padding: const EdgeInsets.only(left: 2, right: 2, bottom: 80),
                         width: MediaQuery.of(context).size.width - 10,
                         height: 400,
                         child: ListView(
                           children: const [
-                            // LoadingFriends(),
-                            // LoadingFriends(),
-                            // LoadingFriends(),
+                            LoadingFriends(),
+                            LoadingFriends(),
+                            LoadingFriends(),
                             // LoadingFriends(),
                             // LoadingFriends(),
                             // LoadingFriends(),
@@ -215,8 +200,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
         for (var i = 0; i < friendService.length; i++) {
           Users? tmp = await updateProfile.getUsers();
           if (tmp != null) {
-            FriendEntity friendEntity = FriendEntity(
-                email: tmp.email, name: tmp.name, urlAvatar: tmp.urlAvatar);
+            FriendEntity friendEntity = FriendEntity(email: tmp.email, name: tmp.name, urlAvatar: tmp.urlAvatar);
             friend.add(friendEntity);
           }
         }
@@ -238,8 +222,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   // Chọn ảnh trong thiết bị
   Future<void> pickImage() async {
     try {
-      final XFile? pickerFile =
-          await picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickerFile = await picker.pickImage(source: ImageSource.gallery);
       if (pickerFile != null) {
         setState(() {
           image = File(pickerFile.path);

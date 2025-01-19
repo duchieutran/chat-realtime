@@ -6,14 +6,14 @@ import 'package:chatting/views/auth/widgets/text_field_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
   late TextEditingController controllerEmail;
   late TextEditingController controllerPassword;
 
@@ -34,14 +34,15 @@ class _LoginState extends State<Login> {
   }
 
   // function handle login
-  void handleLogin() {}
+  void handleSignUp() {}
 
   // function handle navigator signup
-  navigatorSignUp() => Navigator.pushNamed(context, AppRouters.signup);
+  navigatorSignIn() => Navigator.pushNamed(context, AppRouters.login);
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> {
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: Center(
                   child: Text(
-                    "Welcome to SayHi ...\nYour friends await you! ",
+                    "Welcome to SayHi ...\nLet's get you started with an account!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AppColors.red30,
@@ -96,7 +97,7 @@ class _LoginState extends State<Login> {
                   children: [
                     // Login
                     const Text(
-                      "Login",
+                      "Sign Up",
                       style: TextStyle(
                         color: AppColors.blue40,
                         fontSize: 35,
@@ -136,7 +137,7 @@ class _LoginState extends State<Login> {
                         ),
                         child: const Center(
                           child: Text(
-                            "Sign In",
+                            "Sign Up",
                             style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.light, fontSize: 20),
                           ),
                         ),
@@ -148,7 +149,7 @@ class _LoginState extends State<Login> {
                       width: size.width,
                       child: const Center(
                         child: Text(
-                          "or singup with email",
+                          "already have an account? sign in now!",
                           style: TextStyle(color: AppColors.grey40),
                         ),
                       ),
@@ -160,7 +161,7 @@ class _LoginState extends State<Login> {
                             color: AppColors.light,
                             child: Center(
                               child: IconButton(
-                                onPressed: navigatorSignUp,
+                                onPressed: navigatorSignIn,
                                 icon: const Icon(
                                   Icons.email,
                                   color: AppColors.grey50,

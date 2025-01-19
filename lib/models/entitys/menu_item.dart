@@ -14,32 +14,32 @@ class MenuItemModel {
 
   static List<MenuItemModel> menuItems = [
     MenuItemModel(
-      title: "Home",
+      title: "Trang Chủ",
       riveIcon: TabItem(stateMachine: "HOME_interactivity", artboard: "HOME"),
     ),
     MenuItemModel(
-      title: "Search",
+      title: "Tìm Kiếm",
       riveIcon:
           TabItem(stateMachine: "SEARCH_Interactivity", artboard: "SEARCH"),
     ),
     MenuItemModel(
-      title: "Favorites",
+      title: "Yêu Thích",
       riveIcon:
           TabItem(stateMachine: "STAR_Interactivity", artboard: "LIKE/STAR"),
     ),
     MenuItemModel(
-      title: "Help",
+      title: "Trợ Giúp",
       riveIcon: TabItem(stateMachine: "CHAT_Interactivity", artboard: "CHAT"),
     ),
   ];
 
   static List<MenuItemModel> menuItems2 = [
     MenuItemModel(
-      title: "History",
+      title: "Lịch Sử",
       riveIcon: TabItem(stateMachine: "TIMER_Interactivity", artboard: "TIMER"),
     ),
     MenuItemModel(
-      title: "Notification",
+      title: "Đăng Xuất",
       riveIcon: TabItem(stateMachine: "BELL_Interactivity", artboard: "BELL"),
     ),
   ];

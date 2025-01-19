@@ -1,5 +1,6 @@
 const String spline = 'assets/images/backgrounds/spline.png';
 const String star = 'assets/icons/star.png';
+const String logoLogin = 'assets/images/chat_logo.svg';
 
 // Rive assets
 const String iconsRiv = 'assets/rive/icons.riv';

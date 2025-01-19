@@ -1,7 +1,6 @@
 import 'package:chatting/data_sources/app_colors.dart';
 import 'package:chatting/view_models/auths/auth_service.dart';
 import 'package:chatting/view_models/chat/chat_service.dart';
-import 'package:chatting/views/auth/widgets/rounded_text_field.dart';
 import 'package:chatting/views/widgets/chat_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -105,13 +104,13 @@ class ChatPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 25, right: 25, bottom: 25),
-              child: RoundedTextField(
-                  hintText: "Type a message", controller: _messageController),
-            ),
-          ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(left: 25, right: 25, bottom: 25),
+          //     child: RoundedTextField(
+          //         hintText: "Type a message", controller: _messageController),
+          //   ),
+          // ),
           // icon
           Container(
             decoration: const BoxDecoration(
