@@ -1,6 +1,5 @@
+import 'package:chatting/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-
-import '../../../data_sources/app_colors.dart';
 
 class TextFieldAuth extends StatelessWidget {
   const TextFieldAuth(

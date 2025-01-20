@@ -1,6 +1,6 @@
-import 'package:chatting/data_sources/app_colors.dart';
-import 'package:chatting/data_sources/app_routers.dart';
-import 'package:chatting/view_models/auths/auth_service.dart';
+import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/utils/app_routers.dart';
+import 'package:chatting/view_models/auths/auth_viewmodel.dart';
 import 'package:chatting/view_models/chat/chat_service.dart';
 import 'package:chatting/views/widgets/drawer.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: const Text(
           "Home",
-          style: TextStyle(
-              color: AppColors.light,
-              fontWeight: FontWeight.w500,
-              fontSize: 25),
+          style: TextStyle(color: AppColors.light, fontWeight: FontWeight.w500, fontSize: 25),
         ),
         centerTitle: true,
         backgroundColor: AppColors.grey40,
@@ -60,26 +57,21 @@ class _ChatScreenState extends State<ChatScreen> {
 
         // return list view
         return ListView(
-          children: snapshot.data!
-              .map<Widget>((userdata) => _buildUserListItem(userdata, context))
-              .toList(),
+          children: snapshot.data!.map<Widget>((userdata) => _buildUserListItem(userdata, context)).toList(),
         );
       },
     );
   }
 
-  Widget _buildUserListItem(
-      Map<String, dynamic> userData, BuildContext context) {
+  Widget _buildUserListItem(Map<String, dynamic> userData, BuildContext context) {
     // display all users except current user
     if (userData["email"] != _authService.getCurrentUser()!.email) {
       return UserTile(
         text: userData['email'],
         onTap: () {
           // tapper on a user -> go to chat page
-          Navigator.pushNamed(context, AppRouters.chat, arguments: {
-            'receiverEmail': userData["email"],
-            'receiverID': userData['uid']
-          });
+          Navigator.pushNamed(context, AppRouters.chat,
+              arguments: {'receiverEmail': userData["email"], 'receiverID': userData['uid']});
         },
       );
     } else {

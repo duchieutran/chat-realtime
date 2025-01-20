@@ -1,6 +1,5 @@
-import 'package:chatting/data_sources/app_routers.dart';
-import 'package:chatting/data_sources/themes/themes.dart';
-import 'package:chatting/views/auth/auth_gate.dart';
+import 'package:chatting/utils/app_routers.dart';
+import 'package:chatting/utils/themes.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {

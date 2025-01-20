@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:chatting/data_sources/app_colors.dart';
-import 'package:chatting/data_sources/themes/themes.dart';
+
 import 'package:chatting/models/entitys/friend_entity.dart';
-import 'package:chatting/models/users/users.dart';
+import 'package:chatting/models/entitys/users.dart';
+import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/view_models/profile/profile_service.dart';
 import 'package:chatting/views/widgets/loading_friends.dart';
 import 'package:flutter/material.dart';

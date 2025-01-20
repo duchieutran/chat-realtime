@@ -1,15 +1,9 @@
-import 'package:chatting/data_sources/app_colors.dart';
-import 'package:chatting/data_sources/assets.dart';
+import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/utils/assets.dart';
 import 'package:flutter/material.dart';
 
 class LoadingFriends extends StatelessWidget {
-  const LoadingFriends(
-      {super.key,
-      this.avatarImg,
-      this.name,
-      this.email,
-      this.onPress,
-      this.icon});
+  const LoadingFriends({super.key, this.avatarImg, this.name, this.email, this.onPress, this.icon});
   final String? avatarImg;
   final String? name;
   final String? email;
@@ -28,13 +22,7 @@ class LoadingFriends extends StatelessWidget {
             color: AppColors.light,
             border: Border.all(width: 1, color: AppColors.grey10),
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            boxShadow: const [
-              BoxShadow(
-                  offset: Offset(0, 3),
-                  blurRadius: 3,
-                  spreadRadius: 4,
-                  color: AppColors.grey30)
-            ],
+            boxShadow: const [BoxShadow(offset: Offset(0, 3), blurRadius: 3, spreadRadius: 4, color: AppColors.grey30)],
           ),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),

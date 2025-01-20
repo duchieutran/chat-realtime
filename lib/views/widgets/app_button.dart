@@ -1,4 +1,4 @@
-import 'package:chatting/data_sources/app_colors.dart';
+import 'package:chatting/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {

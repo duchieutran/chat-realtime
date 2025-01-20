@@ -7,11 +7,10 @@ class AuthService extends ChangeNotifier {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   // đăng nhập tài khoản
-  Future<UserCredential?> signIn(
-      {required String email, required String password}) async {
+  Future<UserCredential?> signIn({required String email, required String password}) async {
     try {
-      UserCredential userCredential = await firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+
       return userCredential;
     } catch (e) {
       return null;
@@ -26,8 +25,8 @@ class AuthService extends ChangeNotifier {
   }) async {
     try {
       // create user
-      UserCredential userCredential = await firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential =
+          await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
 
       // save user
       firestore.collection("Users").doc(userCredential.user!.uid).set({

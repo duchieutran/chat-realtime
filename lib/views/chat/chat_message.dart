@@ -1,5 +1,5 @@
-import 'package:chatting/data_sources/app_colors.dart';
-import 'package:chatting/view_models/auths/auth_service.dart';
+import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/view_models/auths/auth_viewmodel.dart';
 import 'package:chatting/view_models/chat/chat_service.dart';
 import 'package:chatting/views/widgets/chat_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,10 +33,7 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           receiverEmail,
-          style: const TextStyle(
-              color: AppColors.light,
-              fontWeight: FontWeight.w500,
-              fontSize: 20),
+          style: const TextStyle(color: AppColors.light, fontWeight: FontWeight.w500, fontSize: 20),
         ),
         centerTitle: true,
         backgroundColor: AppColors.grey40,
@@ -67,8 +64,7 @@ class ChatPage extends StatelessWidget {
         }
 
         return ListView(
-          children:
-              snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
+          children: snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
         );
       },
     );
@@ -81,14 +77,12 @@ class ChatPage extends StatelessWidget {
     bool isCurrentUser = data['senderID'] == _authService.getCurrentUser()!.uid;
 
     // align message to the right if sender is the current user, otherwise left
-    var alignment =
-        isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+    var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
     return Container(
         alignment: alignment,
         child: Column(
-          crossAxisAlignment:
-              isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             // style messagemessage
             ChatBubble(message: data["message"], isCurrentUser: isCurrentUser)
@@ -113,8 +107,7 @@ class ChatPage extends StatelessWidget {
           // ),
           // icon
           Container(
-            decoration: const BoxDecoration(
-                color: AppColors.green50, shape: BoxShape.circle),
+            decoration: const BoxDecoration(color: AppColors.green50, shape: BoxShape.circle),
             margin: const EdgeInsets.only(right: 25),
             child: IconButton(
               onPressed: sendMessage,

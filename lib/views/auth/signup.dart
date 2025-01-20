@@ -1,7 +1,6 @@
-import 'package:chatting/data_sources/app_colors.dart';
-import 'package:chatting/data_sources/app_routers.dart';
-import 'package:chatting/data_sources/assets.dart';
-import 'package:chatting/data_sources/themes/themes.dart';
+import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/utils/app_routers.dart';
+import 'package:chatting/utils/assets.dart';
 import 'package:chatting/views/auth/widgets/text_field_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
