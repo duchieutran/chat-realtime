@@ -11,12 +11,15 @@
    - Xem chi tiết tại: [auth.dart - dòng 36, 37](./lib/services/auth_services.dart)
    
 2. Xử lý view_model login, signup
-   - deadline: hết ngày 20/01/2025
+   - deadline: hết ngày 20/01/2025 (Đã xong)
    
 3. Xử lý handle SingIn và SingUp ở cả 2 file để có thể đăng nhập và đăng kí.
-   - deadline: hết ngày 20 / 01 / 2025 
+   - deadline: hết ngày 20 / 01 / 2025 (Đã xong)
    - Xem chi tiết tại: [login.dart - dòng 36, 37](./lib/views/auth/login.dart)[và](./lib/views/auth/signup.dart)
     
+4. Thiết kế trang home
+   - Công việc : Cần phân thích xem trong Home có những chức năng nào, bố cục trong trang home để dựng UI 
+   - deadline : hết ngày 22/01/2025
 
 
 # Công việc làm bảo trì app :
@@ -28,7 +31,10 @@
 ## Tóm tắt công việc :
 1. 20/01/2025 :
    - Học lại provider 
-   - xử lý phần 1, 2 công việc chính.
+   - xử lý phần 2, 3 công việc chính.
+2. 22/01/2025 :
+   - Học xử lý token 
+   - Xử lý phần 4 
 
 
     

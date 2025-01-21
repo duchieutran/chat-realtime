@@ -1,6 +1,7 @@
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
+import 'package:chatting/view_models/auths/auth_viewmodel.dart';
 import 'package:chatting/views/auth/widgets/text_field_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +14,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  AuthViewmodel auth = AuthViewmodel();
   late TextEditingController controllerEmail;
   late TextEditingController controllerPassword;
 
@@ -33,7 +35,15 @@ class _SignUpState extends State<SignUp> {
   }
 
   // function handle login
-  void handleSignUp() {}
+  void handleSignUp() {
+    bool success = auth.signUp(email: controllerEmail.text, password: controllerPassword.text);
+    if (success) {
+      // TODO : popup
+      Navigator.pushNamed(context, AppRouters.login);
+    } else {
+      // TODO : popup
+    }
+  }
 
   // function handle navigator signup
   navigatorSignIn() => Navigator.pushNamed(context, AppRouters.login);

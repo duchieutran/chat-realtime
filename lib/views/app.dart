@@ -12,8 +12,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       onGenerateRoute: AppRouters.onGenerateRoute,
-      // initialRoute: AppRouters.login,
-      // home: const AuthGate(),
+      initialRoute: AppRouters.welcome,
     );
   }
 }

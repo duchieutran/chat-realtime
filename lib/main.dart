@@ -1,3 +1,5 @@
+import 'package:chatting/view_models/auths/auth_provider.dart';
+import 'package:chatting/views/auth/login.dart';
 import 'package:chatting/views/firebase_options.dart';
 import 'package:chatting/view_models/auths/auth_viewmodel.dart';
 import 'package:chatting/views/app.dart';
@@ -15,7 +17,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => AuthService(),
+          create: (context) => AuthProvider(),
         )
       ],
       child: const MyApp(),

@@ -1,61 +1,31 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chatting/services/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 
-class AuthService extends ChangeNotifier {
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+class AuthViewmodel extends ChangeNotifier {
+  AuthServices authServices = AuthServices();
 
-  // đăng nhập tài khoản
-  Future<UserCredential?> signIn({required String email, required String password}) async {
+  // login
+  bool login({required String email, required String password}) {
     try {
-      UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-
-      return userCredential;
+      authServices.login(email: email, password: password);
+      return true;
     } catch (e) {
-      return null;
+      return false;
     }
   }
 
-  // Đăng kí tài khoản
-  Future<UserCredential?> register({
-    required String email,
-    required String password,
-    required String name,
-  }) async {
+  // signup
+  bool signUp({required String email, required String password}) {
     try {
-      // create user
-      UserCredential userCredential =
-          await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-
-      // save user
-      firestore.collection("Users").doc(userCredential.user!.uid).set({
-        'uid': userCredential.user!.uid,
-        'name': name,
-        'email': email,
-        'urlAvatar': '',
-        'isOnline': false,
-        'friends': []
-      });
-
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
-    }
-  }
-
-  // lấy tài khoản người dùng hiện tại
-  User? getCurrentUser() {
-    return firebaseAuth.currentUser;
-  }
-
-  // Đăng xuất tài khoản
-  Future<void> logout() async {
-    try {
-      await firebaseAuth.signOut();
-      print(firebaseAuth.currentUser);
+      authServices.signup(email: email, password: password);
+      return true;
     } catch (e) {
-      rethrow;
+      return false;
     }
+  }
+
+  // logout
+  void logout() {
+    authServices.logout();
   }
 }

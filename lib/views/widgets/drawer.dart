@@ -7,8 +7,8 @@ class DrawerHome extends StatelessWidget {
   const DrawerHome({super.key});
 
   void logout(BuildContext context) {
-    final authView = AuthService();
-    authView.logout();
+    // final authView = AuthService();
+    // authView.logout();
     Navigator.pushNamed(context, AppRouters.login);
   }
 
