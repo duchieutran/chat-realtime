@@ -62,10 +62,9 @@ class _SignUpState extends State<SignUp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // ảnh
-              SvgPicture.asset(
-                logoLogin,
-                width: 100,
-                height: 100,
+              Image.asset(
+                logo,
+                width: 250,
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 8),

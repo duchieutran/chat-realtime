@@ -11,14 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 
-class UpdateProfile extends StatefulWidget {
-  const UpdateProfile({super.key});
+class Profile extends StatefulWidget {
+  const Profile({super.key});
 
   @override
-  State<UpdateProfile> createState() => _UpdateProfileState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _UpdateProfileState extends State<UpdateProfile> {
+class _ProfileState extends State<Profile> {
   final ProfileService updateProfile = ProfileService();
   late File image;
   final ImagePicker picker = ImagePicker();

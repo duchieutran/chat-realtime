@@ -18,21 +18,25 @@ class _WelcomeState extends State<Welcome> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       body: Center(
-        child: ActionSlider.standard(
-            toggleColor: AppColors.blue40,
-            backgroundColor: AppColors.light,
-            child: const Text(
-              'Slide to verify > > >',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-            ),
-            action: (controller) async {
-              controller.loading();
-              await Future.delayed(const Duration(seconds: 3));
-              controller.success();
-              final router = (authProvider.isAuthenticated) ? AppRouters.home : AppRouters.login;
-              await Future.delayed(const Duration(seconds: 1));
-              Navigator.pushNamed(context, router);
-            }),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: ActionSlider.standard(
+              toggleColor: AppColors.blue40,
+              backgroundColor: AppColors.light,
+              child: const Text(
+                'Welcome to SayHi ...',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+              action: (controller) async {
+                controller.loading();
+                await Future.delayed(const Duration(seconds: 3));
+                controller.success();
+                await authProvider.checkAuthState();
+                final router = (authProvider.isAuthenticated) ? AppRouters.home : AppRouters.login;
+                await Future.delayed(const Duration(seconds: 1));
+                Navigator.popAndPushNamed(context, router);
+              }),
+        ),
       ),
     );
   }
