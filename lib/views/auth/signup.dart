@@ -2,9 +2,8 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/auths/auth_viewmodel.dart';
-import 'package:chatting/views/auth/widgets/text_field_auth.dart';
+import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -20,7 +19,6 @@ class _SignUpState extends State<SignUp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controllerEmail = TextEditingController();
     controllerPassword = TextEditingController();
@@ -28,7 +26,6 @@ class _SignUpState extends State<SignUp> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     controllerEmail.dispose();
     controllerPassword.dispose();
@@ -39,7 +36,7 @@ class _SignUpState extends State<SignUp> {
     bool success = auth.signUp(email: controllerEmail.text, password: controllerPassword.text);
     if (success) {
       // TODO : popup
-      Navigator.pushNamed(context, AppRouters.login);
+      Navigator.pushNamed(context, AppRouters.profileComplete);
     } else {
       // TODO : popup
     }
@@ -114,13 +111,13 @@ class _SignUpState extends State<SignUp> {
                     ),
                     const SizedBox(height: 10),
                     // TextField email, password
-                    TextFieldAuth(
+                    TextFieldCustom(
                       controller: controllerEmail,
                       hintText: 'admin@admin.vn',
                       inputType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 10),
-                    TextFieldAuth(
+                    TextFieldCustom(
                       controller: controllerPassword,
                       hintText: '******',
                       obscureText: true,
@@ -130,10 +127,7 @@ class _SignUpState extends State<SignUp> {
                     const SizedBox(height: 30),
                     // Button
                     GestureDetector(
-                      onTap: () {
-                        print(controllerEmail.text);
-                        print(controllerPassword.text);
-                      },
+                      onTap: handleSignUp,
                       child: Container(
                         width: size.width,
                         height: 50,

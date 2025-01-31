@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class AppButton extends StatelessWidget {
   final VoidCallback onTap;
   final String? title;
+  final double fontSize;
   final Color color, backgroundColors;
   const AppButton(
       {super.key,
       required this.onTap,
       this.title,
+      this.fontSize = 25,
       this.color = AppColors.dark,
       this.backgroundColors = AppColors.brandOrange50});
 
@@ -27,7 +29,7 @@ class AppButton extends StatelessWidget {
           child: Text(
             title ?? "",
             style: TextStyle(
-              fontSize: 25,
+              fontSize: fontSize,
               color: color,
               fontWeight: FontWeight.w700,
             ),

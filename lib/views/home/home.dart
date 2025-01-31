@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chatting/services/auth_services.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/views/widgets/widgets_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rive/rive.dart' as rv;
 
 class Home extends StatefulWidget {
@@ -56,9 +56,6 @@ class _HomeState extends State<Home> {
                   WidgetsCard(
                     width: size.width,
                     height: 340,
-                    onTap: () {
-                      setState(() {});
-                    },
                     child: CarouselSlider(
                       items: image.map((img) {
                         return Image.asset(
@@ -84,11 +81,11 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              users,
+                              friends,
                               height: 100,
                             ),
                             const Text(
-                              "community",
+                              "friends",
                               style: TextStyle(color: AppColors.blue40, fontSize: 16, fontWeight: FontWeight.w900),
                             )
                           ],
@@ -98,17 +95,19 @@ class _HomeState extends State<Home> {
                       // profile
                       WidgetsCard(
                         onTap: () {
-                          setState(() {});
+                          setState(() {
+                            Navigator.pushNamed(context, AppRouters.profile);
+                          });
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              users,
+                              profiles,
                               height: 100,
                             ),
                             const Text(
-                              "Friends",
+                              "profiles",
                               style: TextStyle(color: AppColors.blue40, fontSize: 16, fontWeight: FontWeight.w900),
                             )
                           ],
@@ -118,11 +117,41 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(height: 30),
                   WidgetsCard(
-                    width: size.width,
-                    onTap: () {
-                      setState(() {});
-                    },
-                  ),
+                      width: size.width,
+                      onTap: () {
+                        setState(() {});
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(webChat),
+                            const Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Chats",
+                                    style: TextStyle(
+                                      color: AppColors.blue40,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Nơi bạn có thể trò chuyện trực tuyến, chia sẻ những câu chuyện với bạn bè của mình hàng ngày.",
+                                    softWrap: true,
+                                    textAlign: TextAlign.justify,
+                                    overflow: TextOverflow.visible,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )),
                 ],
               ))
         ]),

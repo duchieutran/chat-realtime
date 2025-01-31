@@ -1,8 +1,8 @@
 import 'package:chatting/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class TextFieldAuth extends StatelessWidget {
-  const TextFieldAuth(
+class TextFieldCustom extends StatelessWidget {
+  const TextFieldCustom(
       {super.key,
       required this.controller,
       this.inputType = TextInputType.text,

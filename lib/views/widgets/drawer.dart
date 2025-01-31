@@ -1,6 +1,5 @@
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
-import 'package:chatting/view_models/auths/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 
 class DrawerHome extends StatelessWidget {

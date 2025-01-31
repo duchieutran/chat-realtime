@@ -18,9 +18,15 @@
    - Xem chi tiết tại: [login.dart - dòng 36, 37](./lib/views/auth/login.dart)[và](./lib/views/auth/signup.dart)
     
 4. Thiết kế trang home
-   - Công việc : Cần phân thích xem trong Home có những chức năng nào, bố cục trong trang home để dựng UI 
+   - Công việc : Cần phân thích xem trong Home có những chức năng nào, bố cục trong trang home để dựng UI (Đã xong) 
    - deadline : hết ngày 22/01/2025
-
+5. Xử lý trang sau khi đăng kí tài khoản, vẽ sevicer, api, firebase
+   - Công việc : tạo UI (Đã xong)
+   - deadline : hết ngày 25/01/2025
+6. Xử lý trang profile :
+   - Sao chép, hiển thị bạn bè.
+7. Tạo trang bạn bè: 
+   - gửi lời mời kết bạn, chấp nhận, hiển thị 
 
 # Công việc làm bảo trì app :
 1. Tạo viền cho icon Email thành hình lục giác (login.dart)

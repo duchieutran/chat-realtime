@@ -2,6 +2,7 @@ import 'package:chatting/views/auth/login.dart';
 import 'package:chatting/views/auth/signup.dart';
 import 'package:chatting/views/home/home.dart';
 import 'package:chatting/views/profile/profile.dart';
+import 'package:chatting/views/profile/profile_complete.dart';
 import 'package:chatting/views/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +25,8 @@ class AppRouters {
         return const Login();
       case signup:
         return const SignUp();
+      case profileComplete:
+        return const ProfileComplete();
       case home:
         return const Home();
       case profile:
@@ -37,6 +40,7 @@ class AppRouters {
   static const String register = '/register';
   static const String login = '/login';
   static const String signup = '/signup';
+  static const String profileComplete = '/profileComplete';
   static const String home = '/home';
   static const String profile = '/profile';
   static const String chat = '/chat';

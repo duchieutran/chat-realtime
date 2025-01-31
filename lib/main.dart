@@ -1,7 +1,5 @@
 import 'package:chatting/view_models/auths/auth_provider.dart';
-import 'package:chatting/views/auth/login.dart';
 import 'package:chatting/views/firebase_options.dart';
-import 'package:chatting/view_models/auths/auth_viewmodel.dart';
 import 'package:chatting/views/app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

@@ -3,10 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Users {
   final String uid;
   final String email;
-  final String name;
-  final String urlAvatar;
+  String name;
+  String urlAvatar;
   final bool isOnline;
-  final Timestamp? lastSeen;
   List<String>? friends;
   List<String>? friendRequests;
 
@@ -16,9 +15,10 @@ class Users {
       this.name = '',
       this.urlAvatar = '',
       this.isOnline = false,
-      this.lastSeen,
       this.friends,
       this.friendRequests});
+
+  // getter && setter
 
   // Chuyển từ JSON trong Firestore thành Users
   factory Users.fromJson(Map<String, dynamic> json) {
@@ -29,8 +29,7 @@ class Users {
         urlAvatar: json['urlAvatar'] ?? '',
         isOnline: json['isOnline'] ?? false,
         friends: List<String>.from(json['friends'] ?? []),
-        friendRequests: List<String>.from(json['friendRequests'] ?? []),
-        lastSeen: json['lastSeen']);
+        friendRequests: List<String>.from(json['friendRequests'] ?? []));
   }
 
   // Chuyển UserModel thành JSON để lưu vào Firestore

@@ -2,9 +2,8 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/auths/auth_viewmodel.dart';
-import 'package:chatting/views/auth/widgets/text_field_auth.dart';
+import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -113,13 +112,13 @@ class _LoginState extends State<Login> {
                     ),
                     const SizedBox(height: 10),
                     // TextField email, password
-                    TextFieldAuth(
+                    TextFieldCustom(
                       controller: controllerEmail,
                       hintText: 'admin@admin.vn',
                       inputType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 10),
-                    TextFieldAuth(
+                    TextFieldCustom(
                       controller: controllerPassword,
                       hintText: '******',
                       obscureText: true,

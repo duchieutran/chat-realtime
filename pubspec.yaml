@@ -50,6 +50,7 @@ dependencies:
   shimmer: ^3.0.0
   action_slider: ^0.7.0
   carousel_slider: ^5.0.0
+  path: ^1.8.0
 
 dev_dependencies:
   flutter_test:
