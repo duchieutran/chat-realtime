@@ -1,5 +1,7 @@
+import 'package:chatting/utils/assets.dart';
 import 'package:chatting/views/auth/login.dart';
 import 'package:chatting/views/auth/signup.dart';
+import 'package:chatting/views/friends/friends.dart';
 import 'package:chatting/views/home/home.dart';
 import 'package:chatting/views/profile/profile.dart';
 import 'package:chatting/views/profile/profile_complete.dart';
@@ -31,6 +33,8 @@ class AppRouters {
         return const Home();
       case profile:
         return const Profile();
+      case friends:
+        return const Friends();
       default:
         throw "$nameRouters is not define";
     }
@@ -43,5 +47,6 @@ class AppRouters {
   static const String profileComplete = '/profileComplete';
   static const String home = '/home';
   static const String profile = '/profile';
+  static const String friends = '/friends';
   static const String chat = '/chat';
 }

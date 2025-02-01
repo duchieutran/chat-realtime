@@ -1,6 +1,8 @@
 import 'package:chatting/models/users.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/view_models/friends/friend_viewmodel.dart';
 import 'package:chatting/view_models/profile/profile_viewmodel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -13,8 +15,10 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   // khai báo
   final ProfileViewModel profileViewModel = ProfileViewModel();
+  final FriendViewModel friendViewModel = FriendViewModel();
   late bool isLoading;
   Users users = Users();
+  List<Users> listFriend = [];
 
   @override
   void initState() {
@@ -33,6 +37,18 @@ class _ProfileState extends State<Profile> {
       setState(() {
         isLoading = false;
       });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // hàm lấy thông tin friend
+  getFriends() async {
+    try {
+      List<Users>? friends = await friendViewModel.getFriend();
+      if (friends != null) {
+        listFriend = friends;
+      }
     } catch (e) {
       rethrow;
     }

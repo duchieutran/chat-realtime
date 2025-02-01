@@ -58,7 +58,7 @@ class StoreServices {
   // sửa thông tin người dùng
   modifyUser({required Users user}) async {
     try {
-      if (auth.currentUser == null) {
+      if (auth.currentUser != null) {
         String uid = auth.currentUser!.uid;
         await fireStore.collection("users").doc(uid).update({
           'uid': uid,
@@ -70,10 +70,80 @@ class StoreServices {
           'friendRequests': user.friendRequests,
         });
       } else {
-        print("user khong ton tai");
+        print("user không tồn tại!");
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  // Hàm gửi lời mời kết bạn
+  Future<void> sendFriendRequest(String receiverUid) async {
+    try {
+      if (auth.currentUser != null) {
+        String uid = auth.currentUser!.uid;
+        final receiverRef = fireStore.collection("users").doc(receiverUid);
+        await receiverRef.update({
+          'friendRequests': FieldValue.arrayUnion([uid])
+        });
+      }
+    } catch (e) {
+      print("Lỗi khi gửi lời mời kết bạn: $e");
+    }
+  }
+
+  // hiển thị bạn bè gửi lời mời
+  Stream<List<String>> listenToFriendRequests() {
+    try {
+      String? uid = auth.currentUser?.uid;
+      return fireStore.collection("users").doc(uid ?? "").snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          return List<String>.from(snapshot.data()?['friendRequests'] ?? []);
+        }
+        return [];
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // hàm chấp nhận
+  Future<void> acceptFriendRequest(String senderUid) async {
+    try {
+      final userUid = auth.currentUser?.uid;
+      if (userUid == null) throw Exception("Người dùng chưa đăng nhập.");
+
+      final userRef = fireStore.collection("users").doc(userUid);
+      final senderRef = fireStore.collection("users").doc(senderUid);
+
+      await fireStore.runTransaction((transaction) async {
+        // Thêm bạn mới vào danh sách của cả hai
+        transaction.update(userRef, {
+          'friends': FieldValue.arrayUnion([senderUid]),
+          'friendRequests': FieldValue.arrayRemove([senderUid]),
+        });
+
+        transaction.update(senderRef, {
+          'friends': FieldValue.arrayUnion([userUid]),
+        });
+      });
+    } catch (e) {
+      print("Lỗi khi chấp nhận lời mời kết bạn: $e");
+    }
+  }
+
+  // Hàm từ chối lời mời kết bạn
+  Future<void> remoteFriendRequest(String senderUid) async {
+    try {
+      final userUid = auth.currentUser?.uid; // Lấy UID của người dùng hiện tại
+      if (userUid == null) throw Exception("Người dùng chưa đăng nhập.");
+
+      final userRef = fireStore.collection("users").doc(userUid);
+      await userRef.update({
+        'friendRequests': FieldValue.arrayRemove([senderUid]),
+      });
+    } catch (e) {
+      print("Lỗi khi từ chối lời mời kết bạn: $e");
     }
   }
 }
