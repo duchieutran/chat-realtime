@@ -1,6 +1,6 @@
-import 'package:chatting/utils/assets.dart';
 import 'package:chatting/views/auth/login.dart';
 import 'package:chatting/views/auth/signup.dart';
+import 'package:chatting/views/chat/chat_screen.dart';
 import 'package:chatting/views/friends/friends.dart';
 import 'package:chatting/views/home/home.dart';
 import 'package:chatting/views/profile/profile.dart';
@@ -35,6 +35,8 @@ class AppRouters {
         return const Profile();
       case friends:
         return const Friends();
+      case chat:
+        return const ChatScreen();
       default:
         throw "$nameRouters is not define";
     }

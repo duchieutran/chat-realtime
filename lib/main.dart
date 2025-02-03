@@ -1,4 +1,5 @@
 import 'package:chatting/view_models/auths/auth_provider.dart';
+import 'package:chatting/view_models/chat/message.dart';
 import 'package:chatting/views/firebase_options.dart';
 import 'package:chatting/views/app.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,6 +17,9 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MessageViewModel(),
         )
       ],
       child: const MyApp(),

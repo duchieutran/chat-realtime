@@ -55,28 +55,6 @@ class StoreServices {
     }
   }
 
-  // sửa thông tin người dùng
-  modifyUser({required Users user}) async {
-    try {
-      if (auth.currentUser != null) {
-        String uid = auth.currentUser!.uid;
-        await fireStore.collection("users").doc(uid).update({
-          'uid': uid,
-          'email': user.email,
-          'name': user.name,
-          'urlAvatar': user.urlAvatar,
-          'isOnline': user.isOnline,
-          'friends': user.friends,
-          'friendRequests': user.friendRequests,
-        });
-      } else {
-        print("user không tồn tại!");
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   // Hàm gửi lời mời kết bạn
   Future<void> sendFriendRequest(String receiverUid) async {
     try {
@@ -99,6 +77,21 @@ class StoreServices {
       return fireStore.collection("users").doc(uid ?? "").snapshots().map((snapshot) {
         if (snapshot.exists) {
           return List<String>.from(snapshot.data()?['friendRequests'] ?? []);
+        }
+        return [];
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // cập nhật danh sách bạn bè
+  Stream<List<String>> listenToFriend() {
+    try {
+      String? uid = auth.currentUser?.uid;
+      return fireStore.collection("users").doc(uid ?? "").snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          return List<String>.from(snapshot.data()?['friends'] ?? []);
         }
         return [];
       });
@@ -145,5 +138,89 @@ class StoreServices {
     } catch (e) {
       print("Lỗi khi từ chối lời mời kết bạn: $e");
     }
+  }
+
+  // Gửi tin nhắn giữa hai người
+  Future<void> sendMessage({
+    required String receiverUid,
+    required String message,
+  }) async {
+    try {
+      String senderUid = auth.currentUser!.uid;
+      String chatId = getChatId(senderUid, receiverUid);
+      await fireStore.collection("chats").doc(chatId).collection("messages").add({
+        'senderUid': senderUid,
+        'receiverUid': receiverUid,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print("Lỗi khi gửi tin nhắn: $e");
+    }
+  }
+
+  // Tạo nhóm chat
+  Future<void> createGroupChat({
+    required String groupName,
+    required List<String> members,
+  }) async {
+    try {
+      DocumentReference groupRef = await fireStore.collection("groups").add({
+        'groupName': groupName,
+        'members': members,
+        'createdBy': auth.currentUser!.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print("Lỗi khi tạo nhóm: $e");
+    }
+  }
+
+  // Gửi tin nhắn trong nhóm
+  Future<void> sendGroupMessage({
+    required String groupId,
+    required String message,
+  }) async {
+    try {
+      String senderUid = auth.currentUser!.uid;
+
+      await fireStore.collection("groups").doc(groupId).collection("messages").add({
+        'senderUid': senderUid,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print("Lỗi khi gửi tin nhắn nhóm: $e");
+    }
+  }
+
+  // Nhận tin nhắn trong nhóm theo thời gian thực
+  Stream<List<Map<String, dynamic>>> getGroupMessages(String groupId) {
+    return fireStore
+        .collection("groups")
+        .doc(groupId)
+        .collection("messages")
+        .orderBy("timestamp", descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
+
+  // Nhận tin nhắn theo thời gian thực
+  Stream<List<Map<String, dynamic>>> getMessages(String receiverUid) {
+    String senderUid = auth.currentUser!.uid;
+    String chatId = getChatId(senderUid, receiverUid);
+
+    return fireStore
+        .collection("chats")
+        .doc(chatId)
+        .collection("messages")
+        .orderBy("timestamp", descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
+
+  // Tạo chatId duy nhất cho cuộc trò chuyện giữa hai người
+  String getChatId(String uid1, String uid2) {
+    return uid1.hashCode <= uid2.hashCode ? "$uid1\_$uid2" : "$uid2\_$uid1";
   }
 }

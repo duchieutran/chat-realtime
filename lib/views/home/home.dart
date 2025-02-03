@@ -119,7 +119,7 @@ class _HomeState extends State<Home> {
                     WidgetsCard(
                         width: size.width,
                         onTap: () {
-                          setState(() {});
+                          Navigator.pushNamed(context, AppRouters.chat);
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
