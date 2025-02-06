@@ -1,5 +1,5 @@
 import 'package:chatting/models/users.dart';
-import 'package:chatting/view_models/friends/friend_viewmodel.dart';
+import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
 import 'package:chatting/views/chat/chat_message.dart';
 import 'package:flutter/material.dart';
 

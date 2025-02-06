@@ -1,6 +1,6 @@
+import 'package:chatting/view_models/chat_vm/message.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../view_models/chat/message.dart';
 
 class MessageScreen extends StatefulWidget {
   final String receiverUid;
@@ -66,7 +66,6 @@ class _MessageScreenState extends State<MessageScreen> {
                   itemBuilder: (context, index) {
                     var message = messages[index];
                     bool isMe = message['senderUid'] == messageViewModel.auth.currentUser!.uid;
-
                     return Align(
                       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(

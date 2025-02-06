@@ -1,6 +1,6 @@
 import 'package:chatting/models/users.dart';
 import 'package:chatting/services/store_services.dart';
-import 'package:chatting/view_models/profile/profile_viewmodel.dart';
+import 'package:chatting/view_models/profile_vm/profile_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FriendViewModel {

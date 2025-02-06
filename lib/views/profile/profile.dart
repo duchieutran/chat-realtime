@@ -1,7 +1,7 @@
 import 'package:chatting/models/users.dart';
 import 'package:chatting/utils/app_colors.dart';
-import 'package:chatting/view_models/friends/friend_viewmodel.dart';
-import 'package:chatting/view_models/profile/profile_viewmodel.dart';
+import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
+import 'package:chatting/view_models/profile_vm/profile_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
