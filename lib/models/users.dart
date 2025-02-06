@@ -6,6 +6,7 @@ class Users {
   final bool isOnline;
   List<String>? friends;
   List<String>? friendRequests;
+  List<String>? groupId;
 
   Users(
       {this.uid = '',
@@ -14,9 +15,8 @@ class Users {
       this.urlAvatar = '',
       this.isOnline = false,
       this.friends,
-      this.friendRequests});
-
-  // getter && setter
+      this.friendRequests,
+      this.groupId});
 
   // Chuyển từ JSON trong Firestore thành Users
   factory Users.fromJson(Map<String, dynamic> json) {
@@ -27,7 +27,8 @@ class Users {
         urlAvatar: json['urlAvatar'] ?? '',
         isOnline: json['isOnline'] ?? false,
         friends: List<String>.from(json['friends'] ?? []),
-        friendRequests: List<String>.from(json['friendRequests'] ?? []));
+        friendRequests: List<String>.from(json['friendRequests'] ?? []),
+        groupId: List<String>.from(json['groupId'] ?? []));
   }
 
   // Chuyển UserModel thành JSON để lưu vào Firestore
@@ -40,6 +41,7 @@ class Users {
       'isOnline': isOnline,
       'friends': friends,
       'friendRequests': friendRequests,
+      'groupId': groupId,
     };
   }
 }

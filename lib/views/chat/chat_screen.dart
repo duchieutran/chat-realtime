@@ -1,6 +1,7 @@
 import 'package:chatting/models/users.dart';
 import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
 import 'package:chatting/views/chat/chat_message.dart';
+import 'package:chatting/views/chat/create_group_screen.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -46,14 +47,15 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
-          onPressed: () {},
-        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: () {},
+            icon: const Icon(Icons.group_add, color: Colors.black),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateGroupScreen(users: users)),
+              );
+            },
           ),
         ],
       ),

@@ -171,6 +171,16 @@ class StoreServices {
         'createdBy': auth.currentUser!.uid,
         'timestamp': FieldValue.serverTimestamp(),
       });
+
+      // Lấy ID nhóm
+      String groupId = groupRef.id;
+
+      // Cập nhật danh sách nhóm của từng thành viên
+      for (String member in members) {
+        await fireStore.collection("users").doc(member).update({
+          'groups': FieldValue.arrayUnion([groupId])
+        });
+      }
     } catch (e) {
       print("Lỗi khi tạo nhóm: $e");
     }
@@ -183,7 +193,6 @@ class StoreServices {
   }) async {
     try {
       String senderUid = auth.currentUser!.uid;
-
       await fireStore.collection("groups").doc(groupId).collection("messages").add({
         'senderUid': senderUid,
         'message': message,
@@ -221,6 +230,6 @@ class StoreServices {
 
   // Tạo chatId duy nhất cho cuộc trò chuyện giữa hai người
   String getChatId(String uid1, String uid2) {
-    return uid1.hashCode <= uid2.hashCode ? "$uid1\_$uid2" : "$uid2\_$uid1";
+    return (uid1.compareTo(uid2) < 0) ? "$uid1\_$uid2" : "$uid2\_$uid1";
   }
 }
