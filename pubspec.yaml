@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.5.4
+  sdk: ^3.5.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -97,14 +97,14 @@ flutter:
   fonts:
      - family: Quicksand
        fonts:
-         - asset: assets/fonts/Quicksand/Quicksand-Regular.ttf
-         - asset: assets/fonts/Quicksand/Quicksand-Bold.ttf
+         - asset: assets/fonts/quicksand/Quicksand-Regular.ttf
+         - asset: assets/fonts/quicksand/Quicksand-Bold.ttf
            weight: 700
-         - asset: assets/fonts/Quicksand/Quicksand-Light.ttf
+         - asset: assets/fonts/quicksand/Quicksand-Light.ttf
            weight: 300
-         - asset: assets/fonts/Quicksand/Quicksand-Medium.ttf
+         - asset: assets/fonts/quicksand/Quicksand-Medium.ttf
            weight: 500
-         - asset: assets/fonts/Quicksand/Quicksand-SemiBold.ttf
+         - asset: assets/fonts/quicksand/Quicksand-SemiBold.ttf
            weight: 600
   #   - family: Trajan Pro
   #     fonts:
