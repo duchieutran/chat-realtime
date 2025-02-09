@@ -14,8 +14,8 @@ class FriendViewModel {
     try {
       Users? users = await profile.getUserProfile();
       if (users?.friends == null || users!.friends!.isEmpty) return null;
-      List<Users?> listUserFriend =
-          await Future.wait(users.friends!.map((uid) async => await store.getUserInfo(uid: uid)));
+      List<Users?> listUserFriend = await Future.wait(
+          users.friends!.map((uid) async => await store.getUserInfo(uid: uid)));
       return listUserFriend.whereType<Users>().toList();
     } catch (e) {
       rethrow;
@@ -48,7 +48,9 @@ class FriendViewModel {
       final currentUser = auth.currentUser;
       if (currentUser == null || receiverUid == currentUser.uid) return false;
       Users? user = await findFriends(uid: receiverUid);
-      if (user?.friendRequests?.contains(currentUser.uid) ?? false) return false;
+      if (user?.friendRequests?.contains(currentUser.uid) ?? false) {
+        return false;
+      }
       await store.sendFriendRequest(receiverUid);
       return true;
     } catch (e) {

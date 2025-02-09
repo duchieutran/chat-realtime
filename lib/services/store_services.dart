@@ -31,9 +31,11 @@ class StoreServices {
   // lấy thông tin cá nhân theo uid
   Future<Users?> getUserInfo({required String uid}) async {
     try {
-      DocumentSnapshot userSnapshot = await fireStore.collection("users").doc(uid).get();
+      DocumentSnapshot userSnapshot =
+          await fireStore.collection("users").doc(uid).get();
       if (userSnapshot.exists) {
-        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> userData =
+            userSnapshot.data() as Map<String, dynamic>;
         Users user = Users(
           uid: userData['uid'] ?? '',
           email: userData['email'] ?? '',
@@ -74,7 +76,11 @@ class StoreServices {
   Stream<List<String>> listenToFriendRequests() {
     try {
       String? uid = auth.currentUser?.uid;
-      return fireStore.collection("users").doc(uid ?? "").snapshots().map((snapshot) {
+      return fireStore
+          .collection("users")
+          .doc(uid ?? "")
+          .snapshots()
+          .map((snapshot) {
         if (snapshot.exists) {
           return List<String>.from(snapshot.data()?['friendRequests'] ?? []);
         }
@@ -89,7 +95,7 @@ class StoreServices {
   Stream<List<String>> listenToFriend() {
     try {
       String? uid = auth.currentUser?.uid;
-      return fireStore.collection("users").doc(uid ?? "").snapshots().map((snapshot) {
+      return fireStore.collection("users").doc(uid).snapshots().map((snapshot) {
         if (snapshot.exists) {
           return List<String>.from(snapshot.data()?['friends'] ?? []);
         }
@@ -148,7 +154,11 @@ class StoreServices {
     try {
       String senderUid = auth.currentUser!.uid;
       String chatId = getChatId(senderUid, receiverUid);
-      await fireStore.collection("chats").doc(chatId).collection("messages").add({
+      await fireStore
+          .collection("chats")
+          .doc(chatId)
+          .collection("messages")
+          .add({
         'senderUid': senderUid,
         'receiverUid': receiverUid,
         'message': message,
@@ -193,7 +203,11 @@ class StoreServices {
   }) async {
     try {
       String senderUid = auth.currentUser!.uid;
-      await fireStore.collection("groups").doc(groupId).collection("messages").add({
+      await fireStore
+          .collection("groups")
+          .doc(groupId)
+          .collection("messages")
+          .add({
         'senderUid': senderUid,
         'message': message,
         'timestamp': FieldValue.serverTimestamp(),

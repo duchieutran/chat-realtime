@@ -20,7 +20,7 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => MessageViewModel(),
-        )
+        ),
       ],
       child: const MyApp(),
     ),

@@ -9,12 +9,16 @@ class CardInfo extends StatefulWidget {
     required this.urlAvatar,
     required this.email,
     required this.name,
+    this.feature,
+    this.iconData,
   });
 
   final VoidCallback? function;
   final String urlAvatar;
   final String email;
   final String name;
+  final IconData? iconData;
+  final String? feature;
 
   @override
   State<CardInfo> createState() => _CardInfoState();
@@ -83,18 +87,18 @@ class _CardInfoState extends State<CardInfo> {
                 color: AppColors.green50,
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.chat,
+                    widget.iconData ?? Icons.chat,
                     color: AppColors.light,
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(
-                    "Chat",
-                    style: TextStyle(
+                    widget.feature ?? "Chat",
+                    style: const TextStyle(
                         color: AppColors.light, fontWeight: FontWeight.bold),
                   ),
                 ],
