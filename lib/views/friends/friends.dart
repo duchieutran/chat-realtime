@@ -1,4 +1,5 @@
 import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
+import 'package:chatting/views/friends/component/card_info.dart';
 import 'package:flutter/material.dart';
 import 'package:chatting/models/users.dart';
 
@@ -16,11 +17,16 @@ class _FriendsState extends State<Friends> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Friends"),
+          title: const Text(
+            "Friends",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
           bottom: const TabBar(
             tabs: [
               Tab(text: "Friends"),
@@ -31,7 +37,7 @@ class _FriendsState extends State<Friends> {
         ),
         body: TabBarView(
           children: [
-            _buildFriendsList(),
+            _buildFriendsList(size: size),
             _buildFriendRequests(),
             _buildSearchFriends(),
           ],
@@ -40,28 +46,31 @@ class _FriendsState extends State<Friends> {
     );
   }
 
-  Widget _buildFriendsList() {
-    return FutureBuilder<List<Users>?> (
+  Widget _buildFriendsList({required Size size}) {
+    return FutureBuilder<List<Users>?>(
       future: friendVM.getFriend(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasError || snapshot.data == null || snapshot.data!.isEmpty) {
+        if (snapshot.hasError ||
+            snapshot.data == null ||
+            snapshot.data!.isEmpty) {
           return const Center(child: Text("No friends"));
         }
         return ListView.builder(
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {
             Users user = snapshot.data![index];
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user.urlAvatar ?? "https://via.placeholder.com/150"),
-                ),
-                title: Text(user.name ?? "No name", style: const TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text(user.email ?? "No email"),
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: CardInfo(
+                function: () {
+                  print("not null");
+                },
+                urlAvatar: user.urlAvatar,
+                email: user.email,
+                name: user.name,
               ),
             );
           },
@@ -71,13 +80,15 @@ class _FriendsState extends State<Friends> {
   }
 
   Widget _buildFriendRequests() {
-    return FutureBuilder<List<String>?> (
+    return FutureBuilder<List<String>?>(
       future: friendVM.getFriendRequest(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasError || snapshot.data == null || snapshot.data!.isEmpty) {
+        if (snapshot.hasError ||
+            snapshot.data == null ||
+            snapshot.data!.isEmpty) {
           return const Center(child: Text("No requests"));
         }
         return ListView.builder(
@@ -86,7 +97,8 @@ class _FriendsState extends State<Friends> {
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               child: ListTile(
-                title: Text("UID: ${snapshot.data![index]}", style: const TextStyle(fontWeight: FontWeight.bold)),
+                title: Text("UID: ${snapshot.data![index]}",
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 trailing: ElevatedButton(
                   onPressed: () {
                     // Handle accept request
@@ -128,13 +140,16 @@ class _FriendsState extends State<Friends> {
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(searchedUser!.urlAvatar ?? "https://via.placeholder.com/150"),
+                backgroundImage: NetworkImage(searchedUser!.urlAvatar ??
+                    "https://via.placeholder.com/150"),
               ),
-              title: Text(searchedUser!.name ?? "No name", style: const TextStyle(fontWeight: FontWeight.bold)),
+              title: Text(searchedUser!.name ?? "No name",
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(searchedUser!.email ?? "No email"),
               trailing: ElevatedButton(
                 onPressed: () async {
-                  bool success = await friendVM.sendFriend(receiverUid: searchedUser!.uid);
+                  bool success =
+                      await friendVM.sendFriend(receiverUid: searchedUser!.uid);
                   if (success) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Request sent")),
