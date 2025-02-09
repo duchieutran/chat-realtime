@@ -1,9 +1,10 @@
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
-import 'package:chatting/models/users.dart';
+import 'package:chatting/models/users_model.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   final List<Users> users;
+
   const CreateGroupScreen({super.key, required this.users});
 
   @override
@@ -22,7 +23,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed: selectedUsers.isNotEmpty && groupNameController.text.isNotEmpty ? createGroup : null,
+            onPressed:
+                selectedUsers.isNotEmpty && groupNameController.text.isNotEmpty
+                    ? createGroup
+                    : null,
           ),
         ],
       ),
@@ -43,12 +47,17 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 final user = widget.users[index];
                 final isSelected = selectedUsers.contains(user);
                 return ListTile(
-                  leading: CircleAvatar(backgroundImage: NetworkImage(user.urlAvatar)),
+                  leading: CircleAvatar(
+                      backgroundImage: NetworkImage(user.urlAvatar)),
                   title: Text(user.name),
-                  trailing: isSelected ? const Icon(Icons.check_circle, color: Colors.green) : null,
+                  trailing: isSelected
+                      ? const Icon(Icons.check_circle, color: Colors.green)
+                      : null,
                   onTap: () {
                     setState(() {
-                      isSelected ? selectedUsers.remove(user) : selectedUsers.add(user);
+                      isSelected
+                          ? selectedUsers.remove(user)
+                          : selectedUsers.add(user);
                     });
                   },
                 );
@@ -62,7 +71,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   void createGroup() {
     String groupName = groupNameController.text.trim();
-    print("Tạo nhóm '$groupName' với: ${selectedUsers.map((e) => e.name).join(", ")}");
+    print(
+        "Tạo nhóm '$groupName' với: ${selectedUsers.map((e) => e.name).join(", ")}");
 
     Navigator.pop(context);
   }

@@ -1,5 +1,4 @@
 import 'package:chatting/utils/app_colors.dart';
-import 'package:chatting/utils/app_routers.dart';
 import 'package:flutter/material.dart';
 
 class CardInfo extends StatefulWidget {

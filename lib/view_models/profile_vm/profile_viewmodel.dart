@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:chatting/models/users.dart';
+import 'package:chatting/models/users_model.dart';
 import 'package:chatting/services/pick_image_services.dart';
 import 'package:chatting/services/storage_services.dart';
 import 'package:chatting/services/store_services.dart';
@@ -34,7 +34,8 @@ class ProfileViewModel {
     if (currentUser != null) {
       String uid = currentUser.uid;
       String? email = currentUser.email;
-      Users users = Users(uid: uid, email: email ?? "", name: name, urlAvatar: image);
+      Users users =
+          Users(uid: uid, email: email ?? "", name: name, urlAvatar: image);
       await storeServices.saveUser(user: users);
     }
   }

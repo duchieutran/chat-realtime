@@ -1,4 +1,4 @@
-import 'package:chatting/models/users.dart';
+import 'package:chatting/models/users_model.dart';
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
 import 'package:chatting/view_models/profile_vm/profile_viewmodel.dart';
@@ -43,7 +43,8 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       backgroundColor: AppColors.light,
       appBar: AppBar(
-        title: const Text("Profile", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text("Profile",
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: isLoading
@@ -77,18 +78,26 @@ class _ProfileState extends State<Profile> {
                         const SizedBox(height: 12),
                         Text(
                           users.name,
-                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.light),
+                          style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.light),
                         ),
                         Text(
                           users.email,
-                          style: const TextStyle(fontSize: 16, color: AppColors.light),
+                          style: const TextStyle(
+                              fontSize: 16, color: AppColors.light),
                         ),
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            infoCard("Friends", users.friends!.length.toString(), Icons.person),
-                            infoCard("Requests", users.friendRequests!.length.toString(), Icons.person_add),
+                            infoCard("Friends",
+                                users.friends!.length.toString(), Icons.person),
+                            infoCard(
+                                "Requests",
+                                users.friendRequests!.length.toString(),
+                                Icons.person_add),
                           ],
                         ),
                       ],
@@ -114,7 +123,9 @@ class _ProfileState extends State<Profile> {
                       children: [
                         textInfo(title: "UID", content: users.uid),
                         textInfo(title: "Email", content: users.email),
-                        textInfo(title: "Status", content: users.isOnline ? "Online" : "Offline"),
+                        textInfo(
+                            title: "Status",
+                            content: users.isOnline ? "Online" : "Offline"),
                       ],
                     ),
                   ),
@@ -131,11 +142,17 @@ class _ProfileState extends State<Profile> {
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.light),
+          style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.light),
         ),
         Text(
           title,
-          style: const TextStyle(fontSize: 14, color: AppColors.light, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+              fontSize: 14,
+              color: AppColors.light,
+              fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -159,7 +176,8 @@ class _ProfileState extends State<Profile> {
             child: GestureDetector(
               onTap: () {
                 Clipboard.setData(ClipboardData(text: content));
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied UID to clipboard.")));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Copied UID to clipboard.")));
               },
               child: Align(
                 alignment: Alignment.centerRight,

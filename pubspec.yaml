@@ -52,6 +52,7 @@ dependencies:
   carousel_slider: ^5.0.0
   path: ^1.8.0
   intl: ^0.18.0
+  timeago: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -95,17 +96,17 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-     - family: Quicksand
-       fonts:
-         - asset: assets/fonts/quicksand/Quicksand-Regular.ttf
-         - asset: assets/fonts/quicksand/Quicksand-Bold.ttf
-           weight: 700
-         - asset: assets/fonts/quicksand/Quicksand-Light.ttf
-           weight: 300
-         - asset: assets/fonts/quicksand/Quicksand-Medium.ttf
-           weight: 500
-         - asset: assets/fonts/quicksand/Quicksand-SemiBold.ttf
-           weight: 600
+    - family: Quicksand
+      fonts:
+        - asset: assets/fonts/quicksand/Quicksand-Regular.ttf
+        - asset: assets/fonts/quicksand/Quicksand-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/quicksand/Quicksand-Light.ttf
+          weight: 300
+        - asset: assets/fonts/quicksand/Quicksand-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/quicksand/Quicksand-SemiBold.ttf
+          weight: 600
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

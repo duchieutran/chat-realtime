@@ -1,12 +1,13 @@
 import 'package:chatting/services/store_services.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/view_models/chat_vm/message_vm.dart';
 import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
 import 'package:chatting/view_models/profile_vm/profile_viewmodel.dart';
 import 'package:chatting/views/friends/component/card_info.dart';
 import 'package:chatting/views/friends/component/popup_friends.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
-import 'package:chatting/models/users.dart';
+import 'package:chatting/models/users_model.dart';
 
 class Friends extends StatefulWidget {
   const Friends({super.key});
@@ -19,6 +20,7 @@ class _FriendsState extends State<Friends> {
   final FriendViewModel friendVM = FriendViewModel();
   final ProfileViewModel profileVM = ProfileViewModel();
   final StoreServices store = StoreServices();
+  final MessageViewModel messageViewModel = MessageViewModel();
   final TextEditingController searchController = TextEditingController();
   Users? searchedUser;
 
@@ -91,7 +93,7 @@ class _FriendsState extends State<Friends> {
     return StreamBuilder<List<String>>(
       stream: store.listenToFriendRequests(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return CircularProgressIndicator();
+        if (!snapshot.hasData) return const CircularProgressIndicator();
         List<String> friendRequestIds = snapshot.data!;
 
         return ListView.builder(
@@ -102,15 +104,24 @@ class _FriendsState extends State<Friends> {
               builder: (context, userSnapshot) {
                 if (!userSnapshot.hasData) return const SizedBox();
                 Users user = userSnapshot.data!;
-                return CardInfo(
-                  urlAvatar: user.urlAvatar,
-                  email: user.email,
-                  name: user.name,
-                  iconData: Icons.check_circle,
-                  feature: "Accept",
-                  function: () async {
-                    await store.acceptFriendRequest(user.uid);
-                  },
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CardInfo(
+                    urlAvatar: user.urlAvatar,
+                    email: user.email,
+                    name: user.name,
+                    iconData: Icons.check_circle,
+                    feature: "Accept",
+                    function: () async {
+                      // chấp nhận kết bạn
+                      await store.acceptFriendRequest(user.uid);
+                      // đòng thời tạo đoạn chat rieng tư
+                      messageViewModel.createChatRoom(
+                          urlAvatar: user.urlAvatar,
+                          name: user.name,
+                          uidName: user.uid);
+                    },
+                  ),
                 );
               },
             );

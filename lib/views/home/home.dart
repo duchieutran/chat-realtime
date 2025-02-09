@@ -16,6 +16,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<String> image = [carouserImg1, carouserImg2, carouserImg3];
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -35,7 +36,10 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         title: const Text(
           "SayHi",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.blue40),
+          style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: AppColors.blue40),
         ),
       ),
       body: SizedBox(
@@ -88,7 +92,10 @@ class _HomeState extends State<Home> {
                               ),
                               const Text(
                                 "friends",
-                                style: TextStyle(color: AppColors.blue40, fontSize: 16, fontWeight: FontWeight.w900),
+                                style: TextStyle(
+                                    color: AppColors.blue40,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w900),
                               )
                             ],
                           ),
@@ -108,7 +115,10 @@ class _HomeState extends State<Home> {
                               ),
                               const Text(
                                 "profiles",
-                                style: TextStyle(color: AppColors.blue40, fontSize: 16, fontWeight: FontWeight.w900),
+                                style: TextStyle(
+                                    color: AppColors.blue40,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w900),
                               )
                             ],
                           ),

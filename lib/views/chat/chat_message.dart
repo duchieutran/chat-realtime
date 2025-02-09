@@ -1,4 +1,4 @@
-import 'package:chatting/view_models/chat_vm/message.dart';
+import 'package:chatting/view_models/chat_vm/message_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +41,8 @@ class _MessageScreenState extends State<MessageScreen> {
             const SizedBox(width: 10),
             Text(
               widget.receiverName,
-              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -61,17 +62,21 @@ class _MessageScreenState extends State<MessageScreen> {
                 var messages = snapshot.data!;
                 return ListView.builder(
                   reverse: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     var message = messages[index];
-                    bool isMe = message['senderUid'] == messageViewModel.auth.currentUser!.uid;
+                    bool isMe = message['senderUid'] ==
+                        messageViewModel.auth.currentUser!.uid;
                     return Align(
-                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
                         padding: const EdgeInsets.all(12),
-                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.75),
                         decoration: BoxDecoration(
                           color: isMe ? Colors.blueAccent : Colors.grey[300],
                           borderRadius: BorderRadius.only(
@@ -83,7 +88,8 @@ class _MessageScreenState extends State<MessageScreen> {
                         ),
                         child: Text(
                           message['message'],
-                          style: TextStyle(color: isMe ? Colors.white : Colors.black),
+                          style: TextStyle(
+                              color: isMe ? Colors.white : Colors.black),
                         ),
                       ),
                     );
@@ -110,7 +116,8 @@ class _MessageScreenState extends State<MessageScreen> {
                   child: TextField(
                     controller: messageController,
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       hintText: "Nhập tin nhắn...",
                       filled: true,
                       fillColor: Colors.grey[100],
@@ -125,7 +132,8 @@ class _MessageScreenState extends State<MessageScreen> {
                 GestureDetector(
                   onTap: () {
                     if (messageController.text.isNotEmpty) {
-                      messageViewModel.sendMessage(widget.receiverUid, messageController.text);
+                      messageViewModel.sendMessage(
+                          widget.receiverUid, messageController.text);
                       messageController.clear();
                     }
                   },

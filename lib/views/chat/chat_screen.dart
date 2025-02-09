@@ -1,8 +1,11 @@
-import 'package:chatting/models/users.dart';
+import 'package:chatting/models/chat_room_model.dart';
+import 'package:chatting/models/users_model.dart';
+import 'package:chatting/view_models/chat_vm/message_vm.dart';
 import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
 import 'package:chatting/views/chat/chat_message.dart';
 import 'package:chatting/views/chat/create_group_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -13,37 +16,42 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   // Khai báo
+
   FriendViewModel friends = FriendViewModel();
   List<Users> users = [];
 
   @override
   void initState() {
     super.initState();
-    getFriends();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MessageViewModel>().getChatRoom();
+    });
   }
 
-  // hàm lấy thông tin bạn bè
-  getFriends() async {
-    try {
-      List<Users>? user = await friends.getFriend();
-      if (user != null) {
-        setState(() {
-          users = user;
-        });
-      } else {
-        users = [];
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
+  // // hàm lấy thông tin bạn bè
+  // getFriends() async {
+  //   try {
+  //     List<Users>? user = await friends.getFriend();
+  //     if (user != null) {
+  //       setState(() {
+  //         users = user;
+  //       });
+  //     } else {
+  //       users = [];
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final chatProvider = Provider.of<MessageViewModel>(context);
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Messages", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        title: const Text("Messages",
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -53,7 +61,8 @@ class _ChatScreenState extends State<ChatScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CreateGroupScreen(users: users)),
+                MaterialPageRoute(
+                    builder: (context) => CreateGroupScreen(users: users)),
               );
             },
           ),
@@ -61,14 +70,29 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView.separated(
-          itemCount: users.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            return ChatTile(
-              uid: users[index].uid,
-              urlAvatar: users[index].urlAvatar,
-              userName: users[index].name,
+        child: Consumer<MessageViewModel>(
+          builder: (context, chatProvider, child) {
+            return StreamBuilder<List<ChatRoomModel>>(
+              stream: chatProvider.listRoom,
+              builder: (context, snapshot) {
+                List<ChatRoomModel> rooms =
+                    snapshot.data ?? chatProvider.cachedRooms;
+                if (rooms.isEmpty) {
+                  return const Center(child: Text("Chưa có tin nhắn nào"));
+                }
+                return ListView.separated(
+                  itemCount: rooms.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    return ChatTile(
+                      uid: rooms[index].chatId,
+                      urlAvatar: rooms[index].urlAvatar,
+                      userName: rooms[index].name,
+                    );
+                  },
+                );
+              },
             );
           },
         ),
@@ -78,7 +102,12 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class ChatTile extends StatelessWidget {
-  const ChatTile({super.key, required this.userName, required this.urlAvatar, required this.uid});
+  const ChatTile(
+      {super.key,
+      required this.userName,
+      required this.urlAvatar,
+      required this.uid});
+
   final String userName;
   final String urlAvatar;
   final String uid;
@@ -116,7 +145,9 @@ class ChatTile extends StatelessWidget {
               radius: 28,
               backgroundColor: Colors.blueAccent,
               backgroundImage: NetworkImage(urlAvatar),
-              child: urlAvatar.isNotEmpty ? null : const Icon(Icons.person, color: Colors.white, size: 30),
+              child: urlAvatar.isNotEmpty
+                  ? null
+                  : const Icon(Icons.person, color: Colors.white, size: 30),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -125,7 +156,8 @@ class ChatTile extends StatelessWidget {
                 children: [
                   Text(
                     userName,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -137,7 +169,8 @@ class ChatTile extends StatelessWidget {
             ),
             Column(
               children: [
-                const Text("chat now ", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const Text("chat now ",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 Container(
                   width: 20,
@@ -147,7 +180,8 @@ class ChatTile extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: const Center(
-                    child: Text("3", style: TextStyle(color: Colors.white, fontSize: 12)),
+                    child: Text("3",
+                        style: TextStyle(color: Colors.white, fontSize: 12)),
                   ),
                 ),
               ],
