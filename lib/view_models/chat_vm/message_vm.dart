@@ -1,4 +1,5 @@
 import 'package:chatting/models/chat_room_model.dart';
+import 'package:chatting/models/message_model.dart';
 import 'package:chatting/services/chat_service.dart';
 import 'package:chatting/services/store_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,13 +14,20 @@ class MessageViewModel extends ChangeNotifier {
 
   Stream<List<ChatRoomModel>>? listRoom;
   List<ChatRoomModel> cachedRooms = []; // Lưu dữ liệu cũ
+  List<MessageModel> _messages = [];
+  bool _isLoading = true;
 
   // hàm tạo đoạn chat riêng tư
-  void createChatRoom(
+  void createChatRoom({required String uidName}) {
+    _chatService.createChat("", "", [auth.currentUser!.uid, uidName]);
+  }
+
+  void createChatRoomGroup(
       {required String urlAvatar,
       required String name,
-      required String uidName}) {
-    _chatService.createChat(urlAvatar, name, [auth.currentUser!.uid, uidName]);
+      required List<String> members}) {
+    members.insert(0, auth.currentUser!.uid);
+    _chatService.createChat(urlAvatar, name, members, isGroup: true);
   }
 
   // hàm hiển thị ngay đầu tiên
@@ -42,37 +50,31 @@ class MessageViewModel extends ChangeNotifier {
 
   // hàm hiển thị đoạn chat
   void getChatRoom() async {
-    await fetchInitialRooms(); // Hàm lấy dữ liệu từ Firestore
-
+    await fetchInitialRooms();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _chatService.getUserChats(auth.currentUser!.uid);
       notifyListeners();
     });
   }
 
-  // Nhận tin nhắn theo thời gian thực
-  Stream<List<Map<String, dynamic>>> getMessages(String receiverUid) {
-    return _storeServices.getMessages(receiverUid);
+  /// Lắng nghe tin nhắn trong đoạn chat
+  Stream<List<MessageModel>> getMessageStream(String chatId) {
+    return _chatService.getMessages(chatId);
   }
 
-  // Gửi tin nhắn
-  Future<void> sendMessage(String receiverUid, String message) async {
-    try {
-      String senderUid = auth.currentUser!.uid;
-      String chatId = _storeServices.getChatId(senderUid, receiverUid);
+  /// Gửi tin nhắn mới
+  Future<void> sendMessage(String chatId, String senderId, String text) async {
+    final message = MessageModel(
+      senderId: senderId,
+      text: text,
+      timestamp: Timestamp.now(),
+    );
+    await _chatService.sendMessage(chatId, message);
+  }
 
-      await fireStore
-          .collection("chats")
-          .doc(chatId)
-          .collection("messages")
-          .add({
-        "senderUid": senderUid,
-        "receiverUid": receiverUid,
-        "message": message,
-        "timestamp": FieldValue.serverTimestamp(),
-      });
-      notifyListeners();
-    } catch (e) {
-      print("Lỗi khi gửi tin nhắn: $e");
-    }
+  /// Đánh dấu tin nhắn đã xem
+  Future<void> markMessageAsSeen(
+      String chatId, String messageId, String userId) async {
+    await _chatService.markMessageAsSeen(chatId, messageId, userId);
   }
 }

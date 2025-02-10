@@ -2,10 +2,12 @@ import 'package:chatting/models/chat_room_model.dart';
 import 'package:chatting/models/users_model.dart';
 import 'package:chatting/view_models/chat_vm/message_vm.dart';
 import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
-import 'package:chatting/views/chat/chat_message.dart';
 import 'package:chatting/views/chat/create_group_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'chat_message.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -15,8 +17,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  // Khai báo
-
+  final auth = FirebaseAuth.instance;
   FriendViewModel friends = FriendViewModel();
   List<Users> users = [];
 
@@ -24,36 +25,34 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      getFriends();
       context.read<MessageViewModel>().getChatRoom();
     });
   }
 
-  // // hàm lấy thông tin bạn bè
-  // getFriends() async {
-  //   try {
-  //     List<Users>? user = await friends.getFriend();
-  //     if (user != null) {
-  //       setState(() {
-  //         users = user;
-  //       });
-  //     } else {
-  //       users = [];
-  //     }
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+  getFriends() async {
+    try {
+      List<Users>? user = await friends.getFriend();
+      if (user != null) {
+        setState(() {
+          users = user;
+        });
+      } else {
+        users = [];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<MessageViewModel>(context);
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: const Text("Messages",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 2,
         centerTitle: true,
         actions: [
           IconButton(
@@ -75,20 +74,54 @@ class _ChatScreenState extends State<ChatScreen> {
             return StreamBuilder<List<ChatRoomModel>>(
               stream: chatProvider.listRoom,
               builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 List<ChatRoomModel> rooms =
                     snapshot.data ?? chatProvider.cachedRooms;
+
                 if (rooms.isEmpty) {
-                  return const Center(child: Text("Chưa có tin nhắn nào"));
+                  return const Center(child: Text("No messages yet"));
                 }
+
                 return ListView.separated(
                   itemCount: rooms.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 12),
                   itemBuilder: (context, index) {
+                    if (rooms[index].type == 'private') {
+                      List<String> members = rooms[index].members;
+                      String uidCurrent = auth.currentUser!.uid;
+                      String name =
+                          uidCurrent == members[0] ? members[1] : members[0];
+
+                      return FutureBuilder<Users?>(
+                        future: friends.findFriends(uid: name),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            Users user = snapshot.data!;
+                            return ChatTile(
+                              uid: rooms[index].chatId,
+                              urlAvatar: user.urlAvatar,
+                              userName: user.name,
+                              messageLast: rooms[index].lastMessage?.content ??
+                                  "Say hi! 👋",
+                              timeLast: "Just now",
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      );
+                    }
+
                     return ChatTile(
                       uid: rooms[index].chatId,
                       urlAvatar: rooms[index].urlAvatar,
                       userName: rooms[index].name,
+                      messageLast:
+                          rooms[index].lastMessage?.content ?? "Say hi! 👋",
+                      timeLast: "Just now",
                     );
                   },
                 );
@@ -102,40 +135,47 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class ChatTile extends StatelessWidget {
-  const ChatTile(
-      {super.key,
-      required this.userName,
-      required this.urlAvatar,
-      required this.uid});
+  const ChatTile({
+    super.key,
+    required this.userName,
+    required this.urlAvatar,
+    required this.uid,
+    required this.messageLast,
+    required this.timeLast,
+  });
 
   final String userName;
   final String urlAvatar;
   final String uid;
+  final String messageLast;
+  final String timeLast;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MessageScreen(
-                receiverName: userName,
-                receiverAvatar: urlAvatar,
-                receiverUid: uid,
-              ),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => MessageScreen(
+              chatId: uid,
+              receiverAvatar: urlAvatar,
+              receiverUid: uid,
+              receiverName: userName,
+            ),
+          ),
+        );
       },
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 5,
-              spreadRadius: 2,
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              spreadRadius: 1,
             ),
           ],
         ),
@@ -144,10 +184,12 @@ class ChatTile extends StatelessWidget {
             CircleAvatar(
               radius: 28,
               backgroundColor: Colors.blueAccent,
-              backgroundImage: NetworkImage(urlAvatar),
-              child: urlAvatar.isNotEmpty
-                  ? null
-                  : const Icon(Icons.person, color: Colors.white, size: 30),
+              backgroundImage:
+                  urlAvatar.isNotEmpty ? NetworkImage(urlAvatar) : null,
+              foregroundColor: Colors.white,
+              child: urlAvatar.isEmpty
+                  ? const Icon(Icons.person, color: Colors.white, size: 30)
+                  : null,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -161,30 +203,20 @@ class ChatTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Last message preview...",
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    messageLast,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    maxLines: 1,
                   ),
                 ],
               ),
             ),
-            Column(
-              children: [
-                const Text("chat now ",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
-                const SizedBox(height: 6),
-                Container(
-                  width: 20,
-                  height: 20,
-                  decoration: const BoxDecoration(
-                    color: Colors.redAccent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Center(
-                    child: Text("3",
-                        style: TextStyle(color: Colors.white, fontSize: 12)),
-                  ),
-                ),
-              ],
+            Text(
+              timeLast,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],
         ),

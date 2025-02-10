@@ -26,7 +26,6 @@ class _FriendsState extends State<Friends> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -86,7 +85,6 @@ class _FriendsState extends State<Friends> {
         );
       },
     );
-    ;
   }
 
   Widget _buildFriendRequests() {
@@ -116,10 +114,7 @@ class _FriendsState extends State<Friends> {
                       // chấp nhận kết bạn
                       await store.acceptFriendRequest(user.uid);
                       // đòng thời tạo đoạn chat rieng tư
-                      messageViewModel.createChatRoom(
-                          urlAvatar: user.urlAvatar,
-                          name: user.name,
-                          uidName: user.uid);
+                      messageViewModel.createChatRoom(uidName: user.uid);
                     },
                   ),
                 );
@@ -149,12 +144,10 @@ class _FriendsState extends State<Friends> {
           child: OutlinedButton(
             onPressed: () async {
               if (searchController.text.trim().isEmpty) {
-                print("Vui long nhap uid");
               } else {
                 Users? user = await friendVM.findFriends(
                     uid: searchController.text.trim());
                 if (user == null) {
-                  print("nguoi dung khong ton tai!");
                 } else {
                   showDialog(
                     context: context,

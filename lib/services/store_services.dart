@@ -146,104 +146,104 @@ class StoreServices {
     }
   }
 
-  // Gửi tin nhắn giữa hai người
-  Future<void> sendMessage({
-    required String receiverUid,
-    required String message,
-  }) async {
-    try {
-      String senderUid = auth.currentUser!.uid;
-      String chatId = getChatId(senderUid, receiverUid);
-      await fireStore
-          .collection("chats")
-          .doc(chatId)
-          .collection("messages")
-          .add({
-        'senderUid': senderUid,
-        'receiverUid': receiverUid,
-        'message': message,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      print("Lỗi khi gửi tin nhắn: $e");
-    }
-  }
+// Gửi tin nhắn giữa hai người
+// Future<void> sendMessage({
+//   required String receiverUid,
+//   required String message,
+// }) async {
+//   try {
+//     String senderUid = auth.currentUser!.uid;
+//     String chatId = getChatId(senderUid, receiverUid);
+//     await fireStore
+//         .collection("chats")
+//         .doc(chatId)
+//         .collection("messages")
+//         .add({
+//       'senderUid': senderUid,
+//       'receiverUid': receiverUid,
+//       'message': message,
+//       'timestamp': FieldValue.serverTimestamp(),
+//     });
+//   } catch (e) {
+//     print("Lỗi khi gửi tin nhắn: $e");
+//   }
+// }
 
-  // Tạo nhóm chat
-  Future<void> createGroupChat({
-    required String groupName,
-    required List<String> members,
-  }) async {
-    try {
-      DocumentReference groupRef = await fireStore.collection("groups").add({
-        'groupName': groupName,
-        'members': members,
-        'createdBy': auth.currentUser!.uid,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+// Tạo nhóm chat
+// Future<void> createGroupChat({
+//   required String groupName,
+//   required List<String> members,
+// }) async {
+//   try {
+//     DocumentReference groupRef = await fireStore.collection("groups").add({
+//       'groupName': groupName,
+//       'members': members,
+//       'createdBy': auth.currentUser!.uid,
+//       'timestamp': FieldValue.serverTimestamp(),
+//     });
+//
+//     // Lấy ID nhóm
+//     String groupId = groupRef.id;
+//
+//     // Cập nhật danh sách nhóm của từng thành viên
+//     for (String member in members) {
+//       await fireStore.collection("users").doc(member).update({
+//         'groups': FieldValue.arrayUnion([groupId])
+//       });
+//     }
+//   } catch (e) {
+//     print("Lỗi khi tạo nhóm: $e");
+//   }
+// }
 
-      // Lấy ID nhóm
-      String groupId = groupRef.id;
+// // Gửi tin nhắn trong nhóm
+// Future<void> sendGroupMessage({
+//   required String groupId,
+//   required String message,
+// }) async {
+//   try {
+//     String senderUid = auth.currentUser!.uid;
+//     await fireStore
+//         .collection("groups")
+//         .doc(groupId)
+//         .collection("messages")
+//         .add({
+//       'senderUid': senderUid,
+//       'message': message,
+//       'timestamp': FieldValue.serverTimestamp(),
+//     });
+//   } catch (e) {
+//     print("Lỗi khi gửi tin nhắn nhóm: $e");
+//   }
+// }
 
-      // Cập nhật danh sách nhóm của từng thành viên
-      for (String member in members) {
-        await fireStore.collection("users").doc(member).update({
-          'groups': FieldValue.arrayUnion([groupId])
-        });
-      }
-    } catch (e) {
-      print("Lỗi khi tạo nhóm: $e");
-    }
-  }
+// // Nhận tin nhắn trong nhóm theo thời gian thực
+// Stream<List<Map<String, dynamic>>> getGroupMessages(String groupId) {
+//   return fireStore
+//       .collection("groups")
+//       .doc(groupId)
+//       .collection("messages")
+//       .orderBy("timestamp", descending: true)
+//       .snapshots()
+//       .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+// }
 
-  // Gửi tin nhắn trong nhóm
-  Future<void> sendGroupMessage({
-    required String groupId,
-    required String message,
-  }) async {
-    try {
-      String senderUid = auth.currentUser!.uid;
-      await fireStore
-          .collection("groups")
-          .doc(groupId)
-          .collection("messages")
-          .add({
-        'senderUid': senderUid,
-        'message': message,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      print("Lỗi khi gửi tin nhắn nhóm: $e");
-    }
-  }
+// Nhận tin nhắn theo thời gian thực
+// Stream<List<Map<String, dynamic>>> getMessages(String receiverUid) {
+//   String senderUid = auth.currentUser!.uid;
+//   String chatId = getChatId(senderUid, receiverUid);
+//
+//   return fireStore
+//       .collection("chats")
+//       .doc(chatId)
+//       .collection("messages")
+//       .orderBy("timestamp", descending: true)
+//       .snapshots()
+//       .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+// }
 
-  // Nhận tin nhắn trong nhóm theo thời gian thực
-  Stream<List<Map<String, dynamic>>> getGroupMessages(String groupId) {
-    return fireStore
-        .collection("groups")
-        .doc(groupId)
-        .collection("messages")
-        .orderBy("timestamp", descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
-  }
-
-  // Nhận tin nhắn theo thời gian thực
-  Stream<List<Map<String, dynamic>>> getMessages(String receiverUid) {
-    String senderUid = auth.currentUser!.uid;
-    String chatId = getChatId(senderUid, receiverUid);
-
-    return fireStore
-        .collection("chats")
-        .doc(chatId)
-        .collection("messages")
-        .orderBy("timestamp", descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
-  }
-
-  // Tạo chatId duy nhất cho cuộc trò chuyện giữa hai người
-  String getChatId(String uid1, String uid2) {
-    return (uid1.compareTo(uid2) < 0) ? "$uid1\_$uid2" : "$uid2\_$uid1";
-  }
+// Tạo chatId duy nhất cho cuộc trò chuyện giữa hai người
+// String getChatId(String uid1, String uid2) {
+//   return (uid1.compareTo(uid2) < 0) ? "$uid1\_$uid2" : "$uid2\_$uid1";
+// }
 }

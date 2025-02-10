@@ -19,7 +19,10 @@ class AppRouters {
     );
   }
 
-  static makeRoute({required String nameRouters, required BuildContext context, Object? arguments}) {
+  static makeRoute(
+      {required String nameRouters,
+      required BuildContext context,
+      Object? arguments}) {
     switch (nameRouters) {
       case welcome:
         return const Welcome();

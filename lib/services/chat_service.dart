@@ -1,4 +1,5 @@
 import 'package:chatting/models/chat_room_model.dart';
+import 'package:chatting/models/message_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatService {
@@ -24,7 +25,7 @@ class ChatService {
 
   // lay danh sach chat
   Stream<List<ChatRoomModel>> getUserChats(String userId) {
-    return FirebaseFirestore.instance
+    return store
         .collection('chats')
         .where('members', arrayContains: userId)
         .orderBy('lastMessage.timestamp', descending: true)
@@ -32,5 +33,54 @@ class ChatService {
         .map((snapshot) => snapshot.docs
             .map((doc) => ChatRoomModel.fromMap(doc.data()))
             .toList());
+  }
+
+  /// Gửi tin nhắn mới
+  Future<void> sendMessage(String chatId, MessageModel message) async {
+    final messageRef = store
+        .collection('messages')
+        .doc(chatId)
+        .collection('messages')
+        .doc(); // ID tự động
+
+    await messageRef.set(message.toMap());
+  }
+
+  /// Lắng nghe danh sách tin nhắn trong một đoạn chat
+  Stream<List<MessageModel>> getMessages(String chatId) {
+    return store
+        .collection('messages')
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => MessageModel.fromMap(doc.data()))
+            .toList());
+  }
+
+  /// Đánh dấu tin nhắn đã xem
+  Future<void> markMessageAsSeen(
+      String chatId, String messageId, String userId) async {
+    final messageRef = store
+        .collection('messages')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId);
+
+    await messageRef.update({
+      'seenBy': FieldValue.arrayUnion([userId]),
+    });
+  }
+
+  /// Lắng nghe trạng thái của một tin nhắn cụ thể
+  Stream<MessageModel> listenToMessage(String chatId, String messageId) {
+    return store
+        .collection('messages')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .snapshots()
+        .map((doc) => MessageModel.fromMap(doc.data()!));
   }
 }
