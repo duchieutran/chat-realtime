@@ -1,7 +1,9 @@
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
+import 'package:chatting/utils/enums.dart';
 import 'package:chatting/view_models/auths_vm/auth_viewmodel.dart';
+import 'package:chatting/views/widgets/app_dialog.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
 
@@ -32,14 +34,23 @@ class _SignUpState extends State<SignUp> {
   }
 
   // function handle login
-  void handleSignUp() {
-    bool success = auth.signUp(email: controllerEmail.text, password: controllerPassword.text);
-    if (success) {
-      // TODO : popup
-      Navigator.pushNamed(context, AppRouters.profileComplete);
-    } else {
-      // TODO : popup
+  Future<void> handleSignUp({required BuildContext context}) async {
+    SignUpStatus status = await auth.signUp(
+        email: controllerEmail.text, password: controllerPassword.text);
+    String message;
+    switch (status) {
+      case SignUpStatus.success:
+      // TODO : vào trang đăng kí
+      case SignUpStatus.emailAlreadyExists:
+        message = "This email is already registered.";
+      case SignUpStatus.error:
+        message = "An error occurred. Please try again.";
+        break;
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   // function handle navigator signup
@@ -127,7 +138,14 @@ class _SignUpState extends State<SignUp> {
                     const SizedBox(height: 30),
                     // Button
                     GestureDetector(
-                      onTap: handleSignUp,
+                      onTap: () {
+                        // TODO : xu ly popup
+                        appDialog(
+                            context: context,
+                            title: "Thong bao",
+                            content: "hahahah");
+                        // handleSignUp(context: context);
+                      },
                       child: Container(
                         width: size.width,
                         height: 50,
@@ -140,7 +158,10 @@ class _SignUpState extends State<SignUp> {
                         child: const Center(
                           child: Text(
                             "Sign Up",
-                            style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.light, fontSize: 20),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.light,
+                                fontSize: 20),
                           ),
                         ),
                       ),

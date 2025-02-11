@@ -1,3 +1,4 @@
+import 'package:chatting/utils/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
@@ -15,13 +16,16 @@ class AuthServices {
   }
 
   // signup
-  Future<bool> signup({required String email, required String password}) async {
+  Future<SignUpStatus> signup({required String email, required String password}) async {
     try {
       await auth.createUserWithEmailAndPassword(email: email, password: password);
-      return true;
-    } catch (e) {
-      print('Error during registration: $e');
-      return false;
+      return SignUpStatus.success;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        return SignUpStatus.emailAlreadyExists;
+      } else {
+        return SignUpStatus.error;
+      }
     }
   }
 

@@ -19,7 +19,6 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controllerEmail = TextEditingController();
     controllerPassword = TextEditingController();
@@ -27,7 +26,6 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     controllerEmail.dispose();
     controllerPassword.dispose();
@@ -37,10 +35,8 @@ class _LoginState extends State<Login> {
   void handleLogin() {
     bool success = auth.login(email: controllerEmail.text, password: controllerPassword.text);
     if (success) {
-      // TODO : show popup
       Navigator.pushNamed(context, AppRouters.home);
     } else {
-      // TODO : show popup
     }
   }
 
