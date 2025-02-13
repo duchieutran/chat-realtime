@@ -24,6 +24,8 @@ class _FriendsState extends State<Friends> {
   final MessageViewModel messageViewModel = MessageViewModel();
   final TextEditingController searchController = TextEditingController();
 
+  Set<String> processingRequests = {};
+
   void _searchFriend() async {
     String uid = searchController.text.trim();
     if (uid.isEmpty) {
@@ -41,9 +43,8 @@ class _FriendsState extends State<Friends> {
     Users? user = await friendVM.findFriends(uid: uid);
 
     if (user != null) {
-      print("a");
       bool? isPending = await friendVM.checkFriends(uid: uid);
-      print("isPending : ");
+
       showDialog(
         context: context,
         builder: (context) => FriendRequestDialog(
@@ -124,10 +125,13 @@ class _FriendsState extends State<Friends> {
                     builder: (context, userSnapshot) {
                       if (!userSnapshot.hasData) return const SizedBox();
                       Users user = userSnapshot.data!;
-                      return CardInfo(
-                        urlAvatar: user.urlAvatar,
-                        email: user.email,
-                        name: user.name,
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CardInfo(
+                          urlAvatar: user.urlAvatar,
+                          email: user.email,
+                          name: user.name,
+                        ),
                       );
                     },
                   );
@@ -155,20 +159,31 @@ class _FriendsState extends State<Friends> {
                     builder: (context, userSnapshot) {
                       if (!userSnapshot.hasData) return const SizedBox();
                       Users user = userSnapshot.data!;
-                      bool icon = true;
-                      return CardInfo(
-                        urlAvatar: user.urlAvatar,
-                        email: user.email,
-                        name: user.name,
-                        iconData: icon ? Icons.check_circle : Icons.downloading,
-                        feature: "accept",
-                        function: () async {
-                          setState(() {
-                            icon = false;
-                          });
-                          await store.acceptFriendRequest(user.uid);
-                          messageViewModel.createChatRoom(uidName: user.uid);
-                        },
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AnimatedOpacity(
+                          opacity:
+                              processingRequests.contains(user.uid) ? 0.5 : 1.0,
+                          duration: const Duration(milliseconds: 300),
+                          child: CardInfo(
+                            urlAvatar: user.urlAvatar,
+                            email: user.email,
+                            name: user.name,
+                            iconData: Icons.check_circle,
+                            feature: "Accept",
+                            function: () async {
+                              setState(() {
+                                processingRequests.add(user.uid);
+                              });
+                              await store.acceptFriendRequest(user.uid);
+                              messageViewModel.createChatRoom(
+                                  uidName: user.uid);
+                              setState(() {
+                                processingRequests.remove(user.uid);
+                              });
+                            },
+                          ),
+                        ),
                       );
                     },
                   );

@@ -61,19 +61,17 @@ class FriendViewModel {
   // Kiểm tra xem UID có trong danh sách yêu cầu kết bạn không
   Future<bool> checkFriends({required String uid}) async {
     bool isCheckFriend = false;
-
-    // Đợi dữ liệu từ Stream
     Users? friend = await findFriends(uid: uid);
-    if (friend != null && friend.friends != null) {
-      isCheckFriend = friend.friends!.contains(uid) ? true : false;
+    if (friend != null && friend.friendRequests != null) {
+      if (friend.friendRequests!.contains(auth.currentUser!.uid)) {
+        isCheckFriend = true;
+      }
     }
 
-    // Kiểm tra danh sách bạn bè
     Users? user = await profile.getUserProfile();
     if (user != null && user.friends != null) {
-      isCheckFriend = true;
+      if (user.friends!.contains(uid)) isCheckFriend = true;
     }
-
     return isCheckFriend;
   }
 }

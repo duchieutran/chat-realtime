@@ -23,16 +23,18 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {
-              AuthServices().logout();
-              Navigator.popAndPushNamed(context, AppRouters.login);
-            },
-            icon: const Icon(
-              Icons.logout_outlined,
-              size: 30,
-              color: AppColors.blue40,
-            )),
-        backgroundColor: AppColors.light,
+          onPressed: () {
+            AuthServices().logout();
+            Navigator.popAndPushNamed(context, AppRouters.login);
+          },
+          icon: const Icon(
+            Icons.logout_outlined,
+            size: 30,
+            color: AppColors.blue40,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
         title: const Text(
           "SayHi",
@@ -42,130 +44,156 @@ class _HomeState extends State<Home> {
               color: AppColors.blue40),
         ),
       ),
-      body: SizedBox(
-        width: size.width,
-        child: Stack(children: [
-          const rv.RiveAnimation.asset(
-            shapesRiv,
-          ),
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          const rv.RiveAnimation.asset(shapesRiv),
           Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                color: Color(0xC7FFFFFF),
+            width: size.width,
+            height: size.height,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.white.withOpacity(0.8),
+                  Colors.white.withOpacity(0.9)
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // carouseSlider banner
-                    WidgetsCard(
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  // Carousel với hiệu ứng đẹp hơn
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: WidgetsCard(
                       width: size.width,
-                      height: 340,
+                      height: 300,
                       child: CarouselSlider(
                         items: image.map((img) {
-                          return Image.asset(
-                            img,
-                            fit: BoxFit.fill,
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.asset(
+                              img,
+                              fit: BoxFit.cover,
+                            ),
                           );
                         }).toList(),
                         options: CarouselOptions(
                           autoPlay: true,
+                          enlargeCenterPage: true,
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 0.85,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // community
-                        WidgetsCard(
-                          onTap: () {
-                            Navigator.pushNamed(context, AppRouters.friends);
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                friends,
-                                height: 100,
-                              ),
-                              const Text(
-                                "friends",
-                                style: TextStyle(
-                                    color: AppColors.blue40,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900),
-                              )
-                            ],
-                          ),
-                        ),
+                  ),
+                  const SizedBox(height: 30),
 
-                        // profile
-                        WidgetsCard(
-                          onTap: () {
-                            Navigator.pushNamed(context, AppRouters.profile);
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                profiles,
-                                height: 100,
-                              ),
-                              const Text(
-                                "profiles",
-                                style: TextStyle(
-                                    color: AppColors.blue40,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
+                  // Danh mục chức năng
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildCategoryCard(
+                          friends, "Friends", AppRouters.friends),
+                      _buildCategoryCard(
+                          profiles, "Profile", AppRouters.profile),
+                    ],
+                  ),
+
+                  const SizedBox(height: 30),
+                  // Chat Box
+                  _buildChatBox(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryCard(String image, String title, String route) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, route),
+      child: Container(
+        width: 150,
+        height: 180,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(image, height: 100),
+            const SizedBox(height: 10),
+            Text(
+              title,
+              style: const TextStyle(
+                color: AppColors.blue40,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChatBox() {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, AppRouters.chat),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Image.asset(webChat, height: 80),
+            const SizedBox(width: 10),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Chats",
+                    style: TextStyle(
+                      color: AppColors.blue40,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
                     ),
-                    const SizedBox(height: 30),
-                    WidgetsCard(
-                        width: size.width,
-                        onTap: () {
-                          Navigator.pushNamed(context, AppRouters.chat);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(webChat),
-                              const Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Chats",
-                                      style: TextStyle(
-                                        color: AppColors.blue40,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Nơi bạn có thể trò chuyện trực tuyến, chia sẻ những câu chuyện với bạn bè của mình hàng ngày.",
-                                      softWrap: true,
-                                      textAlign: TextAlign.justify,
-                                      overflow: TextOverflow.visible,
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        )),
-                  ],
-                ),
-              ))
-        ]),
+                  ),
+                  Text(
+                    "Nơi bạn có thể trò chuyện trực tuyến, chia sẻ những câu chuyện với bạn bè của mình hàng ngày.",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
