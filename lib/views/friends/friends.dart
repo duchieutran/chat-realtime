@@ -6,6 +6,7 @@ import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
 import 'package:chatting/view_models/profile_vm/profile_viewmodel.dart';
 import 'package:chatting/views/friends/component/card_info.dart';
 import 'package:chatting/views/friends/component/popup_friends.dart';
+import 'package:chatting/views/widgets/app_dialog.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,6 @@ class _FriendsState extends State<Friends> {
   final StoreServices store = StoreServices();
   final MessageViewModel messageViewModel = MessageViewModel();
   final TextEditingController searchController = TextEditingController();
-  Users? searchedUser;
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +30,18 @@ class _FriendsState extends State<Friends> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Friends",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          title: const Text("Friends",
+              style: TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
           bottom: const TabBar(
+            indicatorColor: AppColors.blue40,
+            labelColor: AppColors.blue40,
+            unselectedLabelColor: Colors.grey,
+            indicatorWeight: 3.0,
             tabs: [
-              Tab(text: "Friends"),
-              Tab(text: "Requests"),
-              Tab(text: "Search"),
+              Tab(icon: Icon(Icons.people), text: 'My Friends'),
+              Tab(icon: Icon(Icons.person_add), text: 'Requests'),
+              Tab(icon: Icon(Icons.search), text: 'Search'),
             ],
           ),
         ),
@@ -64,16 +66,9 @@ class _FriendsState extends State<Friends> {
         List<String> friendIds = snapshot.data!;
 
         return friendIds.isEmpty
-            ? const Center(
-                child: Text(
-                  "No Friends !",
-                  style: TextStyle(
-                      color: AppColors.grey50,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
-                ),
-              )
+            ? _buildEmptyState("You have no friends yet!")
             : ListView.builder(
+                padding: const EdgeInsets.all(10),
                 itemCount: friendIds.length,
                 itemBuilder: (context, index) {
                   return FutureBuilder<Users?>(
@@ -81,13 +76,10 @@ class _FriendsState extends State<Friends> {
                     builder: (context, userSnapshot) {
                       if (!userSnapshot.hasData) return const SizedBox();
                       Users user = userSnapshot.data!;
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CardInfo(
-                          urlAvatar: user.urlAvatar,
-                          email: user.email,
-                          name: user.name,
-                        ),
+                      return CardInfo(
+                        urlAvatar: user.urlAvatar,
+                        email: user.email,
+                        name: user.name,
                       );
                     },
                   );
@@ -105,16 +97,9 @@ class _FriendsState extends State<Friends> {
         List<String> friendRequestIds = snapshot.data!;
 
         return friendRequestIds.isEmpty
-            ? const Center(
-                child: Text(
-                  "No Friends Requests !",
-                  style: TextStyle(
-                      color: AppColors.grey50,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
-                ),
-              )
+            ? _buildEmptyState("No pending friend requests!")
             : ListView.builder(
+                padding: const EdgeInsets.all(10),
                 itemCount: friendRequestIds.length,
                 itemBuilder: (context, index) {
                   return FutureBuilder<Users?>(
@@ -122,21 +107,16 @@ class _FriendsState extends State<Friends> {
                     builder: (context, userSnapshot) {
                       if (!userSnapshot.hasData) return const SizedBox();
                       Users user = userSnapshot.data!;
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CardInfo(
-                          urlAvatar: user.urlAvatar,
-                          email: user.email,
-                          name: user.name,
-                          iconData: Icons.check_circle,
-                          feature: "Accept",
-                          function: () async {
-                            // chấp nhận kết bạn
-                            await store.acceptFriendRequest(user.uid);
-                            // đòng thời tạo đoạn chat rieng tư
-                            messageViewModel.createChatRoom(uidName: user.uid);
-                          },
-                        ),
+                      return CardInfo(
+                        urlAvatar: user.urlAvatar,
+                        email: user.email,
+                        name: user.name,
+                        iconData: Icons.check_circle,
+                        feature: "Accept",
+                        function: () async {
+                          await store.acceptFriendRequest(user.uid);
+                          messageViewModel.createChatRoom(uidName: user.uid);
+                        },
                       );
                     },
                   );
@@ -147,69 +127,81 @@ class _FriendsState extends State<Friends> {
   }
 
   Widget _buildSearchFriends() {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFieldCustom(
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          TextFieldCustom(
             controller: searchController,
-            hintText: "Search UID",
+            hintText: "Enter UID to search",
             inputType: TextInputType.text,
           ),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          width: 160,
-          height: 50,
-          child: OutlinedButton(
-            onPressed: () async {
-              if (searchController.text.trim().isEmpty) {
-              } else {
-                Users? user = await friendVM.findFriends(
-                    uid: searchController.text.trim());
-                if (user == null) {
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (context) => FriendRequestDialog(
-                        url: user.urlAvatar,
-                        name: user.name,
-                        email: user.email,
-                        statusAdd: false,
-                        onAddFriend: () {
-                          friendVM.sendFriend(
-                              receiverUid: searchController.text);
-                        }),
-                  );
-                }
-              }
-            },
-            style: OutlinedButton.styleFrom(
-              backgroundColor: AppColors.blue40,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: _searchFriend,
+              icon: const Icon(Icons.search, size: 22),
+              label: const Text("Search", style: TextStyle(fontSize: 16)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.blue40,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
               ),
-              shadowColor: Colors.black.withOpacity(0.2),
-              elevation: 3,
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.search, color: AppColors.light, size: 22),
-                SizedBox(width: 8),
-                Text(
-                  "Search",
-                  style: TextStyle(
-                    color: AppColors.light,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  void _searchFriend() async {
+    String uid = searchController.text.trim();
+    if (uid.isEmpty) {
+      appDialog(
+          context: context,
+          title: "Warning!",
+          content: "Please enter a valid UID",
+          confirmText: "Try Again",
+          onConfirm: () {
+            Navigator.pop(context);
+          });
+      return;
+    }
+
+    Users? user = await friendVM.findFriends(uid: uid);
+    if (user != null) {
+      showDialog(
+        context: context,
+        builder: (context) => FriendRequestDialog(
+          url: user.urlAvatar,
+          name: user.name,
+          email: user.email,
+          statusAdd: false,
+          onAddFriend: () => friendVM.sendFriend(receiverUid: uid),
         ),
-      ],
+      );
+    } else {
+      appDialog(
+          context: context,
+          title: "Oops!",
+          content: "UID not found!",
+          confirmText: "Try Again",
+          onConfirm: () {
+            Navigator.pop(context);
+          });
+    }
+  }
+
+  Widget _buildEmptyState(String message) {
+    return Center(
+      child: Text(
+        message,
+        style: const TextStyle(
+            color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 18),
+      ),
     );
   }
 }
