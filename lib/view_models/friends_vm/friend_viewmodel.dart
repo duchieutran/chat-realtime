@@ -9,7 +9,7 @@ class FriendViewModel {
   final StoreServices store = StoreServices();
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  // Lấy uid bạn bè
+  //Lấy uid bạn bè
   Future<List<Users>?> getFriend() async {
     try {
       Users? users = await profile.getUserProfile();
@@ -56,5 +56,24 @@ class FriendViewModel {
     } catch (e) {
       rethrow;
     }
+  }
+
+  // Kiểm tra xem UID có trong danh sách yêu cầu kết bạn không
+  Future<bool> checkFriends({required String uid}) async {
+    bool isCheckFriend = false;
+
+    // Đợi dữ liệu từ Stream
+    Users? friend = await findFriends(uid: uid);
+    if (friend != null && friend.friends != null) {
+      isCheckFriend = friend.friends!.contains(uid) ? true : false;
+    }
+
+    // Kiểm tra danh sách bạn bè
+    Users? user = await profile.getUserProfile();
+    if (user != null && user.friends != null) {
+      isCheckFriend = true;
+    }
+
+    return isCheckFriend;
   }
 }
