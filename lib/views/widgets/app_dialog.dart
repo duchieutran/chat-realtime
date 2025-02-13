@@ -4,12 +4,14 @@ Future<void> appDialog({
   required BuildContext context,
   required String title,
   required String content,
+  bool barrierDismissible = false,
   String confirmText = "OK",
   String cancelText = "Hủy",
   VoidCallback? onConfirm,
   VoidCallback? onCancel,
 }) {
   return showDialog(
+    barrierDismissible: barrierDismissible,
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -28,27 +30,31 @@ Future<void> appDialog({
           style: const TextStyle(fontSize: 16),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              if (onCancel != null) onCancel();
-            },
-            child: Text(cancelText, style: const TextStyle(color: Colors.grey)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-              if (onConfirm != null) onConfirm();
-            },
-            child:
-                Text(confirmText, style: const TextStyle(color: Colors.white)),
-          ),
+          (onCancel == null)
+              ? Container()
+              : TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onCancel();
+                  },
+                  child: Text(cancelText,
+                      style: const TextStyle(color: Colors.grey)),
+                ),
+          (onConfirm == null)
+              ? Container()
+              : ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    onConfirm();
+                  },
+                  child: Text(confirmText,
+                      style: const TextStyle(color: Colors.white)),
+                ),
         ],
       );
     },

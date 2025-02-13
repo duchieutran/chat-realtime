@@ -2,7 +2,9 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/auths_vm/auth_viewmodel.dart';
+import 'package:chatting/views/widgets/app_dialog.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -32,16 +34,37 @@ class _LoginState extends State<Login> {
   }
 
   // function handle login
-  void handleLogin() {
-    bool success = auth.login(email: controllerEmail.text, password: controllerPassword.text);
-    if (success) {
-      Navigator.pushNamed(context, AppRouters.home);
-    } else {
+  Future<void> handleLogin() async {
+    if (controllerEmail.text.isEmpty || controllerPassword.text.isEmpty) {
+      appDialog(
+          context: context,
+          title: "Oops!",
+          content: "Email or Password cannot be empty",
+          confirmText: "Try Again",
+          onConfirm: () {
+            Navigator.pop(context);
+          });
+      return;
     }
+    await auth.signIn(controllerEmail.text, controllerPassword.text);
+
+    appDialog(
+        context: context,
+        title: auth.status ? "Success" : "Oops!",
+        content: auth.message,
+        confirmText: auth.status ? "Proceed" : "Try Again",
+        onConfirm: auth.status
+            ? navigatorHome
+            : () {
+                Navigator.pop(context);
+              });
   }
 
   // function handle navigator signup
-  navigatorSignUp() => Navigator.pushNamed(context, AppRouters.signup);
+  navigatorSignUp() => Navigator.popAndPushNamed(context, AppRouters.signup);
+
+  // function handle navigator home
+  navigatorHome() => Navigator.popAndPushNamed(context, AppRouters.home);
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +160,10 @@ class _LoginState extends State<Login> {
                         child: const Center(
                           child: Text(
                             "Sign In",
-                            style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.light, fontSize: 20),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.light,
+                                fontSize: 20),
                           ),
                         ),
                       ),
@@ -146,29 +172,39 @@ class _LoginState extends State<Login> {
                     // chức năng khác (đăng kí, quên mật khẩu)
                     SizedBox(
                       width: size.width,
-                      child: const Center(
-                        child: Text(
-                          "or singup with email",
-                          style: TextStyle(color: AppColors.grey40),
+                      child: Center(
+                        child: RichText(
+                          text: TextSpan(
+                              text: "Don't have an account?  ",
+                              style: const TextStyle(color: AppColors.grey40),
+                              children: [
+                                TextSpan(
+                                  text: "Create account now!",
+                                  style: const TextStyle(
+                                      color: AppColors.blue40,
+                                      fontWeight: FontWeight.bold),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = navigatorSignUp,
+                                )
+                              ]),
                         ),
                       ),
                     ),
 
                     Center(
-                      child: ClipPath(
-                        child: Container(
-                            color: AppColors.light,
-                            child: Center(
-                              child: IconButton(
-                                onPressed: navigatorSignUp,
-                                icon: const Icon(
-                                  Icons.email,
-                                  color: AppColors.grey50,
-                                  size: 30,
-                                ),
-                              ),
-                            )),
-                      ),
+                      child: TextButton.icon(
+                          onPressed: navigatorSignUp,
+                          icon: const Icon(
+                            Icons.person_outline,
+                            color: AppColors.blue40,
+                          ),
+                          label: const Text(
+                            "Sign Up",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: AppColors.blue40),
+                          )),
                     )
                   ],
                 ),

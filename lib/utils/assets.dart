@@ -8,7 +8,7 @@ const String friends = 'assets/images/users.png';
 const String profiles = 'assets/images/profiles.png';
 const String webChat = 'assets/images/web_chat.png';
 const String logo = 'assets/images/logo_app.png';
-const String noImage = 'assets/images/no_image.png';
+const String noImage = 'assets/images/no_image.jpg';
 
 // image networks
 const String group =
@@ -22,7 +22,3 @@ const String group_3 =
 
 // Rive assets
 const String shapesRiv = 'assets/rive/shapes.riv';
-const String buttonRiv = 'assets/rive/button.riv';
-const String checkRiv = 'assets/rive/check.riv';
-const String confettiRiv = 'assets/rive/confetti.riv';
-const String menuButtonRiv = 'assets/rive/menu_button.riv';

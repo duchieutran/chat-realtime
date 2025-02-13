@@ -1,31 +1,35 @@
-import 'package:chatting/utils/enums.dart';
+import 'package:chatting/models/auth_error_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   // login
-  Future<bool> login({required String email, required String password}) async {
+  Future<AuthErrorModel?> login(
+      {required String email, required String password}) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
-      return true;
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return AuthErrorModel.fromFirebaseError(e);
     } catch (e) {
-      print('Error during registration: $e');
-      return false;
+      return AuthErrorModel(
+          code: "unknown ", message: "An unexpected error occurred.");
     }
   }
 
   // signup
-  Future<SignUpStatus> signup({required String email, required String password}) async {
+  Future<AuthErrorModel?> singUp(
+      {required String email, required String password}) async {
     try {
-      await auth.createUserWithEmailAndPassword(email: email, password: password);
-      return SignUpStatus.success;
+      await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return null;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        return SignUpStatus.emailAlreadyExists;
-      } else {
-        return SignUpStatus.error;
-      }
+      return AuthErrorModel.fromFirebaseError(e);
+    } catch (e) {
+      return AuthErrorModel(
+          code: "unknown ", message: "An unexpected error occurred.");
     }
   }
 
@@ -38,5 +42,5 @@ class AuthServices {
     }
   }
 
-  //
+//
 }

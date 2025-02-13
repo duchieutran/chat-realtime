@@ -6,11 +6,14 @@ class AppButton extends StatelessWidget {
   final String? title;
   final double fontSize;
   final Color color, backgroundColors;
+  final double radiusCircular;
+
   const AppButton(
       {super.key,
       required this.onTap,
       this.title,
       this.fontSize = 25,
+      this.radiusCircular = 25,
       this.color = AppColors.dark,
       this.backgroundColors = AppColors.brandOrange50});
 
@@ -22,7 +25,7 @@ class AppButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
           color: backgroundColors,
-          borderRadius: const BorderRadius.all(Radius.circular(25)),
+          borderRadius: BorderRadius.all(Radius.circular(radiusCircular)),
           border: Border.all(width: 2, color: backgroundColors),
         ),
         child: Center(

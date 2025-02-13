@@ -39,7 +39,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColors.light,
       appBar: AppBar(
@@ -59,6 +58,10 @@ class _ProfileState extends State<Profile> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: AppColors.blue30,
+                      gradient: const LinearGradient(
+                        colors: [AppColors.blue40, AppColors.blue60],
+                        begin: Alignment.bottomCenter,
+                      ),
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(

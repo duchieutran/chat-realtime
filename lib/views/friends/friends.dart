@@ -1,3 +1,4 @@
+import 'package:chatting/models/users_model.dart';
 import 'package:chatting/services/store_services.dart';
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/view_models/chat_vm/message_vm.dart';
@@ -7,7 +8,6 @@ import 'package:chatting/views/friends/component/card_info.dart';
 import 'package:chatting/views/friends/component/popup_friends.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
-import 'package:chatting/models/users_model.dart';
 
 class Friends extends StatefulWidget {
   const Friends({super.key});
@@ -63,26 +63,36 @@ class _FriendsState extends State<Friends> {
         }
         List<String> friendIds = snapshot.data!;
 
-        return ListView.builder(
-          itemCount: friendIds.length,
-          itemBuilder: (context, index) {
-            return FutureBuilder<Users?>(
-              future: store.getUserInfo(uid: friendIds[index]),
-              builder: (context, userSnapshot) {
-                if (!userSnapshot.hasData) return const SizedBox();
-                Users user = userSnapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CardInfo(
-                    urlAvatar: user.urlAvatar,
-                    email: user.email,
-                    name: user.name,
-                  ),
-                );
-              },
-            );
-          },
-        );
+        return friendIds.isEmpty
+            ? const Center(
+                child: Text(
+                  "No Friends !",
+                  style: TextStyle(
+                      color: AppColors.grey50,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+              )
+            : ListView.builder(
+                itemCount: friendIds.length,
+                itemBuilder: (context, index) {
+                  return FutureBuilder<Users?>(
+                    future: store.getUserInfo(uid: friendIds[index]),
+                    builder: (context, userSnapshot) {
+                      if (!userSnapshot.hasData) return const SizedBox();
+                      Users user = userSnapshot.data!;
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CardInfo(
+                          urlAvatar: user.urlAvatar,
+                          email: user.email,
+                          name: user.name,
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
       },
     );
   }
@@ -94,34 +104,44 @@ class _FriendsState extends State<Friends> {
         if (!snapshot.hasData) return const CircularProgressIndicator();
         List<String> friendRequestIds = snapshot.data!;
 
-        return ListView.builder(
-          itemCount: friendRequestIds.length,
-          itemBuilder: (context, index) {
-            return FutureBuilder<Users?>(
-              future: store.getUserInfo(uid: friendRequestIds[index]),
-              builder: (context, userSnapshot) {
-                if (!userSnapshot.hasData) return const SizedBox();
-                Users user = userSnapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CardInfo(
-                    urlAvatar: user.urlAvatar,
-                    email: user.email,
-                    name: user.name,
-                    iconData: Icons.check_circle,
-                    feature: "Accept",
-                    function: () async {
-                      // chấp nhận kết bạn
-                      await store.acceptFriendRequest(user.uid);
-                      // đòng thời tạo đoạn chat rieng tư
-                      messageViewModel.createChatRoom(uidName: user.uid);
+        return friendRequestIds.isEmpty
+            ? const Center(
+                child: Text(
+                  "No Friends Requests !",
+                  style: TextStyle(
+                      color: AppColors.grey50,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+              )
+            : ListView.builder(
+                itemCount: friendRequestIds.length,
+                itemBuilder: (context, index) {
+                  return FutureBuilder<Users?>(
+                    future: store.getUserInfo(uid: friendRequestIds[index]),
+                    builder: (context, userSnapshot) {
+                      if (!userSnapshot.hasData) return const SizedBox();
+                      Users user = userSnapshot.data!;
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CardInfo(
+                          urlAvatar: user.urlAvatar,
+                          email: user.email,
+                          name: user.name,
+                          iconData: Icons.check_circle,
+                          feature: "Accept",
+                          function: () async {
+                            // chấp nhận kết bạn
+                            await store.acceptFriendRequest(user.uid);
+                            // đòng thời tạo đoạn chat rieng tư
+                            messageViewModel.createChatRoom(uidName: user.uid);
+                          },
+                        ),
+                      );
                     },
-                  ),
-                );
-              },
-            );
-          },
-        );
+                  );
+                },
+              );
       },
     );
   }

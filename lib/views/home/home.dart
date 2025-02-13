@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
               Navigator.popAndPushNamed(context, AppRouters.login);
             },
             icon: const Icon(
-              Icons.menu,
+              Icons.logout_outlined,
               size: 30,
               color: AppColors.blue40,
             )),

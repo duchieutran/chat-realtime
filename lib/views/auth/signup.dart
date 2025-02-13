@@ -1,10 +1,10 @@
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
-import 'package:chatting/utils/enums.dart';
 import 'package:chatting/view_models/auths_vm/auth_viewmodel.dart';
 import 'package:chatting/views/widgets/app_dialog.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -35,26 +35,34 @@ class _SignUpState extends State<SignUp> {
 
   // function handle login
   Future<void> handleSignUp({required BuildContext context}) async {
-    SignUpStatus status = await auth.signUp(
-        email: controllerEmail.text, password: controllerPassword.text);
-    String message;
-    switch (status) {
-      case SignUpStatus.success:
-      // TODO : vào trang đăng kí
-      case SignUpStatus.emailAlreadyExists:
-        message = "This email is already registered.";
-      case SignUpStatus.error:
-        message = "An error occurred. Please try again.";
-        break;
+    if (controllerEmail.text.isEmpty || controllerPassword.text.isEmpty) {
+      appDialog(
+          context: context,
+          title: "Oops!",
+          content: "Email or Password cannot be empty",
+          confirmText: "Try Again");
+      return;
     }
+    await auth.signUp(controllerEmail.text, controllerPassword.text);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    appDialog(
+        context: context,
+        title: auth.status ? "Success" : "Oops!",
+        content: auth.message,
+        confirmText: auth.status ? "Proceed" : "Try Again",
+        onConfirm: auth.status
+            ? navigatorUpdate
+            : () {
+                Navigator.pop(context);
+              });
   }
 
   // function handle navigator signup
-  navigatorSignIn() => Navigator.pushNamed(context, AppRouters.login);
+  navigatorSignIn() => Navigator.popAndPushNamed(context, AppRouters.login);
+
+  // function handle navigator update profile
+  navigatorUpdate() =>
+      Navigator.popAndPushNamed(context, AppRouters.profileComplete);
 
   @override
   Widget build(BuildContext context) {
@@ -137,14 +145,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                     const SizedBox(height: 30),
                     // Button
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
-                        // TODO : xu ly popup
-                        appDialog(
-                            context: context,
-                            title: "Thong bao",
-                            content: "hahahah");
-                        // handleSignUp(context: context);
+                        handleSignUp(context: context);
                       },
                       child: Container(
                         width: size.width,
@@ -167,32 +170,42 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    // chức năng khác (đăng kí, quên mật khẩu)
+                    // TODO : thêm chức năng quên mật khẩu
                     SizedBox(
                       width: size.width,
-                      child: const Center(
-                        child: Text(
-                          "already have an account? sign in now!",
-                          style: TextStyle(color: AppColors.grey40),
+                      child: Center(
+                        child: RichText(
+                          text: TextSpan(
+                              text: "Already have an account? ",
+                              style: const TextStyle(color: AppColors.grey40),
+                              children: [
+                                TextSpan(
+                                  text: "Sign In now!",
+                                  style: const TextStyle(
+                                      color: AppColors.blue40,
+                                      fontWeight: FontWeight.bold),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = navigatorSignIn,
+                                )
+                              ]),
                         ),
                       ),
                     ),
 
                     Center(
-                      child: ClipPath(
-                        child: Container(
-                            color: AppColors.light,
-                            child: Center(
-                              child: IconButton(
-                                onPressed: navigatorSignIn,
-                                icon: const Icon(
-                                  Icons.email,
-                                  color: AppColors.grey50,
-                                  size: 30,
-                                ),
-                              ),
-                            )),
-                      ),
+                      child: TextButton.icon(
+                          onPressed: navigatorSignIn,
+                          icon: const Icon(
+                            Icons.person_outline,
+                            color: AppColors.blue40,
+                          ),
+                          label: const Text(
+                            "Sign In",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: AppColors.blue40),
+                          )),
                     )
                   ],
                 ),

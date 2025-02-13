@@ -32,10 +32,11 @@ class _WelcomeState extends State<Welcome> {
               await Future.delayed(const Duration(seconds: 3));
               controller.success();
               await authProvider.checkAuthState();
-              final router = (authProvider.isAuthenticated) ? AppRouters.home : AppRouters.login;
+              final router = (authProvider.isAuthenticated)
+                  ? AppRouters.home
+                  : AppRouters.login;
               await Future.delayed(const Duration(seconds: 1));
-
-              if (!context.mounted) return; // Kiểm tra widget có còn tồn tại không
+              if (!context.mounted) return;
               Navigator.popAndPushNamed(context, router);
             },
           ),

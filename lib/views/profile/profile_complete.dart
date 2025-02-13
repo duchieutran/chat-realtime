@@ -3,6 +3,7 @@ import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/profile_vm/profile_viewmodel.dart';
 import 'package:chatting/views/widgets/app_button.dart';
+import 'package:chatting/views/widgets/app_dialog.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,7 @@ class ProfileComplete extends StatefulWidget {
 class _ProfileCompleteState extends State<ProfileComplete> {
   ProfileViewModel profileViewModel = ProfileViewModel();
   late bool isLoading;
+  late bool isLoadingImage;
   late String image;
   late TextEditingController nameController;
 
@@ -23,6 +25,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
   void initState() {
     super.initState();
     isLoading = true;
+    isLoadingImage = true;
     image = "";
     nameController = TextEditingController();
   }
@@ -36,20 +39,73 @@ class _ProfileCompleteState extends State<ProfileComplete> {
   // Update avatar
   updateAvatar() async {
     String url = await profileViewModel.upLoadImage();
+    if (url.isNotEmpty) {
+      appDialog(
+          context: context,
+          barrierDismissible: false,
+          title: "🎉 Success!",
+          content: "Your profile picture has been successfully updated!",
+          confirmText: "Okey",
+          onConfirm: () {
+            Navigator.pop(context);
+          });
+    }
     setState(() {
       image = url;
     });
   }
 
   // hàm update thông tin cá nhân.
-  updateProfile() async {
-    if (nameController.text.isNotEmpty) {
-      await profileViewModel.updateProfile(name: nameController.text, image: image);
-      setState(() {
-        isLoading = false;
-      });
+  void updateProfile() async {
+    if (nameController.text.isEmpty || image.isEmpty) {
+      // Hiển thị popup lỗi nếu thiếu thông tin
+      appDialog(
+        context: context,
+        title: "⚠️ Error",
+        content: "Please update your profile picture and full name.",
+        confirmText: "Try Again",
+        onConfirm: () {
+          Navigator.pop(context);
+        },
+      );
     } else {
-      // TODO : show popup
+      try {
+        // Hiển thị popup loading
+        appDialog(
+            context: context,
+            title: "🔄 Loading...",
+            content: "Updating your profile...");
+        await profileViewModel.updateProfile(
+          name: nameController.text,
+          image: image,
+        );
+
+        // Đóng popup loading
+        Navigator.pop(context);
+
+        // Hiển thị thông báo thành công
+        appDialog(
+            context: context,
+            title: "✅ Success!",
+            content: "Your profile has been updated successfully.",
+            confirmText: "Okey",
+            onConfirm: () {
+              Navigator.pushNamed(context, AppRouters.home);
+            });
+      } catch (e) {
+        // Đóng popup loading
+        Navigator.pop(context);
+
+        // Hiển thị thông báo lỗi
+        appDialog(
+            context: context,
+            title: "❌ Error",
+            content: "Failed to update profile. Please try again.",
+            confirmText: "Try Again",
+            onConfirm: () {
+              Navigator.pop(context);
+            });
+      }
     }
   }
 
@@ -81,20 +137,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const SizedBox(height: 100),
-                          // nút upload avt ,
-                          SizedBox(
-                            width: 180,
-                            height: 50,
-                            child: AppButton(
-                              onTap: updateAvatar,
-                              title: "Upload Avatar",
-                              fontSize: 16,
-                              color: AppColors.light,
-                              backgroundColors: AppColors.blue40,
-                            ),
-                          ),
                           // tạo field điền tên đăng nhập
-                          const SizedBox(height: 40),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: TextFieldCustom(
@@ -105,7 +148,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                             ),
                           ),
                           // Nút update and -> next,
-                          const SizedBox(height: 50),
+                          const SizedBox(height: 30),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: Row(
@@ -114,25 +157,12 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                 SizedBox(
                                   width: size.width * 0.4,
                                   child: AppButton(
+                                    radiusCircular: 12,
                                     onTap: updateProfile,
                                     title: "update",
                                     fontSize: 16,
                                     color: AppColors.light,
                                     backgroundColors: AppColors.blue40,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.4,
-                                  child: AppButton(
-                                    onTap: isLoading
-                                        ? () {}
-                                        : () {
-                                            Navigator.popAndPushNamed(context, AppRouters.home);
-                                          },
-                                    title: "next >",
-                                    fontSize: 16,
-                                    color: AppColors.light,
-                                    backgroundColors: isLoading ? AppColors.grey30 : AppColors.blue40,
                                   ),
                                 ),
                               ],
@@ -147,7 +177,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                 left: size.width / 2 - 60,
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(width: 5, color: AppColors.light),
+                    border: Border.all(width: 5, color: AppColors.green30),
                     borderRadius: const BorderRadius.all(Radius.circular(65)),
                   ),
                   child: CircleAvatar(
@@ -170,7 +200,22 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                     ),
                   ),
                 ),
-              )
+              ),
+              // TODO : format lai
+              Positioned(
+                  top: 240,
+                  left: size.width / 2 + 20,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: const BoxDecoration(
+                        color: AppColors.grey30,
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
+                    child: IconButton(
+                      icon: const Icon(Icons.camera_alt),
+                      onPressed: updateAvatar,
+                    ),
+                  ))
             ],
           ),
         ),
