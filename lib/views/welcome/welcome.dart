@@ -1,7 +1,7 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
-import 'package:chatting/view_models/auths_vm/auth_provider.dart';
+import 'package:chatting/view_models/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

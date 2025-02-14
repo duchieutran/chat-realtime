@@ -53,6 +53,7 @@ dependencies:
   path: ^1.8.0
   intl: ^0.18.0
   timeago: ^3.0.2
+  firebase_database: ^11.3.2
 
 dev_dependencies:
   flutter_test:

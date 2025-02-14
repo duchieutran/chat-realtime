@@ -1,8 +1,8 @@
 import 'package:chatting/models/users_model.dart';
 import 'package:chatting/services/store_services.dart';
 import 'package:chatting/utils/app_colors.dart';
-import 'package:chatting/view_models/chat_vm/message_vm.dart';
-import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
+import 'package:chatting/view_models/friend_viewmodel.dart';
+import 'package:chatting/view_models/message_vm.dart';
 import 'package:chatting/views/friends/component/card_info.dart';
 import 'package:chatting/views/friends/component/popup_friends.dart';
 import 'package:chatting/views/widgets/app_dialog.dart';

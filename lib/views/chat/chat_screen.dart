@@ -1,10 +1,11 @@
 import 'package:chatting/models/chat_room_model.dart';
 import 'package:chatting/models/users_model.dart';
-import 'package:chatting/view_models/chat_vm/message_vm.dart';
-import 'package:chatting/view_models/friends_vm/friend_viewmodel.dart';
+import 'package:chatting/view_models/friend_viewmodel.dart';
+import 'package:chatting/view_models/message_vm.dart';
 import 'package:chatting/views/chat/create_group_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'chat_message.dart';
@@ -26,11 +27,11 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getFriends();
-      context.read<MessageViewModel>().getChatRoom();
+      Provider.of<MessageViewModel>(context, listen: false).getChatRoom();
     });
   }
 
-  getFriends() async {
+  void getFriends() async {
     try {
       List<Users>? user = await friends.getFriend();
       if (user != null) {
@@ -47,6 +48,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final chatViewModel = Provider.of<MessageViewModel>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -69,61 +72,62 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Consumer<MessageViewModel>(
-          builder: (context, chatProvider, child) {
-            return StreamBuilder<List<ChatRoomModel>>(
-              stream: chatProvider.listRoom,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+        child: StreamBuilder<List<ChatRoomModel>>(
+          stream: chatViewModel.listRoom,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text("No messages yet"));
+            }
+
+            if (snapshot.hasError) {
+              return const Center(child: Text("Something went wrong!"));
+            }
+
+            List<ChatRoomModel> rooms = snapshot.data!;
+
+            return ListView.separated(
+              itemCount: rooms.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                DateTime dateTime = rooms[index].lastMessage!.lastSend.toDate();
+                String time = DateFormat('HH:mm').format(dateTime);
+                if (rooms[index].type == 'private') {
+                  List<String> members = rooms[index].members;
+                  String uidCurrent = auth.currentUser!.uid;
+                  String name =
+                      uidCurrent == members[0] ? members[1] : members[0];
+
+                  return FutureBuilder<Users?>(
+                    future: friends.findFriends(uid: name),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        Users user = snapshot.data!;
+                        return ChatTile(
+                          uid: rooms[index].chatId,
+                          urlAvatar: user.urlAvatar,
+                          userName: user.name,
+                          messageLast:
+                              rooms[index].lastMessage?.content ?? "Say hi! 👋",
+                          timeLast: time,
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  );
                 }
-                List<ChatRoomModel> rooms =
-                    snapshot.data ?? chatProvider.cachedRooms;
 
-                if (rooms.isEmpty) {
-                  return const Center(child: Text("No messages yet"));
-                }
-
-                return ListView.separated(
-                  itemCount: rooms.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    if (rooms[index].type == 'private') {
-                      List<String> members = rooms[index].members;
-                      String uidCurrent = auth.currentUser!.uid;
-                      String name =
-                          uidCurrent == members[0] ? members[1] : members[0];
-
-                      return FutureBuilder<Users?>(
-                        future: friends.findFriends(uid: name),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            Users user = snapshot.data!;
-                            return ChatTile(
-                              uid: rooms[index].chatId,
-                              urlAvatar: user.urlAvatar,
-                              userName: user.name,
-                              messageLast: rooms[index].lastMessage?.content ??
-                                  "Say hi! 👋",
-                              timeLast: "Just now",
-                            );
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
-                      );
-                    }
-
-                    return ChatTile(
-                      uid: rooms[index].chatId,
-                      urlAvatar: rooms[index].urlAvatar,
-                      userName: rooms[index].name,
-                      messageLast:
-                          rooms[index].lastMessage?.content ?? "Say hi! 👋",
-                      timeLast: "Just now",
-                    );
-                  },
+                return ChatTile(
+                  uid: rooms[index].chatId,
+                  urlAvatar: rooms[index].urlAvatar,
+                  userName: rooms[index].name,
+                  messageLast:
+                      rooms[index].lastMessage?.content ?? "Say hi! 👋",
+                  timeLast: time,
                 );
               },
             );

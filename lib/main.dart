@@ -1,7 +1,7 @@
-import 'package:chatting/view_models/auths_vm/auth_provider.dart';
-import 'package:chatting/view_models/chat_vm/message_vm.dart';
-import 'package:chatting/views/firebase_options.dart';
+import 'package:chatting/view_models/auth_provider.dart';
+import 'package:chatting/view_models/message_vm.dart';
 import 'package:chatting/views/app.dart';
+import 'package:chatting/views/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

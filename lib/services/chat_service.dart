@@ -1,4 +1,5 @@
 import 'package:chatting/models/chat_room_model.dart';
+import 'package:chatting/models/last_message_model.dart';
 import 'package:chatting/models/message_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,13 +11,15 @@ class ChatService {
   Future<String> createChat(String urlAvatar, String name, List<String> members,
       {bool isGroup = false}) async {
     final chatRef = store.collection('chats').doc();
+    LastMessageModel lastMessageNew =
+        LastMessageModel(senderID: "", content: "", lastSend: Timestamp.now());
     ChatRoomModel newChat = ChatRoomModel(
       chatId: chatRef.id,
       urlAvatar: urlAvatar,
       name: name,
       type: isGroup ? 'group' : 'private',
       members: members,
-      lastMessage: null,
+      lastMessage: lastMessageNew,
       createdAt: Timestamp.now(),
     );
     await chatRef.set(newChat.toMap());
@@ -43,7 +46,15 @@ class ChatService {
         .collection('messages')
         .doc(); // ID tự động
 
+    LastMessageModel lastMessageModel = LastMessageModel(
+        senderID: message.senderId,
+        content: message.text,
+        lastSend: message.timestamp);
+
+    final lastMessage = store.collection('chats').doc(chatId);
+
     await messageRef.set(message.toMap());
+    await lastMessage.update({'lastMessage': lastMessageModel.toMap()});
   }
 
   /// Lắng nghe danh sách tin nhắn trong một đoạn chat

@@ -16,7 +16,7 @@ class LastMessageModel {
       LastMessageModel(
           senderID: data['senderID'],
           content: data['content'],
-          lastSend: data['lastSend']);
+          lastSend: data['timestamp']);
 
   // chuyen tu model => map
   Map<String, dynamic> toMap() => {

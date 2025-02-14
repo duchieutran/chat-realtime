@@ -13,7 +13,7 @@ class MessageViewModel extends ChangeNotifier {
   final ChatService _chatService = ChatService();
 
   Stream<List<ChatRoomModel>>? listRoom;
-  List<ChatRoomModel> cachedRooms = []; // Lưu dữ liệu cũ
+  List<ChatRoomModel> cachedRooms = [];
   List<MessageModel> _messages = [];
   bool _isLoading = true;
 
@@ -50,11 +50,8 @@ class MessageViewModel extends ChangeNotifier {
 
   // hàm hiển thị đoạn chat
   void getChatRoom() async {
-    await fetchInitialRooms();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _chatService.getUserChats(auth.currentUser!.uid);
-      notifyListeners();
-    });
+    listRoom = _chatService.getUserChats(auth.currentUser!.uid);
+    notifyListeners();
   }
 
   /// Lắng nghe tin nhắn trong đoạn chat

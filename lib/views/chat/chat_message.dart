@@ -1,6 +1,6 @@
 import 'package:chatting/models/message_model.dart';
 import 'package:chatting/utils/app_colors.dart';
-import 'package:chatting/view_models/chat_vm/message_vm.dart';
+import 'package:chatting/view_models/message_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,9 +1,9 @@
+import 'package:chatting/models/users_model.dart';
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
-import 'package:chatting/view_models/chat_vm/message_vm.dart';
+import 'package:chatting/view_models/message_vm.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
-import 'package:chatting/models/users_model.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   final List<Users> users;
