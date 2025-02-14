@@ -88,13 +88,15 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget _buildMessageBubble(
       MessageModel message, MessageViewModel messageViewModel) {
     bool isMe = message.senderId == messageViewModel.auth.currentUser!.uid;
-
+    String urlAvatar = message.senderAvatar;
+    String name = message.senderName;
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
+          // THời gian của tin nhắn
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -108,38 +110,61 @@ class _MessageScreenState extends State<MessageScreen> {
             ],
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment:
-                isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+          // Nội dung của tin nhắn
+          Column(
             children: [
-              // TODO : thiết kế ảnh ở đây nhè
-              isMe
-                  ? const SizedBox()
-                  : Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      width: 30,
-                      height: 30,
-                      decoration: const BoxDecoration(
-                          color: AppColors.blue40,
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
+              // Tên người nhắn tin (chỉ hiển thị với người bên kia)
+              Row(children: [
+                const SizedBox(width: 40),
+                isMe
+                    ? const SizedBox()
+                    : Text(name,
+                        style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.grey40))
+              ]),
+              // ảnh đại diện + tin nhắn
+              Row(
+                mainAxisAlignment:
+                    isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                children: [
+                  isMe
+                      ? const SizedBox()
+                      : Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          width: 30,
+                          height: 30,
+                          decoration: const BoxDecoration(
+                              color: AppColors.blue40,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(urlAvatar),
+                          ),
+                        ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.all(12),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.75,
                     ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 5),
-                padding: const EdgeInsets.all(12),
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.75,
-                ),
-                decoration: BoxDecoration(
-                  color: isMe ? Colors.blueAccent : Colors.grey[300],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  message.text,
-                  style: TextStyle(color: isMe ? Colors.white : Colors.black),
-                ),
+                    decoration: BoxDecoration(
+                      color: isMe ? Colors.blueAccent : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      message.text,
+                      style:
+                          TextStyle(color: isMe ? Colors.white : Colors.black),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
+          // Hiển thị xem ai đã xem
+          // TODO : dự kiến
         ],
       ),
     );
@@ -182,9 +207,9 @@ class _MessageScreenState extends State<MessageScreen> {
             onTap: () {
               if (messageController.text.isNotEmpty) {
                 messageViewModel.sendMessage(
-                  widget.chatId,
-                  messageViewModel.auth.currentUser!.uid,
-                  messageController.text,
+                  chatId: widget.chatId,
+                  text: messageController.text,
+                  senderId: messageViewModel.auth.currentUser!.uid,
                 );
                 messageController.clear();
               }

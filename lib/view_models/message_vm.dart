@@ -1,5 +1,6 @@
 import 'package:chatting/models/chat_room_model.dart';
 import 'package:chatting/models/message_model.dart';
+import 'package:chatting/models/users_model.dart';
 import 'package:chatting/services/chat_service.dart';
 import 'package:chatting/services/store_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,9 +61,16 @@ class MessageViewModel extends ChangeNotifier {
   }
 
   /// Gửi tin nhắn mới
-  Future<void> sendMessage(String chatId, String senderId, String text) async {
+  Future<void> sendMessage(
+      {required String chatId,
+      required String senderId,
+      required String text}) async {
+    Users? user = await _storeServices.getUserInfo(uid: senderId);
+
     final message = MessageModel(
       senderId: senderId,
+      senderName: user?.name ?? "",
+      senderAvatar: user?.urlAvatar ?? "",
       text: text,
       timestamp: Timestamp.now(),
     );

@@ -48,7 +48,6 @@ class AuthServices {
   setIsOnline() async {
     DatabaseReference ref =
         FirebaseDatabase.instance.ref('users/${auth.currentUser!.uid}');
-
     await ref.set({'isOnline': true});
     await ref.onDisconnect().set({'isOnline': false});
   }

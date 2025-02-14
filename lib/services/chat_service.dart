@@ -85,13 +85,13 @@ class ChatService {
   }
 
   /// Lắng nghe trạng thái của một tin nhắn cụ thể
-  Stream<MessageModel> listenToMessage(String chatId, String messageId) {
-    return store
-        .collection('messages')
-        .doc(chatId)
-        .collection('messages')
-        .doc(messageId)
-        .snapshots()
-        .map((doc) => MessageModel.fromMap(doc.data()!));
-  }
+// Stream<MessageModel> listenToMessage(String chatId, String messageId) {
+//   return store
+//       .collection('messages')
+//       .doc(chatId)
+//       .collection('messages')
+//       .doc(messageId)
+//       .snapshots()
+//       .map((doc) => MessageModel.fromMap(doc.data()!));
+// }
 }
