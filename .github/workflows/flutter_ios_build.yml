@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v3
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'  # Chọn phiên bản Flutter bạn sử dụng
 
@@ -30,8 +30,9 @@ jobs:
       - name: Archive iOS app
         run: flutter build ios --release --no-codesign
 
-      - name: Upload iOS build artifact
-        uses: actions/upload-artifact@v2
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: ios-build
-          path: build/ios/iphoneos/*.ipa
+          name: flutter-app-build
+          path: build/ios/iphoneos/Runner.ipa
+
