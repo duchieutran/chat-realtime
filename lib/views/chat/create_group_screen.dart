@@ -158,7 +158,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                           backgroundImage: NetworkImage(user.urlAvatar),
                         ),
                         title: Text(user.name,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600)),
                         trailing: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 300),

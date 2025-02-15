@@ -15,8 +15,6 @@ class MessageViewModel extends ChangeNotifier {
 
   Stream<List<ChatRoomModel>>? listRoom;
   List<ChatRoomModel> cachedRooms = [];
-  List<MessageModel> _messages = [];
-  bool _isLoading = true;
 
   // hàm tạo đoạn chat riêng tư
   void createChatRoom({required String uidName}) {

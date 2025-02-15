@@ -1,8 +1,8 @@
 import 'package:chatting/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class CardInfo extends StatefulWidget {
-  const CardInfo({
+class CardFriend extends StatefulWidget {
+  const CardFriend({
     super.key,
     this.function,
     required this.urlAvatar,
@@ -20,10 +20,10 @@ class CardInfo extends StatefulWidget {
   final String? feature;
 
   @override
-  State<CardInfo> createState() => _CardInfoState();
+  State<CardFriend> createState() => _CardFriendState();
 }
 
-class _CardInfoState extends State<CardInfo> {
+class _CardFriendState extends State<CardFriend> {
   @override
   Widget build(BuildContext context) {
     return Container(

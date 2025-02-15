@@ -45,16 +45,18 @@ class _SignUpState extends State<SignUp> {
     }
     await auth.signUp(controllerEmail.text, controllerPassword.text);
 
-    appDialog(
-        context: context,
-        title: auth.status ? "Success" : "Oops!",
-        content: auth.message,
-        confirmText: auth.status ? "Proceed" : "Try Again",
-        onConfirm: auth.status
-            ? navigatorUpdate
-            : () {
-                Navigator.pop(context);
-              });
+    if (mounted) {
+      appDialog(
+          context: context,
+          title: auth.status ? "Success" : "Oops!",
+          content: auth.message,
+          confirmText: auth.status ? "Proceed" : "Try Again",
+          onConfirm: auth.status
+              ? navigatorUpdate
+              : () {
+                  Navigator.pop(context);
+                });
+    }
   }
 
   // function handle navigator signup

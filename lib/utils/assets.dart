@@ -1,6 +1,5 @@
 // image assets
 const String spline = 'assets/images/backgrounds/spline.png';
-const String star = 'assets/icons/star.png';
 const String carouserImg1 = 'assets/images/carouser_img1.png';
 const String carouserImg2 = 'assets/images/carouser_img2.png';
 const String carouserImg3 = 'assets/images/carouser_img3.png';
@@ -9,6 +8,8 @@ const String profiles = 'assets/images/profiles.png';
 const String webChat = 'assets/images/web_chat.png';
 const String logo = 'assets/images/logo_app.png';
 const String noImage = 'assets/images/no_image.jpg';
+const String backgroundProfile = 'assets/images/background_profile.png';
+const String vectorProfile = 'assets/images/vector.png';
 
 // image networks
 const String group =

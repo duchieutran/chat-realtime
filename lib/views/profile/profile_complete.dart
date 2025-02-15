@@ -40,15 +40,17 @@ class _ProfileCompleteState extends State<ProfileComplete> {
   updateAvatar() async {
     String url = await profileViewModel.upLoadImage();
     if (url.isNotEmpty) {
-      appDialog(
-          context: context,
-          barrierDismissible: false,
-          title: "🎉 Success!",
-          content: "Your profile picture has been successfully updated!",
-          confirmText: "Okey",
-          onConfirm: () {
-            Navigator.pop(context);
-          });
+      if (mounted) {
+        appDialog(
+            context: context,
+            barrierDismissible: false,
+            title: "🎉 Success!",
+            content: "Your profile picture has been successfully updated!",
+            confirmText: "Okey",
+            onConfirm: () {
+              Navigator.pop(context);
+            });
+      }
     }
     setState(() {
       image = url;
@@ -81,30 +83,38 @@ class _ProfileCompleteState extends State<ProfileComplete> {
         );
 
         // Đóng popup loading
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
 
         // Hiển thị thông báo thành công
-        appDialog(
-            context: context,
-            title: "✅ Success!",
-            content: "Your profile has been updated successfully.",
-            confirmText: "Okey",
-            onConfirm: () {
-              Navigator.pushNamed(context, AppRouters.home);
-            });
+        if (mounted) {
+          appDialog(
+              context: context,
+              title: "✅ Success!",
+              content: "Your profile has been updated successfully.",
+              confirmText: "Okey",
+              onConfirm: () {
+                Navigator.pushNamed(context, AppRouters.home);
+              });
+        }
       } catch (e) {
         // Đóng popup loading
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
 
         // Hiển thị thông báo lỗi
-        appDialog(
-            context: context,
-            title: "❌ Error",
-            content: "Failed to update profile. Please try again.",
-            confirmText: "Try Again",
-            onConfirm: () {
-              Navigator.pop(context);
-            });
+        if (mounted) {
+          appDialog(
+              context: context,
+              title: "❌ Error",
+              content: "Failed to update profile. Please try again.",
+              confirmText: "Try Again",
+              onConfirm: () {
+                Navigator.pop(context);
+              });
+        }
       }
     }
   }

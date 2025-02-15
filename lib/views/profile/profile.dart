@@ -124,10 +124,10 @@ class _ProfileState extends State<Profile> {
                     ),
                     child: Column(
                       children: [
-                        textInfo(title: "UID", content: users.uid),
-                        textInfo(title: "Email", content: users.email),
+                        textInfo(title: "UID  ", content: users.uid),
+                        textInfo(title: "Email  ", content: users.email),
                         textInfo(
-                            title: "Status",
+                            title: "Status  ",
                             content: users.isOnline ? "Online" : "Offline"),
                       ],
                     ),

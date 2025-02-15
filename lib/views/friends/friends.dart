@@ -3,9 +3,10 @@ import 'package:chatting/services/store_services.dart';
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
-import 'package:chatting/views/friends/component/card_info.dart';
-import 'package:chatting/views/friends/component/popup_friends.dart';
+import 'package:chatting/views/friends/component/card_friends.dart';
+import 'package:chatting/views/friends/component/popup_friends_requests.dart';
 import 'package:chatting/views/widgets/app_dialog.dart';
+import 'package:chatting/views/widgets/popup_profile.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class Friends extends StatefulWidget {
   const Friends({super.key});
 
   @override
-  _FriendsState createState() => _FriendsState();
+  State<Friends> createState() => _FriendsState();
 }
 
 class _FriendsState extends State<Friends> {
@@ -26,8 +27,10 @@ class _FriendsState extends State<Friends> {
 
   Set<String> processingRequests = {};
 
+  // Hàm tìm kiếm bạn bè
   void _searchFriend() async {
     String uid = searchController.text.trim();
+    // nếu không nhập thì hiện thị thông báo
     if (uid.isEmpty) {
       appDialog(
           context: context,
@@ -39,32 +42,35 @@ class _FriendsState extends State<Friends> {
           });
       return;
     }
-
+    // Tìm kiếm
     Users? user = await friendVM.findFriends(uid: uid);
-
     if (user != null) {
       bool? isPending = await friendVM.checkFriends(uid: uid);
 
-      showDialog(
-        context: context,
-        builder: (context) => FriendRequestDialog(
-          url: user.urlAvatar,
-          name: user.name,
-          email: user.email,
-          statusAdd: isPending,
-          onAddFriend:
-              isPending ? () {} : () => friendVM.sendFriend(receiverUid: uid),
-        ),
-      );
-    } else {
-      appDialog(
+      if (mounted) {
+        showDialog(
           context: context,
-          title: "Oops!",
-          content: "UID not found!",
-          confirmText: "Try Again",
-          onConfirm: () {
-            Navigator.pop(context);
-          });
+          builder: (context) => FriendRequestDialog(
+            url: user.urlAvatar,
+            name: user.name,
+            email: user.email,
+            statusAdd: isPending,
+            onAddFriend:
+                isPending ? () {} : () => friendVM.sendFriend(receiverUid: uid),
+          ),
+        );
+      }
+    } else {
+      if (mounted) {
+        appDialog(
+            context: context,
+            title: "Oops!",
+            content: "UID not found!",
+            confirmText: "Try Again",
+            onConfirm: () {
+              Navigator.pop(context);
+            });
+      }
     }
   }
 
@@ -105,8 +111,10 @@ class _FriendsState extends State<Friends> {
     );
   }
 
+  // Hàm hiển thị danh sách bạn bè
   Widget _buildFriendsList() {
     return StreamBuilder<List<String>>(
+      // lắng nghe sự thay đổi bạn bè
       stream: store.listenToFriend(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -127,10 +135,20 @@ class _FriendsState extends State<Friends> {
                       Users user = userSnapshot.data!;
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CardInfo(
+                        child: CardFriend(
                           urlAvatar: user.urlAvatar,
                           email: user.email,
                           name: user.name,
+                          iconData: Icons.info_outline_rounded,
+                          feature: "Info",
+                          function: () {
+                            showPopUpProfile(
+                                context: context,
+                                urlAvatar: user.urlAvatar,
+                                uid: user.uid,
+                                name: user.name,
+                                email: user.email);
+                          },
                         ),
                       );
                     },
@@ -141,6 +159,7 @@ class _FriendsState extends State<Friends> {
     );
   }
 
+  // Danh sách bạn bè gửi yêu cầu kết bạn
   Widget _buildFriendRequests() {
     return StreamBuilder<List<String>>(
       stream: store.listenToFriendRequests(),
@@ -165,7 +184,7 @@ class _FriendsState extends State<Friends> {
                           opacity:
                               processingRequests.contains(user.uid) ? 0.5 : 1.0,
                           duration: const Duration(milliseconds: 300),
-                          child: CardInfo(
+                          child: CardFriend(
                             urlAvatar: user.urlAvatar,
                             email: user.email,
                             name: user.name,
@@ -193,6 +212,7 @@ class _FriendsState extends State<Friends> {
     );
   }
 
+  // Tìm kiếm bạn bè
   Widget _buildSearchFriends() {
     return Padding(
       padding: const EdgeInsets.all(10),

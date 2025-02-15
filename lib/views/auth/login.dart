@@ -48,16 +48,18 @@ class _LoginState extends State<Login> {
     }
     await auth.signIn(controllerEmail.text, controllerPassword.text);
 
-    appDialog(
-        context: context,
-        title: auth.status ? "Success" : "Oops!",
-        content: auth.message,
-        confirmText: auth.status ? "Proceed" : "Try Again",
-        onConfirm: auth.status
-            ? navigatorHome
-            : () {
-                Navigator.pop(context);
-              });
+    if (mounted) {
+      appDialog(
+          context: context,
+          title: auth.status ? "Success" : "Oops!",
+          content: auth.message,
+          confirmText: auth.status ? "Proceed" : "Try Again",
+          onConfirm: auth.status
+              ? navigatorHome
+              : () {
+                  Navigator.pop(context);
+                });
+    }
   }
 
   // function handle navigator signup
