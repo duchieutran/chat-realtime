@@ -98,7 +98,6 @@ class _MessageScreenState extends State<MessageScreen> {
     bool isMe = message.senderId == messageViewModel.auth.currentUser!.uid;
     String urlAvatar = message.senderAvatar;
     String name = message.senderName;
-    String uid = message.senderId;
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
@@ -173,19 +172,19 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
           // Hiển thị xem ai đã xem
           // TODO : dự kiến
-          isMe
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 10,
-                      backgroundImage: NetworkImage(
-                        urlAvatar,
-                      ),
-                    )
-                  ],
-                )
-              : const SizedBox()
+          // isMe
+          //     ? Row(
+          //         mainAxisAlignment: MainAxisAlignment.end,
+          //         children: [
+          //           CircleAvatar(
+          //             maxRadius: 10,
+          //             backgroundImage: NetworkImage(
+          //               urlAvatar,
+          //             ),
+          //           )
+          //         ],
+          //       )
+          //     : const SizedBox()
         ],
       ),
     );

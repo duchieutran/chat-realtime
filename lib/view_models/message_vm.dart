@@ -76,8 +76,8 @@ class MessageViewModel extends ChangeNotifier {
   }
 
   /// Đánh dấu tin nhắn đã xem
-  Future<void> markMessageAsSeen(
-      String chatId, String messageId, String userId) async {
-    await _chatService.markMessageAsSeen(chatId, messageId, userId);
-  }
+// Future<void> markMessageAsSeen(
+//     String chatId, String messageId, String userId) async {
+//   await _chatService.markMessageAsSeen(chatId, messageId, userId);
+// }
 }

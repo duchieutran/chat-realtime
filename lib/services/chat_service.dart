@@ -71,16 +71,16 @@ class ChatService {
   }
 
   /// Đánh dấu tin nhắn đã xem
-  Future<void> markMessageAsSeen(
-      String chatId, String messageId, String userId) async {
-    final messageRef = store
-        .collection('messages')
-        .doc(chatId)
-        .collection('messages')
-        .doc(messageId);
-
-    await messageRef.update({
-      'seenBy': FieldValue.arrayUnion([userId]),
-    });
-  }
+// Future<void> markMessageAsSeen(
+//     String chatId, String messageId, String userId) async {
+//   final messageRef = store
+//       .collection('messages')
+//       .doc(chatId)
+//       .collection('messages')
+//       .doc(messageId);
+//
+//   await messageRef.update({
+//     'seenBy': FieldValue.arrayUnion([userId]),
+//   });
+// }
 }
