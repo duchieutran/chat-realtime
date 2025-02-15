@@ -24,10 +24,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build iOS
-        run: flutter build ios --release --no-codesign
+      - name: Clean Flutter project (optional)
+        run: flutter clean  # Bạn có thể thêm lệnh này để đảm bảo sạch sẽ trước khi build
 
-      - name: Archive iOS app
+      - name: Build iOS app
         run: flutter build ios --release --no-codesign
 
       - name: Upload build artifact
@@ -35,4 +35,3 @@ jobs:
         with:
           name: flutter-app-build
           path: build/ios/iphoneos/Runner.ipa
-
