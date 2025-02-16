@@ -38,6 +38,7 @@ class AuthServices {
   // logout
   logout() async {
     try {
+      await setOffline();
       await auth.signOut();
     } catch (e) {
       print('Error during registration: $e');
@@ -45,10 +46,24 @@ class AuthServices {
   }
 
   // cập nhật trạng thái người dùng
-  setIsOnline() async {
+  Future<void> setIsOnline() async {
     DatabaseReference ref =
         FirebaseDatabase.instance.ref('users/${auth.currentUser!.uid}');
     await ref.set({'isOnline': true});
     await ref.onDisconnect().set({'isOnline': false});
+  }
+
+  Future<void> setOffline() async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref('users/${auth.currentUser!.uid}');
+    await ref.set({'isOnline': false});
+  }
+
+  // Lắng nghe trạng thái online của người dùng
+  Stream<bool> getUserStatus(String userId) {
+    return FirebaseDatabase.instance
+        .ref('users/$userId/isOnline')
+        .onValue
+        .map((event) => event.snapshot.value as bool? ?? false);
   }
 }

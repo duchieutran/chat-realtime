@@ -149,6 +149,7 @@ class _FriendsState extends State<Friends> {
                                 name: user.name,
                                 email: user.email);
                           },
+                          uid: user.uid,
                         ),
                       );
                     },
@@ -201,6 +202,7 @@ class _FriendsState extends State<Friends> {
                                 processingRequests.remove(user.uid);
                               });
                             },
+                            uid: user.uid,
                           ),
                         ),
                       );

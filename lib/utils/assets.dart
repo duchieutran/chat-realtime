@@ -10,6 +10,7 @@ const String logo = 'assets/images/logo_app.png';
 const String noImage = 'assets/images/no_image.jpg';
 const String backgroundProfile = 'assets/images/background_profile.png';
 const String vectorProfile = 'assets/images/vector.png';
+const String iconClose = 'assets/images/icon_close.png';
 
 // image networks
 const String group =

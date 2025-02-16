@@ -1,3 +1,4 @@
+import 'package:chatting/services/auth_services.dart';
 import 'package:chatting/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +11,11 @@ class CardFriend extends StatefulWidget {
     required this.name,
     this.feature,
     this.iconData,
+    required this.uid,
   });
 
   final VoidCallback? function;
+  final String uid;
   final String urlAvatar;
   final String email;
   final String name;
@@ -51,9 +54,47 @@ class _CardFriendState extends State<CardFriend> {
           ]),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: NetworkImage(widget.urlAvatar),
+          Stack(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: NetworkImage(widget.urlAvatar),
+              ),
+              Positioned(
+                right: 2,
+                bottom: 2,
+                child: StreamBuilder<bool>(
+                    stream: AuthServices().getUserStatus(widget.uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        bool isOnline = snapshot.data ?? false;
+                        return Container(
+                          width: 13,
+                          height: 13,
+                          decoration: BoxDecoration(
+                              color: isOnline
+                                  ? AppColors.green50
+                                  : AppColors.grey40,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              border:
+                                  Border.all(color: AppColors.light, width: 1)),
+                        );
+                      } else {
+                        return Container(
+                          width: 13,
+                          height: 13,
+                          decoration: BoxDecoration(
+                              color: AppColors.grey40,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              border:
+                                  Border.all(color: AppColors.light, width: 1)),
+                        );
+                      }
+                    }),
+              )
+            ],
           ),
           const SizedBox(width: 10),
           Expanded(

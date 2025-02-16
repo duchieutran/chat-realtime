@@ -10,6 +10,7 @@ void showPopUpProfile(
     required String urlAvatar,
     required String uid}) {
   showDialog(
+    barrierDismissible: false,
     context: context,
     builder: (context) => Dialog(
       shape: RoundedRectangleBorder(
@@ -75,6 +76,18 @@ void showPopUpProfile(
                     ],
                   ),
                 ),
+                Positioned(
+                    top: 20,
+                    right: 20,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Image(
+                        image: AssetImage(iconClose),
+                        height: 20,
+                      ),
+                    ))
               ],
             ),
             Stack(
