@@ -2,7 +2,7 @@ import 'package:chatting/models/chat_room_model.dart';
 import 'package:chatting/models/users_model.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
-import 'package:chatting/views/chat/create_group_screen.dart';
+import 'package:chatting/views/chat/update_group.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -64,7 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CreateGroupScreen(users: users)),
+                    builder: (context) => UpdateGroup(users: users)),
               );
             },
           ),
@@ -128,6 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   messageLast:
                       rooms[index].lastMessage?.content ?? "Say hi! 👋",
                   timeLast: time,
+                  isGroup: true,
                 );
               },
             );
@@ -146,6 +147,7 @@ class ChatTile extends StatelessWidget {
     required this.uid,
     required this.messageLast,
     required this.timeLast,
+    this.isGroup = false,
   });
 
   final String userName;
@@ -153,6 +155,7 @@ class ChatTile extends StatelessWidget {
   final String uid;
   final String messageLast;
   final String timeLast;
+  final bool isGroup;
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +169,7 @@ class ChatTile extends StatelessWidget {
               receiverAvatar: urlAvatar,
               receiverUid: uid,
               receiverName: userName,
+              isGroup: isGroup,
             ),
           ),
         );

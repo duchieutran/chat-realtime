@@ -126,9 +126,7 @@ class _ProfileState extends State<Profile> {
                       children: [
                         textInfo(title: "UID  ", content: users.uid),
                         textInfo(title: "Email  ", content: users.email),
-                        textInfo(
-                            title: "Status  ",
-                            content: users.isOnline ? "Online" : "Offline"),
+                        textInfo(title: "Status  ", content: "Online"),
                       ],
                     ),
                   ),

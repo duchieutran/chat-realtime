@@ -19,7 +19,9 @@ class _ProfileCompleteState extends State<ProfileComplete> {
   late bool isLoading;
   late bool isLoadingImage;
   late String image;
+  String? errorText;
   late TextEditingController nameController;
+  late TextEditingController userNameController;
 
   @override
   void initState() {
@@ -28,16 +30,18 @@ class _ProfileCompleteState extends State<ProfileComplete> {
     isLoadingImage = true;
     image = "";
     nameController = TextEditingController();
+    userNameController = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
     nameController.dispose();
+    userNameController.dispose();
   }
 
   // Update avatar
-  updateAvatar() async {
+  void updateAvatar() async {
     String url = await profileViewModel.upLoadImage();
     if (url.isNotEmpty) {
       if (mounted) {
@@ -59,28 +63,48 @@ class _ProfileCompleteState extends State<ProfileComplete> {
 
   // hàm update thông tin cá nhân.
   void updateProfile() async {
-    if (nameController.text.isEmpty || image.isEmpty) {
+    if (nameController.text.isEmpty ||
+        image.isEmpty ||
+        userNameController.text.isEmpty) {
       // Hiển thị popup lỗi nếu thiếu thông tin
       appDialog(
         context: context,
         title: "⚠️ Error",
-        content: "Please update your profile picture and full name.",
+        content: "Please update your profile picture or full name or username.",
         confirmText: "Try Again",
         onConfirm: () {
           Navigator.pop(context);
         },
       );
     } else {
+      bool checkUserName = await profileViewModel.checkExistUserName(
+          userName: userNameController.text);
+      if (!checkUserName) {
+        if (mounted) {
+          appDialog(
+              context: context,
+              title: "⚠️ Error",
+              content:
+                  "Username already exists. Please choose a different one.",
+              confirmText: "Try Again",
+              onConfirm: () {
+                Navigator.pop(context);
+              });
+        }
+        return;
+      }
       try {
         // Hiển thị popup loading
-        appDialog(
-            context: context,
-            title: "🔄 Loading...",
-            content: "Updating your profile...");
+        if (mounted) {
+          appDialog(
+              context: context,
+              title: "🔄 Loading...",
+              content: "Updating your profile...");
+        }
         await profileViewModel.updateProfile(
-          name: nameController.text,
-          image: image,
-        );
+            name: nameController.text,
+            image: image,
+            username: userNameController.text);
 
         // Đóng popup loading
         if (mounted) {
@@ -155,6 +179,16 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                               textInputAction: TextInputAction.done,
                               inputType: TextInputType.text,
                               hintText: "enter your full name",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: TextFieldCustom(
+                              controller: userNameController,
+                              textInputAction: TextInputAction.done,
+                              inputType: TextInputType.text,
+                              hintText: "enter your username",
+                              errorText: errorText,
                             ),
                           ),
                           // Nút update and -> next,

@@ -9,7 +9,8 @@ class TextFieldCustom extends StatelessWidget {
       this.inputType = TextInputType.text,
       this.hintText = '',
       this.obscureText = false,
-      this.textInputAction = TextInputAction.next});
+      this.textInputAction = TextInputAction.next,
+      this.errorText});
 
   final TextEditingController controller;
   final TextInputType inputType;
@@ -17,12 +18,14 @@ class TextFieldCustom extends StatelessWidget {
   final bool obscureText;
   final TextInputAction textInputAction;
   final Function(String)? onChanged;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       onChanged: onChanged,
+
       style: const TextStyle(fontSize: 18, color: Colors.black),
       textAlign: TextAlign.left,
       textInputAction: textInputAction,
@@ -30,6 +33,7 @@ class TextFieldCustom extends StatelessWidget {
       obscureText: obscureText,
       // ẩn hiện password
       decoration: InputDecoration(
+        errorText: errorText,
         contentPadding: const EdgeInsets.only(
             left: 15.0, top: 15.0, right: 10.0, bottom: 17.0),
         hintText: hintText,

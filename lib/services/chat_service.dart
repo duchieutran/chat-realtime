@@ -26,6 +26,30 @@ class ChatService {
     return chatRef.id;
   }
 
+  // hàm update group
+  Future<void> updateGroup(
+      {required chatUID,
+      required String urlAvatar,
+      required String name,
+      required List<String> members}) async {
+    try {
+      final chatRef = store.collection('chats').doc(chatUID);
+
+      Map<String, dynamic> dataToUpdate = {};
+
+      dataToUpdate['name'] = name;
+      dataToUpdate['urlAvatar'] = urlAvatar;
+      dataToUpdate['members'] = members;
+
+      if (dataToUpdate.isNotEmpty) {
+        await chatRef.update(dataToUpdate);
+      }
+    } catch (e) {
+      print("Lỗi khi cập nhật chat: $e");
+      throw Exception("Không thể cập nhật thông tin chat");
+    }
+  }
+
   // lay danh sach chat
   Stream<List<ChatRoomModel>> getUserChats(String userId) {
     return store
@@ -38,7 +62,7 @@ class ChatService {
             .toList());
   }
 
-  /// Gửi tin nhắn mới
+  // Gửi tin nhắn mới
   Future<void> sendMessage(String chatId, MessageModel message) async {
     final messageRef = store
         .collection('messages')
@@ -57,7 +81,7 @@ class ChatService {
     await lastMessage.update({'lastMessage': lastMessageModel.toMap()});
   }
 
-  /// Lắng nghe danh sách tin nhắn trong một đoạn chat
+  // Lắng nghe danh sách tin nhắn trong một đoạn chat
   Stream<List<MessageModel>> getMessages(String chatId) {
     return store
         .collection('messages')
@@ -70,17 +94,23 @@ class ChatService {
             .toList());
   }
 
-  /// Đánh dấu tin nhắn đã xem
-// Future<void> markMessageAsSeen(
-//     String chatId, String messageId, String userId) async {
-//   final messageRef = store
-//       .collection('messages')
-//       .doc(chatId)
-//       .collection('messages')
-//       .doc(messageId);
-//
-//   await messageRef.update({
-//     'seenBy': FieldValue.arrayUnion([userId]),
-//   });
-// }
+  // get Info doan chat
+  Future<List<String>> listUIDGroup({required String uidGroup}) async {
+    try {
+      final chatRef = store.collection('chats').doc(uidGroup);
+      final docSnapshot = await chatRef.get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        if (data != null && data.containsKey('members')) {
+          List<dynamic> members = data['members'];
+          return members.cast<String>();
+        }
+      }
+      return [];
+    } catch (e) {
+      print("Lỗi khi lấy danh sách UID: $e");
+      throw Exception("Không thể lấy danh sách UID của nhóm");
+    }
+  }
 }

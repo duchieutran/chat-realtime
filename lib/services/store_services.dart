@@ -11,21 +11,39 @@ class StoreServices {
     try {
       if (auth.currentUser != null) {
         String uid = auth.currentUser!.uid;
+        bool available = await isUsernameAvailable(user.username);
+        if (!available) {
+          print("Username đã tồn tại!");
+          return;
+        }
+
         await fireStore.collection("users").doc(uid).set({
           'uid': user.uid,
           'email': user.email,
           'name': user.name,
+          'username': user.username, // Thêm username vào
           'urlAvatar': user.urlAvatar,
-          'isOnline': user.isOnline,
           'friends': user.friends,
           'friendRequests': user.friendRequests,
         }, SetOptions(merge: true));
       } else {
-        print("user không tồn tại!");
+        print("User không tồn tại!");
       }
     } catch (e) {
       rethrow;
     }
+  }
+
+  // kiểm tra xem username có trùng không
+  Future<bool> isUsernameAvailable(String username) async {
+    var query = await fireStore
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+
+    // Nếu không có tài liệu nào hoặc nếu tài liệu tìm thấy có ID là của user hiện tại
+    return query.docs.isEmpty ||
+        query.docs.every((doc) => doc.id == auth.currentUser!.uid);
   }
 
   // lấy thông tin cá nhân theo uid
@@ -41,7 +59,6 @@ class StoreServices {
           email: userData['email'] ?? '',
           name: userData['name'] ?? '',
           urlAvatar: userData['urlAvatar'] ?? '',
-          isOnline: userData['isOnline'] ?? false,
           friends: List<String>.from(userData['friends'] ?? []),
           friendRequests: List<String>.from(userData['friendRequests'] ?? []),
         );

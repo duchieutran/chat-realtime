@@ -21,12 +21,44 @@ class MessageViewModel extends ChangeNotifier {
     _chatService.createChat("", "", [auth.currentUser!.uid, uidName]);
   }
 
+  // hàm tạo chat group
   void createChatRoomGroup(
       {required String urlAvatar,
       required String name,
       required List<String> members}) {
     members.insert(0, auth.currentUser!.uid);
     _chatService.createChat(urlAvatar, name, members, isGroup: true);
+  }
+
+  // Lấy thông tin đoạn chat
+  Future<List<Users>> getUser({required String uidGroup}) async {
+    try {
+      List<String> uidList =
+          await _chatService.listUIDGroup(uidGroup: uidGroup);
+      if (uidList.isEmpty)
+        return []; // Trả về danh sách rỗng nếu không có user nào
+
+      // Dùng Future.wait để đợi tất cả các truy vấn hoàn thành
+      List<Users?> users = await Future.wait(
+          uidList.map((uid) => _storeServices.getUserInfo(uid: uid)));
+
+      // Lọc ra những user hợp lệ (không null)
+      return users.whereType<Users>().toList();
+    } catch (e) {
+      print("Lỗi khi lấy danh sách người dùng: $e");
+      throw Exception("Không thể lấy danh sách người dùng");
+    }
+  }
+
+  // cập nhật đoạn chat
+  void updateChatRoomGroup(
+      {required String uidGroup,
+      required String urlAvatar,
+      required String name,
+      required List<String> members}) {
+    members.insert(0, auth.currentUser!.uid);
+    _chatService.updateGroup(
+        chatUID: uidGroup, urlAvatar: urlAvatar, name: name, members: members);
   }
 
   // hàm hiển thị ngay đầu tiên

@@ -1,6 +1,9 @@
 import 'package:chatting/models/message_model.dart';
+import 'package:chatting/models/users_model.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
+import 'package:chatting/views/chat/update_group.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +12,7 @@ class MessageScreen extends StatefulWidget {
   final String receiverUid;
   final String receiverName;
   final String receiverAvatar;
+  final bool isGroup;
 
   const MessageScreen({
     super.key,
@@ -16,6 +20,7 @@ class MessageScreen extends StatefulWidget {
     required this.receiverUid,
     required this.receiverName,
     required this.receiverAvatar,
+    this.isGroup = false,
   });
 
   @override
@@ -24,6 +29,47 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   final TextEditingController messageController = TextEditingController();
+  final FriendViewModel friendsVM = FriendViewModel();
+  final MessageViewModel messageViewModel = MessageViewModel();
+  List<Users> friends = [];
+  List<Users> memberInGroup = [];
+
+  void getFriends() async {
+    try {
+      List<Users>? user = await friendsVM.getFriend();
+      if (user != null) {
+        setState(() {
+          friends = user;
+        });
+      } else {
+        friends = [];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // get user trong nhom
+  Future<void> getMemberInGroup() async {
+    try {
+      List<Users>? user =
+          await messageViewModel.getUser(uidGroup: widget.chatId);
+      setState(() {
+        memberInGroup = user;
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getFriends();
+      getMemberInGroup();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +80,7 @@ class _MessageScreenState extends State<MessageScreen> {
       body: Column(
         children: [
           Expanded(child: _buildMessageList(messageViewModel)),
-          _buildMessageInput(messageViewModel),
+          _buildMessageInput(messageViewModel, friends),
         ],
       ),
     );
@@ -59,14 +105,29 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
         ],
       ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            //TODO : xem thêm
-          },
-          icon: const Icon(Icons.more_horiz),
-        )
-      ],
+      actions: widget.isGroup
+          ? [
+              IconButton(
+                onPressed: () {
+                  // popup thêm bạn bè
+                  // _showBottomSheet(context, users);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdateGroup(
+                          users: friends,
+                          isUpdate: true,
+                          groupName: widget.receiverName,
+                          uidGroup: widget.chatId,
+                          // TODO
+                          usersInGroup: memberInGroup,
+                        ),
+                      ));
+                },
+                icon: const Icon(Icons.group_add),
+              )
+            ]
+          : [],
     );
   }
 
@@ -170,28 +231,14 @@ class _MessageScreenState extends State<MessageScreen> {
               ),
             ],
           ),
-          // Hiển thị xem ai đã xem
-          // TODO : dự kiến
-          // isMe
-          //     ? Row(
-          //         mainAxisAlignment: MainAxisAlignment.end,
-          //         children: [
-          //           CircleAvatar(
-          //             maxRadius: 10,
-          //             backgroundImage: NetworkImage(
-          //               urlAvatar,
-          //             ),
-          //           )
-          //         ],
-          //       )
-          //     : const SizedBox()
         ],
       ),
     );
   }
 
   // widget gui tin nhan
-  Widget _buildMessageInput(MessageViewModel messageViewModel) {
+  Widget _buildMessageInput(
+      MessageViewModel messageViewModel, List<Users> users) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
@@ -249,4 +296,73 @@ class _MessageScreenState extends State<MessageScreen> {
   String _formatTimestamp(DateTime dateTime) {
     return "${dateTime.hour}:${dateTime.minute}, ${dateTime.day} ${dateTime.month} ${dateTime.year}";
   }
+}
+
+// show bottom sheet
+void _showBottomSheet(BuildContext context, List<Users> users) {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+    ),
+    builder: (context) {
+      Size size = MediaQuery.of(context).size;
+      return Container(
+        padding: const EdgeInsets.all(16),
+        height: size.height,
+        child: Column(
+          children: [
+            const Text("click"),
+            Expanded(
+              child: ListView(
+                children: List.generate(
+                  users.length,
+                  (index) {
+                    return GestureDetector(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 400),
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.blue40.withOpacity(0.6),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            leading: CircleAvatar(
+                              radius: 28,
+                              backgroundImage:
+                                  NetworkImage(users[index].urlAvatar),
+                            ),
+                            title: Text(users[index].name,
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600)),
+                            trailing: const AnimatedSwitcher(
+                              duration: Duration(milliseconds: 300),
+                              child: SizedBox.shrink(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

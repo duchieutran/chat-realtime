@@ -76,142 +76,144 @@ class _LoginState extends State<Login> {
         child: SizedBox(
           width: size.width,
           height: size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // ảnh
-              Image.asset(
-                logo,
-                width: 250,
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Center(
-                  child: Text(
-                    "Welcome to SayHi ...\nYour friends await you! ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.red30,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+          child: SizedBox(
+            width: size.width,
+            height: size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // ảnh
+                Image.asset(logo, width: 250),
+                // Text slogan
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Center(
+                    child: Text(
+                      "Welcome to SayHi ...\nYour friends await you! ",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.red30,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              // khung đăng nhập
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(20),
-                width: size.width,
-                decoration: BoxDecoration(
-                  color: AppColors.light,
-                  border: Border.all(color: AppColors.light, width: 1),
-                  borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.grey90.withOpacity(0.2),
-                      offset: const Offset(2, 2),
-                      blurRadius: 5,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Login
-                    const Text(
-                      "Login",
-                      style: TextStyle(
-                        color: AppColors.blue40,
-                        fontSize: 35,
-                        fontWeight: FontWeight.w900,
+                const SizedBox(height: 20),
+                // khung đăng nhập
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(20),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    color: AppColors.light,
+                    border: Border.all(color: AppColors.light, width: 1),
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.grey90.withOpacity(0.2),
+                        offset: const Offset(2, 2),
+                        blurRadius: 5,
+                        spreadRadius: 5,
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    // TextField email, password
-                    TextFieldCustom(
-                      controller: controllerEmail,
-                      hintText: 'admin@admin.vn',
-                      inputType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(height: 10),
-                    TextFieldCustom(
-                      controller: controllerPassword,
-                      hintText: '******',
-                      obscureText: true,
-                      inputType: TextInputType.visiblePassword,
-                      textInputAction: TextInputAction.done,
-                    ),
-                    const SizedBox(height: 30),
-                    // Button
-                    GestureDetector(
-                      onTap: handleLogin,
-                      child: Container(
-                        width: size.width,
-                        height: 50,
-                        decoration: const BoxDecoration(
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Login
+                      const Text(
+                        "Login",
+                        style: TextStyle(
                           color: AppColors.blue40,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(30),
-                          ),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Sign In",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.light,
-                                fontSize: 20),
-                          ),
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    // chức năng khác (đăng kí, quên mật khẩu)
-                    SizedBox(
-                      width: size.width,
-                      child: Center(
-                        child: RichText(
-                          text: TextSpan(
-                              text: "Don't have an account?  ",
-                              style: const TextStyle(color: AppColors.grey40),
-                              children: [
-                                TextSpan(
-                                  text: "Create account now!",
-                                  style: const TextStyle(
-                                      color: AppColors.blue40,
-                                      fontWeight: FontWeight.bold),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = navigatorSignUp,
-                                )
-                              ]),
-                        ),
+                      const SizedBox(height: 10),
+                      // TextField email, password
+                      TextFieldCustom(
+                        controller: controllerEmail,
+                        hintText: 'admin@admin.vn',
+                        inputType: TextInputType.emailAddress,
                       ),
-                    ),
-
-                    Center(
-                      child: TextButton.icon(
-                          onPressed: navigatorSignUp,
-                          icon: const Icon(
-                            Icons.person_outline,
+                      const SizedBox(height: 10),
+                      TextFieldCustom(
+                        controller: controllerPassword,
+                        hintText: '******',
+                        obscureText: true,
+                        inputType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
+                      ),
+                      const SizedBox(height: 30),
+                      // Button
+                      GestureDetector(
+                        onTap: handleLogin,
+                        child: Container(
+                          width: size.width,
+                          height: 50,
+                          decoration: const BoxDecoration(
                             color: AppColors.blue40,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30),
+                            ),
                           ),
-                          label: const Text(
-                            "Sign Up",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: AppColors.blue40),
-                          )),
-                    )
-                  ],
+                          child: const Center(
+                            child: Text(
+                              "Sign In",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.light,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      // chức năng khác (đăng kí, quên mật khẩu)
+                      SizedBox(
+                        width: size.width,
+                        child: Center(
+                          child: RichText(
+                            text: TextSpan(
+                                text: "Don't have an account?  ",
+                                style: const TextStyle(color: AppColors.grey40),
+                                children: [
+                                  TextSpan(
+                                    text: "Create account now!",
+                                    style: const TextStyle(
+                                        color: AppColors.blue40,
+                                        fontWeight: FontWeight.bold),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = navigatorSignUp,
+                                  )
+                                ]),
+                          ),
+                        ),
+                      ),
+
+                      Center(
+                        child: TextButton.icon(
+                            onPressed: navigatorSignUp,
+                            icon: const Icon(
+                              Icons.person_outline,
+                              color: AppColors.blue40,
+                            ),
+                            label: const Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: AppColors.blue40),
+                            )),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
