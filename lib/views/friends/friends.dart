@@ -29,13 +29,13 @@ class _FriendsState extends State<Friends> {
 
   // Hàm tìm kiếm bạn bè
   void _searchFriend() async {
-    String uid = searchController.text.trim();
+    String username = searchController.text.trim();
     // nếu không nhập thì hiện thị thông báo
-    if (uid.isEmpty) {
+    if (username.isEmpty) {
       appDialog(
           context: context,
           title: "Warning!",
-          content: "Please enter a valid UID",
+          content: "Please enter a valid username",
           confirmText: "Try Again",
           onConfirm: () {
             Navigator.pop(context);
@@ -43,9 +43,9 @@ class _FriendsState extends State<Friends> {
       return;
     }
     // Tìm kiếm
-    Users? user = await friendVM.findFriends(uid: uid);
+    final user = await friendVM.findFriendsUsername(username: username);
     if (user != null) {
-      bool? isPending = await friendVM.checkFriends(uid: uid);
+      bool? isPending = await friendVM.checkFriends(uid: user.uid);
 
       if (mounted) {
         showDialog(
@@ -55,8 +55,9 @@ class _FriendsState extends State<Friends> {
             name: user.name,
             email: user.email,
             statusAdd: isPending,
-            onAddFriend:
-                isPending ? () {} : () => friendVM.sendFriend(receiverUid: uid),
+            onAddFriend: isPending
+                ? () {}
+                : () => friendVM.sendFriend(receiverUid: username),
           ),
         );
       }

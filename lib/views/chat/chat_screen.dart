@@ -102,7 +102,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       uidCurrent == members[0] ? members[1] : members[0];
 
                   return FutureBuilder<Users?>(
-                    future: friends.findFriends(uid: name),
+                    future: friends.findFriendsUID(uid: name),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         Users user = snapshot.data!;

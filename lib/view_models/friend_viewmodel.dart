@@ -32,11 +32,20 @@ class FriendViewModel {
     }
   }
 
-  // hiển thị tìm kiếm bạn bè
-  Future<Users?> findFriends({required String uid}) async {
+  // hiển thị tìm kiếm bạn bè bằng uid
+  Future<Users?> findFriendsUID({required String uid}) async {
     try {
       if (auth.currentUser?.uid == uid) return null;
       return await store.getUserInfo(uid: uid);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // hiển thị tìm kiếm bạn bè bằng username
+  Future<Users?> findFriendsUsername({required String username}) async {
+    try {
+      return await store.getUserByUsername(username);
     } catch (e) {
       rethrow;
     }
@@ -47,7 +56,7 @@ class FriendViewModel {
     try {
       final currentUser = auth.currentUser;
       if (currentUser == null || receiverUid == currentUser.uid) return false;
-      Users? user = await findFriends(uid: receiverUid);
+      Users? user = await findFriendsUID(uid: receiverUid);
       if (user?.friendRequests?.contains(currentUser.uid) ?? false) {
         return false;
       }
@@ -61,7 +70,7 @@ class FriendViewModel {
   // Kiểm tra xem UID có trong danh sách yêu cầu kết bạn không
   Future<bool> checkFriends({required String uid}) async {
     bool isCheckFriend = false;
-    Users? friend = await findFriends(uid: uid);
+    Users? friend = await findFriendsUID(uid: uid);
     if (friend != null && friend.friendRequests != null) {
       if (friend.friendRequests!.contains(auth.currentUser!.uid)) {
         isCheckFriend = true;

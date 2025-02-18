@@ -69,6 +69,7 @@ class StoreServices {
           uid: userData['uid'] ?? '',
           email: userData['email'] ?? '',
           name: userData['name'] ?? '',
+          username: userData['username'],
           urlAvatar: userData['urlAvatar'] ?? '',
           friends: List<String>.from(userData['friends'] ?? []),
           friendRequests: List<String>.from(userData['friendRequests'] ?? []),
@@ -83,6 +84,20 @@ class StoreServices {
       print("Lỗi khi lấy thông tin người dùng: $e");
       return null;
     }
+  }
+
+  // lấy thông tin cá nhân theo username
+  Future<Users?> getUserByUsername(String username) async {
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .where("username", isEqualTo: username)
+        .limit(1) // Lấy 1 kết quả để tối ưu hiệu suất
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return Users.fromJson(querySnapshot.docs.first.data());
+    }
+    return null; // Không tìm thấy user
   }
 
   // Hàm gửi lời mời kết bạn

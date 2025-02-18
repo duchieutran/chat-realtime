@@ -86,10 +86,16 @@ class _ProfileState extends State<Profile> {
                               fontWeight: FontWeight.bold,
                               color: AppColors.light),
                         ),
-                        Text(
-                          users.email,
-                          style: const TextStyle(
-                              fontSize: 16, color: AppColors.light),
+                        GestureDetector(
+                          onTap: () {
+                            Clipboard.setData(
+                                ClipboardData(text: users.username));
+                          },
+                          child: Text(
+                            "@${users.username}",
+                            style: const TextStyle(
+                                fontSize: 16, color: AppColors.light),
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Row(
