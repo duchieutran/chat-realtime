@@ -1,5 +1,6 @@
 import 'package:chatting/models/chat_room_model.dart';
 import 'package:chatting/models/users_model.dart';
+import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
 import 'package:chatting/views/chat/update_group.dart';
@@ -76,7 +77,7 @@ class _ChatScreenState extends State<ChatScreen> {
           stream: chatViewModel.listRoom,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: Image(image: AssetImage(gifLoading)));
             }
 
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -110,8 +111,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           uid: rooms[index].chatId,
                           urlAvatar: user.urlAvatar,
                           userName: user.name,
-                          messageLast:
-                              rooms[index].lastMessage?.content ?? "Say hi! 👋",
+                          messageLast: rooms[index].lastMessage?.content ?? "",
                           timeLast: time,
                         );
                       } else {

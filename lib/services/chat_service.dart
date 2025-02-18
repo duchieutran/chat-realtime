@@ -11,8 +11,8 @@ class ChatService {
   Future<String> createChat(String urlAvatar, String name, List<String> members,
       {bool isGroup = false}) async {
     final chatRef = store.collection('chats').doc();
-    LastMessageModel lastMessageNew =
-        LastMessageModel(senderID: "", content: "", lastSend: Timestamp.now());
+    LastMessageModel lastMessageNew = LastMessageModel(
+        senderID: "", content: "Say hi ! ", lastSend: Timestamp.now());
     ChatRoomModel newChat = ChatRoomModel(
       chatId: chatRef.id,
       urlAvatar: urlAvatar,

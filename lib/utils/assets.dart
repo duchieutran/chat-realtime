@@ -11,6 +11,14 @@ const String noImage = 'assets/images/no_image.jpg';
 const String backgroundProfile = 'assets/images/background_profile.png';
 const String vectorProfile = 'assets/images/vector.png';
 const String iconClose = 'assets/images/icon_close.png';
+const String welcome = 'assets/images/welcome.svg';
+
+// gif
+const String gifBatman = 'assets/gif/batman.gif';
+const String gifLoading = 'assets/gif/loading.gif';
+const String gifCloseFail = 'assets/gif/close_fail.gif';
+const String gifCheck = 'assets/gif/check.gif';
+const String gifSonGoKu = 'assets/gif/songoku.gif';
 
 // image networks
 const String group =

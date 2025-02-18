@@ -56,9 +56,16 @@ class _CardFriendState extends State<CardFriend> {
         children: [
           Stack(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(widget.urlAvatar),
+              Container(
+                width: 63,
+                height: 63,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: AppColors.blue40, width: 3)),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(widget.urlAvatar),
+                ),
               ),
               Positioned(
                 right: 2,
@@ -110,7 +117,7 @@ class _CardFriendState extends State<CardFriend> {
                 Text(
                   widget.email,
                   style: const TextStyle(
-                      fontSize: 12, fontStyle: FontStyle.italic),
+                      fontSize: 14, fontWeight: FontWeight.w500),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

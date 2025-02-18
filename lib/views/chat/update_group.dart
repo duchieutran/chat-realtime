@@ -34,10 +34,10 @@ class _UpdateGroupState extends State<UpdateGroup> {
   @override
   void initState() {
     super.initState();
-    // TODO : xu ly logic
     selectedUsers = widget.isUpdate
         ? ((widget.usersInGroup != null) ? widget.usersInGroup! : [])
         : [];
+    print(selectedUsers);
     groupNameController = widget.isUpdate
         ? TextEditingController(text: widget.groupName)
         : TextEditingController();
@@ -142,9 +142,15 @@ class _UpdateGroupState extends State<UpdateGroup> {
               itemCount: widget.users.length,
               itemBuilder: (context, index) {
                 final user = widget.users[index];
-                print(widget.users[index].uid);
-                print(selectedUsers[index].uid);
-                final isSelected = selectedUsers.contains(user);
+                bool isSelected = false;
+                if (selectedUsers.isNotEmpty) {
+                  for (int i = 0; i < selectedUsers.length; i++) {
+                    if (selectedUsers[i].uid == user.uid) {
+                      isSelected = true;
+                      break;
+                    }
+                  }
+                }
 
                 return GestureDetector(
                   onTap: () => setState(() => isSelected
@@ -226,15 +232,14 @@ class _UpdateGroupState extends State<UpdateGroup> {
       name: groupNameController.text.trim(),
       members: selectedUsers.map((e) => e.uid).toList(),
     );
-    Navigator.pop(context);
   }
 
   Future<void> updateGroup() async {
-    print(widget.uidGroup);
     messageViewModel.updateChatRoomGroup(
         uidGroup: widget.uidGroup,
         urlAvatar: avatarGroup[chooseImg],
         name: groupNameController.text.trim(),
         members: selectedUsers.map((e) => e.uid).toList());
+    Navigator.pop(context);
   }
 }

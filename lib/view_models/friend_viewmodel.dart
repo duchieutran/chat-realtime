@@ -70,6 +70,7 @@ class FriendViewModel {
   // Kiểm tra xem UID có trong danh sách yêu cầu kết bạn không
   Future<bool> checkFriends({required String uid}) async {
     bool isCheckFriend = false;
+    if (uid == auth.currentUser!.uid) return true;
     Users? friend = await findFriendsUID(uid: uid);
     if (friend != null && friend.friendRequests != null) {
       if (friend.friendRequests!.contains(auth.currentUser!.uid)) {

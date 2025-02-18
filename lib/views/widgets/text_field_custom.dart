@@ -40,12 +40,12 @@ class TextFieldCustom extends StatelessWidget {
         hintStyle: const TextStyle(
             color: AppColors.grey40, fontWeight: FontWeight.w400, fontSize: 16),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(15),
           borderSide: const BorderSide(
               color: AppColors.blue30, width: 2), // Màu khi Focus
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(15),
           borderSide: const BorderSide(
               color: AppColors.grey40, width: 2), // Màu mặc định
         ),

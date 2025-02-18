@@ -1,5 +1,6 @@
 import 'package:chatting/models/users_model.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/profile_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class _ProfileState extends State<Profile> {
         centerTitle: true,
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: Image(image: AssetImage(gifLoading)))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -94,7 +95,9 @@ class _ProfileState extends State<Profile> {
                           child: Text(
                             "@${users.username}",
                             style: const TextStyle(
-                                fontSize: 16, color: AppColors.light),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.light),
                           ),
                         ),
                         const SizedBox(height: 16),

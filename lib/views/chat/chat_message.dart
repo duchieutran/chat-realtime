@@ -1,6 +1,7 @@
 import 'package:chatting/models/message_model.dart';
 import 'package:chatting/models/users_model.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
 import 'package:chatting/views/chat/update_group.dart';
@@ -136,7 +137,7 @@ class _MessageScreenState extends State<MessageScreen> {
       stream: messageViewModel.getMessageStream(widget.chatId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: Image(image: AssetImage(gifLoading)));
         }
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(child: Text("No messages yet."));

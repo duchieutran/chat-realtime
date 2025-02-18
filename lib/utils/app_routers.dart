@@ -30,7 +30,7 @@ class AppRouters {
         return const Login();
       case signup:
         return const SignUp();
-      case profileComplete:
+      case updateProfile:
         return const ProfileComplete();
       case home:
         return const Home();
@@ -46,10 +46,9 @@ class AppRouters {
   }
 
   static const String welcome = '/';
-  static const String register = '/register';
   static const String login = '/login';
   static const String signup = '/signup';
-  static const String profileComplete = '/profileComplete';
+  static const String updateProfile = '/profileComplete';
   static const String home = '/home';
   static const String profile = '/profile';
   static const String friends = '/friends';

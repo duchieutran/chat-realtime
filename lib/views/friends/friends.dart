@@ -1,6 +1,7 @@
 import 'package:chatting/models/users_model.dart';
 import 'package:chatting/services/store_services.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
 import 'package:chatting/views/friends/component/card_friends.dart';
@@ -57,7 +58,7 @@ class _FriendsState extends State<Friends> {
             statusAdd: isPending,
             onAddFriend: isPending
                 ? () {}
-                : () => friendVM.sendFriend(receiverUid: username),
+                : () => friendVM.sendFriend(receiverUid: user.uid),
           ),
         );
       }
@@ -66,7 +67,7 @@ class _FriendsState extends State<Friends> {
         appDialog(
             context: context,
             title: "Oops!",
-            content: "UID not found!",
+            content: "Username not found!",
             confirmText: "Try Again",
             onConfirm: () {
               Navigator.pop(context);
@@ -119,7 +120,7 @@ class _FriendsState extends State<Friends> {
       stream: store.listenToFriend(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: Image(image: AssetImage(gifLoading)));
         }
         List<String> friendIds = snapshot.data!;
 
@@ -166,7 +167,9 @@ class _FriendsState extends State<Friends> {
     return StreamBuilder<List<String>>(
       stream: store.listenToFriendRequests(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const CircularProgressIndicator();
+        if (!snapshot.hasData) {
+          return const Center(child: Image(image: AssetImage(gifLoading)));
+        }
         List<String> friendRequestIds = snapshot.data!;
 
         return friendRequestIds.isEmpty

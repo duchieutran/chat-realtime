@@ -4,6 +4,7 @@ import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/profile_viewmodel.dart';
 import 'package:chatting/views/widgets/app_button.dart';
 import 'package:chatting/views/widgets/app_dialog.dart';
+import 'package:chatting/views/widgets/app_loading.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
 
@@ -34,10 +35,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
   void updateAvatar() async {
     try {
       if (!mounted) return;
-      appDialog(
-          context: context,
-          title: "🔄 Loading...",
-          content: "Updating your profile...");
+      appLoading(context: context, gif: gifBatman);
       String url = await profileViewModel.upLoadImage();
       if (mounted) Navigator.pop(context);
       if (url.isNotEmpty && mounted) {
@@ -108,10 +106,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
     try {
       // Hiển thị popup loading
       if (mounted) {
-        appDialog(
-            context: context,
-            title: "🔄 Loading...",
-            content: "Updating your profile...");
+        appLoading(context: context, gif: gifSonGoKu);
       }
       await profileViewModel.updateProfile(
           name: nameController.text,
