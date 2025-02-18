@@ -66,6 +66,13 @@ class ProfileViewModel {
     return null;
   }
 
+  // check uid
+  Future<bool> checkUIDExist() async {
+    bool uidExist =
+        await storeServices.isUserUIDExist(uid: auth.currentUser!.uid);
+    return uidExist;
+  }
+
   // check exist username
   Future<bool> checkExistUserName({required String userName}) async {
     try {

@@ -13,6 +13,20 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+  // phân màn
+  String routerName(int status) {
+    switch (status) {
+      case 0:
+        return AppRouters.login;
+      case 1:
+        return AppRouters.profileComplete;
+      case 2:
+        return AppRouters.home;
+      default:
+        return AppRouters.welcome;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -32,9 +46,7 @@ class _WelcomeState extends State<Welcome> {
               await Future.delayed(const Duration(seconds: 3));
               controller.success();
               await authProvider.checkAuthState();
-              final router = (authProvider.isAuthenticated)
-                  ? AppRouters.home
-                  : AppRouters.login;
+              final router = routerName(authProvider.isAuthenticated);
               await Future.delayed(const Duration(seconds: 1));
               if (!context.mounted) return;
               Navigator.popAndPushNamed(context, router);

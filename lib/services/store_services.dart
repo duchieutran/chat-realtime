@@ -46,6 +46,17 @@ class StoreServices {
         query.docs.every((doc) => doc.id == auth.currentUser!.uid);
   }
 
+  // kiểm tra username đã tồn tại trong firestore chưa
+  Future<bool> isUserUIDExist({required String uid}) async {
+    try {
+      DocumentSnapshot snapshot =
+          await fireStore.collection('users').doc(uid).get();
+      return snapshot.exists;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // lấy thông tin cá nhân theo uid
   Future<Users?> getUserInfo({required String uid}) async {
     try {

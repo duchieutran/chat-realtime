@@ -16,22 +16,12 @@ class ProfileComplete extends StatefulWidget {
 
 class _ProfileCompleteState extends State<ProfileComplete> {
   ProfileViewModel profileViewModel = ProfileViewModel();
-  late bool isLoading;
-  late bool isLoadingImage;
-  late String image;
+  bool isLoading = true;
+  bool isLoadingImage = true;
+  String image = "";
   String? errorText;
-  late TextEditingController nameController;
-  late TextEditingController userNameController;
-
-  @override
-  void initState() {
-    super.initState();
-    isLoading = true;
-    isLoadingImage = true;
-    image = "";
-    nameController = TextEditingController();
-    userNameController = TextEditingController();
-  }
+  TextEditingController nameController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
 
   @override
   void dispose() {
@@ -42,9 +32,15 @@ class _ProfileCompleteState extends State<ProfileComplete> {
 
   // Update avatar
   void updateAvatar() async {
-    String url = await profileViewModel.upLoadImage();
-    if (url.isNotEmpty) {
-      if (mounted) {
+    try {
+      if (!mounted) return;
+      appDialog(
+          context: context,
+          title: "🔄 Loading...",
+          content: "Updating your profile...");
+      String url = await profileViewModel.upLoadImage();
+      if (mounted) Navigator.pop(context);
+      if (url.isNotEmpty && mounted) {
         appDialog(
             context: context,
             barrierDismissible: false,
@@ -54,11 +50,13 @@ class _ProfileCompleteState extends State<ProfileComplete> {
             onConfirm: () {
               Navigator.pop(context);
             });
+        setState(() {
+          image = url;
+        });
       }
+    } catch (e) {
+      if (mounted) Navigator.pop(context);
     }
-    setState(() {
-      image = url;
-    });
   }
 
   // hàm update thông tin cá nhân.
@@ -72,75 +70,95 @@ class _ProfileCompleteState extends State<ProfileComplete> {
         title: "⚠️ Error",
         content: "Please update your profile picture or full name or username.",
         confirmText: "Try Again",
-        onConfirm: () {
-          Navigator.pop(context);
-        },
+        onConfirm: () => Navigator.pop(context),
       );
-    } else {
-      bool checkUserName = await profileViewModel.checkExistUserName(
-          userName: userNameController.text);
-      if (!checkUserName) {
-        if (mounted) {
-          appDialog(
-              context: context,
-              title: "⚠️ Error",
-              content:
-                  "Username already exists. Please choose a different one.",
-              confirmText: "Try Again",
-              onConfirm: () {
-                Navigator.pop(context);
-              });
-        }
+      return;
+    }
+
+    if (!validateUsername(userNameController.text)) {
+      if (mounted) {
+        appDialog(
+          context: context,
+          title: "⚠️ Error",
+          content:
+              "Invalid username. Avoid numbers at start, spaces, special characters, and accents.",
+          confirmText: "Try Again",
+          onConfirm: () => Navigator.pop(context),
+        );
         return;
       }
-      try {
-        // Hiển thị popup loading
-        if (mounted) {
-          appDialog(
-              context: context,
-              title: "🔄 Loading...",
-              content: "Updating your profile...");
-        }
-        await profileViewModel.updateProfile(
-            name: nameController.text,
-            image: image,
-            username: userNameController.text);
+    }
 
-        // Đóng popup loading
-        if (mounted) {
-          Navigator.pop(context);
-        }
+    bool checkUserName = await profileViewModel.checkExistUserName(
+        userName: userNameController.text);
+    if (!checkUserName) {
+      if (mounted) {
+        appDialog(
+            context: context,
+            title: "⚠️ Error",
+            content: "Username already exists. Please choose a different one.",
+            confirmText: "Try Again",
+            onConfirm: () {
+              Navigator.pop(context);
+            });
+      }
+      return;
+    }
 
-        // Hiển thị thông báo thành công
-        if (mounted) {
-          appDialog(
-              context: context,
-              title: "✅ Success!",
-              content: "Your profile has been updated successfully.",
-              confirmText: "Okey",
-              onConfirm: () {
-                Navigator.pushNamed(context, AppRouters.home);
-              });
-        }
-      } catch (e) {
-        // Đóng popup loading
-        if (mounted) {
-          Navigator.pop(context);
-        }
+    try {
+      // Hiển thị popup loading
+      if (mounted) {
+        appDialog(
+            context: context,
+            title: "🔄 Loading...",
+            content: "Updating your profile...");
+      }
+      await profileViewModel.updateProfile(
+          name: nameController.text,
+          image: image,
+          username: userNameController.text);
 
-        // Hiển thị thông báo lỗi
-        if (mounted) {
-          appDialog(
-              context: context,
-              title: "❌ Error",
-              content: "Failed to update profile. Please try again.",
-              confirmText: "Try Again",
-              onConfirm: () {
-                Navigator.pop(context);
-              });
-        }
+      // Đóng popup loading
+      if (mounted) {
+        Navigator.pop(context);
+      }
+
+      // Hiển thị thông báo thành công
+      if (mounted) {
+        appDialog(
+            context: context,
+            title: "✅ Success!",
+            content: "Your profile has been updated successfully.",
+            confirmText: "Okey",
+            onConfirm: () {
+              Navigator.pushNamed(context, AppRouters.home);
+            });
+      }
+    } catch (e) {
+      // Đóng popup loading
+      if (mounted) {
+        Navigator.pop(context);
+      }
+
+      // Hiển thị thông báo lỗi
+      if (mounted) {
+        appDialog(
+            context: context,
+            title: "❌ Error",
+            content: "Failed to update profile. Please try again.",
+            confirmText: "Try Again",
+            onConfirm: () {
+              Navigator.pop(context);
+            });
       }
     }
+  }
+
+  // hàm kiểm tra username
+  bool validateUsername(String username) {
+    if (username.isEmpty) return false;
+    // Không được có dấu, không chứa khoảng trắng, không bắt đầu bằng số
+    return RegExp(r'^[a-zA-Z_][a-zA-Z0-9_]{2,15}$').hasMatch(username);
   }
 
   @override
@@ -181,6 +199,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                               hintText: "enter your full name",
                             ),
                           ),
+                          const SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: TextFieldCustom(

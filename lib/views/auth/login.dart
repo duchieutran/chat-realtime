@@ -2,6 +2,7 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/auth_viewmodel.dart';
+import 'package:chatting/view_models/profile_viewmodel.dart';
 import 'package:chatting/views/widgets/app_dialog.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/gestures.dart';
@@ -16,15 +17,9 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   AuthViewmodel auth = AuthViewmodel();
-  late TextEditingController controllerEmail;
-  late TextEditingController controllerPassword;
-
-  @override
-  void initState() {
-    super.initState();
-    controllerEmail = TextEditingController();
-    controllerPassword = TextEditingController();
-  }
+  ProfileViewModel profileViewModel = ProfileViewModel();
+  TextEditingController controllerEmail = TextEditingController();
+  TextEditingController controllerPassword = TextEditingController();
 
   @override
   void dispose() {
@@ -47,6 +42,7 @@ class _LoginState extends State<Login> {
       return;
     }
     await auth.signIn(controllerEmail.text, controllerPassword.text);
+    bool check = await profileViewModel.checkUIDExist();
 
     if (mounted) {
       appDialog(
@@ -55,7 +51,7 @@ class _LoginState extends State<Login> {
           content: auth.message,
           confirmText: auth.status ? "Proceed" : "Try Again",
           onConfirm: auth.status
-              ? navigatorHome
+              ? (check ? navigatorHome : navigatorProfileUpdate)
               : () {
                   Navigator.pop(context);
                 });
@@ -67,6 +63,10 @@ class _LoginState extends State<Login> {
 
   // function handle navigator home
   navigatorHome() => Navigator.popAndPushNamed(context, AppRouters.home);
+
+  // function handle complete profile
+  navigatorProfileUpdate() =>
+      Navigator.popAndPushNamed(context, AppRouters.profileComplete);
 
   @override
   Widget build(BuildContext context) {

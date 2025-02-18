@@ -1,24 +1,27 @@
+import 'package:chatting/view_models/profile_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  String? _token;
-  bool _isAuthenticated = false;
+  ProfileViewModel profileViewModel = ProfileViewModel();
+  int _isAuthenticated = 0;
 
-  String? get token => _token;
-  bool get isAuthenticated => _isAuthenticated;
+  int get isAuthenticated => _isAuthenticated;
 
   // check service
   Future<void> checkAuthState() async {
     final user = auth.currentUser;
 
     if (user != null) {
-      _token = await user.getIdToken();
-      _isAuthenticated = true;
+      bool checkDocumentUID = await profileViewModel.checkUIDExist();
+      if (checkDocumentUID) {
+        _isAuthenticated = 2;
+      } else {
+        _isAuthenticated = 1;
+      }
     } else {
-      _token = null;
-      _isAuthenticated = false;
+      _isAuthenticated = 0;
     }
     notifyListeners();
   }
