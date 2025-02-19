@@ -9,13 +9,16 @@ class ChatService {
 
   // ham tao doan chat [isGroup = true ? 'group' : 'private']
   Future<String> createChat(String urlAvatar, String name, List<String> members,
-      {bool isGroup = false}) async {
+      {bool isGroup = false, String uidAdmin = ""}) async {
     final chatRef = store.collection('chats').doc();
+    // tin nhan cuoi cung
     LastMessageModel lastMessageNew = LastMessageModel(
         senderID: "", content: "Say hi ! ", lastSend: Timestamp.now());
+    // model phong chat
     ChatRoomModel newChat = ChatRoomModel(
       chatId: chatRef.id,
       urlAvatar: urlAvatar,
+      uidAdmin: uidAdmin,
       name: name,
       type: isGroup ? 'group' : 'private',
       members: members,

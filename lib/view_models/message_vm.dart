@@ -27,7 +27,8 @@ class MessageViewModel extends ChangeNotifier {
       required String name,
       required List<String> members}) {
     members.insert(0, auth.currentUser!.uid);
-    _chatService.createChat(urlAvatar, name, members, isGroup: true);
+    _chatService.createChat(urlAvatar, name, members,
+        isGroup: true, uidAdmin: auth.currentUser!.uid);
   }
 
   // Lấy thông tin đoạn chat
@@ -35,8 +36,9 @@ class MessageViewModel extends ChangeNotifier {
     try {
       List<String> uidList =
           await _chatService.listUIDGroup(uidGroup: uidGroup);
-      if (uidList.isEmpty)
+      if (uidList.isEmpty) {
         return []; // Trả về danh sách rỗng nếu không có user nào
+      }
 
       // Dùng Future.wait để đợi tất cả các truy vấn hoàn thành
       List<Users?> users = await Future.wait(

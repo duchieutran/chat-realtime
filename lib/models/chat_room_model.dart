@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ChatRoomModel {
   final String chatId;
   final String urlAvatar;
+  final String uidAdmin;
   final String name;
   final String type;
   final List<String> members;
@@ -13,6 +14,7 @@ class ChatRoomModel {
   ChatRoomModel({
     required this.chatId,
     required this.urlAvatar,
+    required this.uidAdmin,
     required this.name,
     required this.type,
     required this.members,
@@ -24,6 +26,7 @@ class ChatRoomModel {
     return ChatRoomModel(
       chatId: map['chatId'],
       urlAvatar: map['urlAvatar'],
+      uidAdmin: map['uidAdmin'],
       name: map['name'],
       type: map['type'],
       members: List<String>.from(map['members']),
@@ -38,6 +41,7 @@ class ChatRoomModel {
     return {
       'chatId': chatId,
       'urlAvatar': urlAvatar,
+      'uidAdmin': uidAdmin,
       'name': name,
       'type': type,
       'members': members,

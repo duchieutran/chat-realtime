@@ -37,7 +37,6 @@ class _UpdateGroupState extends State<UpdateGroup> {
     selectedUsers = widget.isUpdate
         ? ((widget.usersInGroup != null) ? widget.usersInGroup! : [])
         : [];
-    print(selectedUsers);
     groupNameController = widget.isUpdate
         ? TextEditingController(text: widget.groupName)
         : TextEditingController();
@@ -151,7 +150,6 @@ class _UpdateGroupState extends State<UpdateGroup> {
                     }
                   }
                 }
-
                 return GestureDetector(
                   onTap: () => setState(() => isSelected
                       ? selectedUsers.remove(user)
