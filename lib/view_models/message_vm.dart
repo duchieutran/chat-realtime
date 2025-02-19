@@ -21,6 +21,8 @@ class MessageViewModel extends ChangeNotifier {
     _chatService.createChat("", "", [auth.currentUser!.uid, uidName]);
   }
 
+  // kiểm tra xem có phải admin group không
+
   // hàm tạo chat group
   void createChatRoomGroup(
       {required String urlAvatar,
@@ -58,7 +60,6 @@ class MessageViewModel extends ChangeNotifier {
       required String urlAvatar,
       required String name,
       required List<String> members}) {
-    members.insert(0, auth.currentUser!.uid);
     _chatService.updateGroup(
         chatUID: uidGroup, urlAvatar: urlAvatar, name: name, members: members);
   }

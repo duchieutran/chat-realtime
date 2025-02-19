@@ -13,7 +13,7 @@ class MessageScreen extends StatefulWidget {
   final String receiverUid;
   final String receiverName;
   final String receiverAvatar;
-  final bool isGroup;
+  final bool isAdmin;
 
   const MessageScreen({
     super.key,
@@ -21,7 +21,7 @@ class MessageScreen extends StatefulWidget {
     required this.receiverUid,
     required this.receiverName,
     required this.receiverAvatar,
-    this.isGroup = false,
+    this.isAdmin = false,
   });
 
   @override
@@ -106,12 +106,10 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
         ],
       ),
-      actions: widget.isGroup
+      actions: widget.isAdmin
           ? [
               IconButton(
                 onPressed: () {
-                  // popup thêm bạn bè
-                  // _showBottomSheet(context, users);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -120,7 +118,6 @@ class _MessageScreenState extends State<MessageScreen> {
                           isUpdate: true,
                           groupName: widget.receiverName,
                           uidGroup: widget.chatId,
-                          // TODO
                           usersInGroup: memberInGroup,
                         ),
                       ));
@@ -297,73 +294,4 @@ class _MessageScreenState extends State<MessageScreen> {
   String _formatTimestamp(DateTime dateTime) {
     return "${dateTime.hour}:${dateTime.minute}, ${dateTime.day} ${dateTime.month} ${dateTime.year}";
   }
-}
-
-// show bottom sheet
-void _showBottomSheet(BuildContext context, List<Users> users) {
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-    ),
-    builder: (context) {
-      Size size = MediaQuery.of(context).size;
-      return Container(
-        padding: const EdgeInsets.all(16),
-        height: size.height,
-        child: Column(
-          children: [
-            const Text("click"),
-            Expanded(
-              child: ListView(
-                children: List.generate(
-                  users.length,
-                  (index) {
-                    return GestureDetector(
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 400),
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.blue40.withOpacity(0.6),
-                                blurRadius: 10,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            leading: CircleAvatar(
-                              radius: 28,
-                              backgroundImage:
-                                  NetworkImage(users[index].urlAvatar),
-                            ),
-                            title: Text(users[index].name,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600)),
-                            trailing: const AnimatedSwitcher(
-                              duration: Duration(milliseconds: 300),
-                              child: SizedBox.shrink(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
 }

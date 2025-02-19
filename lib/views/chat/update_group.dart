@@ -1,7 +1,9 @@
 import 'package:chatting/models/users_model.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/message_vm.dart';
+import 'package:chatting/views/widgets/app_loading.dart';
 import 'package:chatting/views/widgets/text_field_custom.dart';
 import 'package:flutter/material.dart';
 
@@ -225,19 +227,25 @@ class _UpdateGroupState extends State<UpdateGroup> {
   }
 
   Future<void> createGroup() async {
+    appLoading(context: context, gif: gifLoading);
     messageViewModel.createChatRoomGroup(
       urlAvatar: avatarGroup[chooseImg],
       name: groupNameController.text.trim(),
       members: selectedUsers.map((e) => e.uid).toList(),
     );
+    Navigator.pop(context);
+    Navigator.popAndPushNamed(context, AppRouters.chat);
   }
 
   Future<void> updateGroup() async {
+    appLoading(context: context, gif: gifLoading);
     messageViewModel.updateChatRoomGroup(
         uidGroup: widget.uidGroup,
         urlAvatar: avatarGroup[chooseImg],
         name: groupNameController.text.trim(),
         members: selectedUsers.map((e) => e.uid).toList());
+    Navigator.pop(context);
+    Navigator.pop(context);
     Navigator.pop(context);
   }
 }

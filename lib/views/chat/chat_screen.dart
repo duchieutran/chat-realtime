@@ -128,7 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   messageLast:
                       rooms[index].lastMessage?.content ?? "Say hi! 👋",
                   timeLast: time,
-                  isGroup: true,
+                  isAdmin: rooms[index].uidAdmin == auth.currentUser!.uid,
                 );
               },
             );
@@ -147,7 +147,7 @@ class ChatTile extends StatelessWidget {
     required this.uid,
     required this.messageLast,
     required this.timeLast,
-    this.isGroup = false,
+    this.isAdmin = false,
   });
 
   final String userName;
@@ -155,7 +155,7 @@ class ChatTile extends StatelessWidget {
   final String uid;
   final String messageLast;
   final String timeLast;
-  final bool isGroup;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +169,7 @@ class ChatTile extends StatelessWidget {
               receiverAvatar: urlAvatar,
               receiverUid: uid,
               receiverName: userName,
-              isGroup: isGroup,
+              isAdmin: isAdmin,
             ),
           ),
         );
