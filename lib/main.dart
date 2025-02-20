@@ -1,5 +1,5 @@
 import 'package:chatting/view_models/auth_provider.dart';
-import 'package:chatting/view_models/drawer_home.dart';
+import 'package:chatting/view_models/drawer_home_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
 import 'package:chatting/views/app.dart';
 import 'package:chatting/views/firebase_options.dart';
@@ -23,7 +23,7 @@ Future<void> main() async {
           create: (context) => MessageViewModel(),
         ),
         ChangeNotifierProvider(
-          create: (context) => DrawerHome(),
+          create: (context) => DrawerHomeViewmodel(),
         ),
       ],
       child: const MyApp(),

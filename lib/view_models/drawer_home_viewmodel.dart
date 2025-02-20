@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class DrawerHome with ChangeNotifier {
+class DrawerHomeViewmodel with ChangeNotifier {
   bool _isOpen = false;
   double _xOffset = 0;
   double _yOffset = 0;
@@ -13,8 +13,8 @@ class DrawerHome with ChangeNotifier {
 
   void toggleDrawer() {
     _isOpen = !_isOpen;
-    _xOffset = _isOpen ? 230 : 0;
-    _yOffset = _isOpen ? 80 : 0;
+    _xOffset = _isOpen ? 250 : 0;
+    _yOffset = _isOpen ? 100 : 0;
     notifyListeners();
   }
 }
