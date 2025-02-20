@@ -1,7 +1,7 @@
 import 'package:chatting/views/auth/login.dart';
 import 'package:chatting/views/auth/signup.dart';
 import 'package:chatting/views/chat/chat_screen.dart';
-import 'package:chatting/views/friends/friends.dart';
+import 'package:chatting/views/friends/friend_screen.dart';
 import 'package:chatting/views/home/home.dart';
 import 'package:chatting/views/profile/profile.dart';
 import 'package:chatting/views/profile/profile_complete.dart';
@@ -36,8 +36,10 @@ class AppRouters {
         return const Home();
       case profile:
         return const Profile();
+
       case friends:
-        return const Friends();
+        // return const Friends();
+        return const FriendScreen();
       case chat:
         return const ChatScreen();
       default:

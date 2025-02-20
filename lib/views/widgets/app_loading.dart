@@ -8,7 +8,7 @@ void appLoading({required BuildContext context, required String gif}) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        backgroundColor: AppColors.translate,
+        backgroundColor: AppColors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),

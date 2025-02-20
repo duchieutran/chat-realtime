@@ -12,6 +12,7 @@ const String backgroundProfile = 'assets/images/background_profile.png';
 const String vectorProfile = 'assets/images/vector.png';
 const String iconClose = 'assets/images/icon_close.png';
 const String welcome = 'assets/images/welcome.svg';
+const String question = 'assets/images/question.jpg';
 
 // gif
 const String gifBatman = 'assets/gif/batman.gif';

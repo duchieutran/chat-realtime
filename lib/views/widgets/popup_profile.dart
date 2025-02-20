@@ -17,7 +17,7 @@ void showPopUpProfile(
         borderRadius: BorderRadius.circular(12),
       ),
       elevation: 0,
-      backgroundColor: AppColors.translate,
+      backgroundColor: AppColors.transparent,
       child: Container(
         height: MediaQuery.of(context).size.height * 0.55,
         decoration: const BoxDecoration(
