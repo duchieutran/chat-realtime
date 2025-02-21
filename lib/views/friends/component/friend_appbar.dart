@@ -1,5 +1,8 @@
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
+import 'package:chatting/view_models/friend_viewmodel.dart';
+import 'package:chatting/views/friends/component/popup_friends_requests.dart';
+import 'package:chatting/views/widgets/app_dialog.dart';
 import 'package:flutter/material.dart';
 
 class FriendAppbar extends StatefulWidget {
@@ -12,13 +15,62 @@ class FriendAppbar extends StatefulWidget {
 }
 
 class _FriendAppbarState extends State<FriendAppbar> {
-  bool isSearch = true;
+  bool isSearch = false;
   final TextEditingController searchController = TextEditingController();
+  final FriendViewModel friendVM = FriendViewModel();
 
   @override
   void dispose() {
     searchController.dispose();
     super.dispose();
+  }
+
+  // ham tim kiem ban be
+  void _searchFriend() async {
+    String username = searchController.text.trim();
+    // nếu không nhập thì hiện thị thông báo
+    if (username.isEmpty) {
+      appDialog(
+          context: context,
+          title: "Warning!",
+          content: "Please enter a valid username",
+          confirmText: "Try Again",
+          onConfirm: () {
+            Navigator.pop(context);
+          });
+      return;
+    }
+    // Tìm kiếm
+    final user = await friendVM.findFriendsUsername(username: username);
+    if (user != null) {
+      bool? isPending = await friendVM.checkFriends(uid: user.uid);
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => FriendRequestDialog(
+            url: user.urlAvatar,
+            name: user.name,
+            email: user.email,
+            statusAdd: isPending,
+            onAddFriend: isPending
+                ? () {}
+                : () => friendVM.sendFriend(receiverUid: user.uid),
+          ),
+        );
+      }
+    } else {
+      if (mounted) {
+        appDialog(
+            context: context,
+            title: "Oops!",
+            content: "Username not found!",
+            confirmText: "Try Again",
+            onConfirm: () {
+              Navigator.pop(context);
+            });
+      }
+    }
   }
 
   @override
@@ -30,7 +82,7 @@ class _FriendAppbarState extends State<FriendAppbar> {
       width: size.width,
       height: size.height * 0.15,
       decoration: BoxDecoration(
-        color: AppColors.blue10.withOpacity(0.3),
+        color: AppColors.blue10.withOpacity(0.5),
       ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -49,8 +101,12 @@ class _FriendAppbarState extends State<FriendAppbar> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
+              onTap: () async {
+                FocusScope.of(context).unfocus();
+                await Future.delayed(const Duration(microseconds: 200));
+                if (mounted) {
+                  Navigator.of(context).pop();
+                }
               },
               child: Icon(
                 Icons.arrow_back_ios,
@@ -62,8 +118,6 @@ class _FriendAppbarState extends State<FriendAppbar> {
                 ? Expanded(
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 10),
-                      // padding: const EdgeInsets.symmetric(
-                      //     horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: AppColors.light,
                         borderRadius: BorderRadius.circular(20),
@@ -77,14 +131,9 @@ class _FriendAppbarState extends State<FriendAppbar> {
                               controller: searchController,
                               decoration: InputDecoration(
                                 hintText: 'Username',
-                                // suffix: GestureDetector(
-                                //   onTap: () {},
-                                //   child: const Icon(
-                                //     Icons.search_outlined,
-                                //     color: AppColors.grey60,
-                                //   ),
-                                // ),
-                                suffixIcon: const Icon(Icons.search_outlined),
+                                suffixIcon: GestureDetector(
+                                    onTap: _searchFriend,
+                                    child: const Icon(Icons.search_outlined)),
                                 hintStyle:
                                     const TextStyle(color: AppColors.grey60),
                                 fillColor: AppColors.light,
@@ -111,9 +160,6 @@ class _FriendAppbarState extends State<FriendAppbar> {
                               style: const TextStyle(color: AppColors.dark),
                             ),
                           ),
-                          // const Icon(
-                          //   Icons.search_outlined,
-                          // )
                         ],
                       ),
                     ),

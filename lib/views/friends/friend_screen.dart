@@ -25,7 +25,7 @@ class _FriendScreenState extends State<FriendScreen> {
 
   // in app
   int _currentTabIndex = 0;
-  final List<String> _tabs = ["Friends", "Requests"];
+  final List<String> _friendScreenTabs = ["Friends", "Requests"];
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class _FriendScreenState extends State<FriendScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(
-          _tabs.length,
+          _friendScreenTabs.length,
           (index) {
             final isSelect = _currentTabIndex == index;
             return GestureDetector(
@@ -101,7 +101,7 @@ class _FriendScreenState extends State<FriendScreen> {
                   width: size.width * 0.2,
                   child: Center(
                     child: Text(
-                      _tabs[index],
+                      _friendScreenTabs[index],
                       style: TextStyle(
                         color: isSelect ? Colors.white : Colors.black54,
                         fontWeight: FontWeight.bold,
@@ -143,7 +143,7 @@ class _FriendScreenState extends State<FriendScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: CardFriend(
                           urlAvatar: user.urlAvatar,
-                          email: user.email,
+                          username: user.username,
                           name: user.name,
                           iconData: Icons.info_outline_rounded,
                           feature: "Info",
@@ -197,7 +197,7 @@ class _FriendScreenState extends State<FriendScreen> {
                           duration: const Duration(milliseconds: 300),
                           child: CardFriend(
                             urlAvatar: user.urlAvatar,
-                            email: user.email,
+                            username: user.username,
                             name: user.name,
                             iconData: Icons.check_circle,
                             feature: "Accept",

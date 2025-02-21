@@ -13,17 +13,28 @@ class Profile extends StatefulWidget {
   State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   final ProfileViewModel profileViewModel = ProfileViewModel();
   final FriendViewModel friendViewModel = FriendViewModel();
+  late AnimationController _animationController;
   late bool isLoading;
   Users users = Users();
 
   @override
   void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat();
     isLoading = true;
     getUsers();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   getUsers() async {
@@ -40,13 +51,9 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColors.light,
-      appBar: AppBar(
-        title: const Text("Profile",
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-      ),
       body: isLoading
           ? const Center(child: Image(image: AssetImage(gifLoading)))
           : SingleChildScrollView(
@@ -54,6 +61,71 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // appbar
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 20),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                    width: size.width,
+                    height: size.height * 0.10,
+                    decoration: BoxDecoration(
+                        color: AppColors.light,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: AppColors.grey40,
+                            spreadRadius: 5,
+                            blurRadius: 15,
+                            offset: Offset(0, 0), // Bóng đều ở cả 4 cạnh
+                          ),
+                        ]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // back
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.arrow_back_ios,
+                            color: AppColors.dark,
+                          ),
+                        ),
+                        // avatar
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                // TODO : onTap setting
+                              },
+                              child: RotationTransition(
+                                turns: _animationController,
+                                child: const Icon(
+                                  Icons.settings,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(users.urlAvatar),
+                                ),
+                                color: AppColors.blue20,
+                                borderRadius: BorderRadius.circular(39),
+                                border: Border.all(
+                                    color: AppColors.blue40, width: 1),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                   // Avatar & Thông tin
                   Container(
                     padding: const EdgeInsets.all(16),

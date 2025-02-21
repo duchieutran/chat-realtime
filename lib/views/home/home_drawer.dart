@@ -28,8 +28,8 @@ class HomeDrawer extends StatelessWidget {
           DrawerFeature(
               size: size,
               onTap: () {
-                AuthViewmodel().logout();
                 drawerViewModel.toggleDrawer();
+                AuthViewmodel().logout();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   AppRouters.login,
                   (Route<dynamic> route) => false,

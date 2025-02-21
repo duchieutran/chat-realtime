@@ -139,7 +139,7 @@ class _FriendsState extends State<Friends> {
                         padding: const EdgeInsets.all(8.0),
                         child: CardFriend(
                           urlAvatar: user.urlAvatar,
-                          email: user.email,
+                          username: user.email,
                           name: user.name,
                           iconData: Icons.info_outline_rounded,
                           feature: "Info",
@@ -191,7 +191,7 @@ class _FriendsState extends State<Friends> {
                           duration: const Duration(milliseconds: 300),
                           child: CardFriend(
                             urlAvatar: user.urlAvatar,
-                            email: user.email,
+                            username: user.email,
                             name: user.name,
                             iconData: Icons.check_circle,
                             feature: "Accept",

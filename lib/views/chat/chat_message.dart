@@ -111,16 +111,17 @@ class _MessageScreenState extends State<MessageScreen> {
               IconButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UpdateGroup(
-                          users: friends,
-                          isUpdate: true,
-                          groupName: widget.receiverName,
-                          uidGroup: widget.chatId,
-                          usersInGroup: memberInGroup,
-                        ),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UpdateGroup(
+                        users: friends,
+                        isUpdate: true,
+                        groupName: widget.receiverName,
+                        uidGroup: widget.chatId,
+                        usersInGroup: memberInGroup,
+                      ),
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.group_add),
               )

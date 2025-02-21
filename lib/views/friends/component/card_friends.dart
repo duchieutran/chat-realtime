@@ -7,7 +7,7 @@ class CardFriend extends StatefulWidget {
     super.key,
     this.function,
     required this.urlAvatar,
-    required this.email,
+    required this.username,
     required this.name,
     this.feature,
     this.iconData,
@@ -17,7 +17,7 @@ class CardFriend extends StatefulWidget {
   final VoidCallback? function;
   final String uid;
   final String urlAvatar;
-  final String email;
+  final String username;
   final String name;
   final IconData? iconData;
   final String? feature;
@@ -115,7 +115,7 @@ class _CardFriendState extends State<CardFriend> {
                       fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 Text(
-                  widget.email,
+                  widget.username,
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w500),
                   maxLines: 1,
