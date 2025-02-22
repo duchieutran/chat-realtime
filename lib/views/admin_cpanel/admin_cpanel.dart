@@ -1,4 +1,6 @@
+import 'package:chatting/services/admin_service.dart';
 import 'package:chatting/utils/app_colors.dart';
+import 'package:chatting/views/admin_cpanel/admin_cpanel_user.dart';
 import 'package:flutter/material.dart';
 
 class AdminCpanel extends StatefulWidget {
@@ -25,9 +27,13 @@ class _AdminCpanelState extends State<AdminCpanel> {
             // app bar
             SizedBox(height: size.height * 0.05),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.arrow_back_ios, color: AppColors.grey30),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(Icons.arrow_back_ios, color: AppColors.grey30)),
                 Text(
                   "Dashboard",
                   style: TextStyle(
@@ -83,12 +89,45 @@ class _AdminCpanelState extends State<AdminCpanel> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildFeature(
-                    size: size,
-                    icon: Icons.person_outline,
-                    title: "User",
-                    subTitle: "100",
-                    onTap: () {}),
+                FutureBuilder<int>(
+                  future: AdminService().getUserCount(),
+                  // Gọi hàm lấy số lượng người dùng
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _buildFeature(
+                        size: size,
+                        icon: Icons.person_outline,
+                        title: "User",
+                        subTitle: "...",
+                        onTap: () {},
+                      );
+                    }
+                    if (snapshot.hasError || !snapshot.hasData) {
+                      return _buildFeature(
+                        size: size,
+                        icon: Icons.person_outline,
+                        title: "User",
+                        subTitle: "0",
+                        onTap: () {},
+                      );
+                    }
+                    return _buildFeature(
+                      size: size,
+                      icon: Icons.person_outline,
+                      title: "User",
+                      subTitle: "${snapshot.data}",
+                      onTap: snapshot.data == 0
+                          ? () {}
+                          : () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminCpanelUser(),
+                                  ));
+                            },
+                    );
+                  },
+                ),
                 _buildFeature(
                     size: size,
                     icon: Icons.message,
@@ -117,6 +156,7 @@ class _AdminCpanelState extends State<AdminCpanel> {
     required VoidCallback? onTap,
   }) {
     return GestureDetector(
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(8),
         width: size.width * 0.29,

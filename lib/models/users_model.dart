@@ -1,5 +1,5 @@
 class Users {
-  final bool role;
+  bool role;
   final String uid;
   final String email;
   String name;
