@@ -5,6 +5,7 @@ import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -242,20 +243,70 @@ class _MessageScreenState extends State<MessageScreen> {
                             backgroundImage: NetworkImage(urlAvatar),
                           ),
                         ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    padding: const EdgeInsets.all(12),
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.75,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isMe ? Colors.blueAccent : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      message.text,
-                      style:
-                          TextStyle(color: isMe ? Colors.white : Colors.black),
+                  GestureDetector(
+                    onLongPress: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isDismissible: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        builder: (context) {
+                          return Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20)),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Button Copy
+                                ListTile(
+                                  leading: Icon(Icons.copy, color: Colors.blue),
+                                  title: Text("Copy",
+                                      style: TextStyle(fontSize: 16)),
+                                  onTap: () {
+                                    Clipboard.setData(
+                                        ClipboardData(text: message.text));
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                Divider(),
+
+                                ListTile(
+                                  leading:
+                                      Icon(Icons.report, color: Colors.red),
+                                  title: Text("Report",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.red)),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.all(12),
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.75,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isMe ? Colors.blueAccent : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        message.text,
+                        style: TextStyle(
+                            color: isMe ? Colors.white : Colors.black),
+                      ),
                     ),
                   ),
                 ],

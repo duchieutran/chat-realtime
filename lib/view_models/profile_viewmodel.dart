@@ -5,8 +5,9 @@ import 'package:chatting/services/pick_image_services.dart';
 import 'package:chatting/services/storage_services.dart';
 import 'package:chatting/services/store_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
-class ProfileViewModel {
+class ProfileViewModel extends ChangeNotifier {
   final PickImageServices imageServices = PickImageServices();
   final StorageServices storageServices = StorageServices();
   final StoreServices storeServices = StoreServices();
@@ -64,6 +65,14 @@ class ProfileViewModel {
       rethrow;
     }
     return null;
+  }
+
+  // check admin
+  Future<bool> checkAdmin() async {
+    Users? isAdmin = await getUserProfile();
+
+    if (isAdmin != null) return isAdmin.role;
+    return false;
   }
 
   // check uid

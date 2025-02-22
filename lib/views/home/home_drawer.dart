@@ -1,6 +1,7 @@
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/view_models/auth_viewmodel.dart';
 import 'package:chatting/view_models/drawer_home_viewmodel.dart';
+import 'package:chatting/view_models/profile_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,8 +14,7 @@ class HomeDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drawerViewModel =
-        Provider.of<DrawerHomeViewmodel>(context, listen: true);
+    final drawerViewModel = Provider.of<DrawerHomeViewmodel>(context, listen: true);
 
     final Size size = MediaQuery.of(context).size;
     return Container(
@@ -40,15 +40,27 @@ class HomeDrawer extends StatelessWidget {
               title: "Log out"),
           // cai dat
           DrawerFeature(size: size, icon: Icons.settings, title: "setting"),
-          if (isAdmin) ...[
-            DrawerFeature(
-                onTap: () {
-                  Navigator.of(context).pushNamed(AppRouters.admin);
-                },
-                size: size,
-                icon: Icons.admin_panel_settings,
-                title: "Admin Panel")
-          ],
+          FutureBuilder<bool>(
+            future: Provider.of<ProfileViewModel>(context, listen: false).checkAdmin(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SizedBox();
+              } else if (snapshot.hasError) {
+                return Text("Lỗi: ${snapshot.error}");
+              } else if (snapshot.data == false) {
+                return SizedBox();
+              } else {
+                return DrawerFeature(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(AppRouters.admin);
+                  },
+                  size: size,
+                  icon: Icons.admin_panel_settings,
+                  title: "Admin Panel",
+                );
+              }
+            },
+          )
         ],
       ),
     );

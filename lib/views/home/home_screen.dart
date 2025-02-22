@@ -1,3 +1,5 @@
+import 'package:chatting/models/notification_model.dart';
+import 'package:chatting/services/notification_service.dart';
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/utils/assets.dart';
@@ -5,6 +7,7 @@ import 'package:chatting/view_models/drawer_home_viewmodel.dart';
 import 'package:chatting/views/home/widgets/home_appbar.dart';
 import 'package:chatting/views/home/widgets/home_chatbox.dart';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/home_carouse_slide.dart';
@@ -74,7 +77,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   // slide
                   HomeCarouselSlider(
                       size: size, carouselImages: carouselImages),
-                  const SizedBox(height: 30),
+                  FutureBuilder<NotificationModel?>(
+                    future: NotificationService().getLatestActiveNotification(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return SizedBox();
+                      }
+
+                      if (snapshot.hasError ||
+                          !snapshot.hasData ||
+                          snapshot.data == null) {
+                        return SizedBox();
+                      }
+                      final notification = snapshot.data!;
+                      return Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.04,
+                        decoration: BoxDecoration(
+                          color: AppColors.violet10.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Center(
+                          child: Marquee(
+                            text: "🎉 ${notification.content}",
+                            style: TextStyle(
+                              color: AppColors.dark,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            pauseAfterRound: Duration(seconds: 3),
+                            blankSpace: MediaQuery.of(context).size.width,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [

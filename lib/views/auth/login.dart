@@ -58,10 +58,9 @@ class _LoginState extends State<Login> {
           onConfirm: auth.status
               ? (check ? navigatorHome : navigatorProfileUpdate)
               : () {
-            Navigator.pop(context);
-          });
+                  Navigator.pop(context);
+                });
     }
-
   }
 
   // function handle navigator signup

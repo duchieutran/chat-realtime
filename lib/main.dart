@@ -2,6 +2,7 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/view_models/auth_provider.dart';
 import 'package:chatting/view_models/drawer_home_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
+import 'package:chatting/view_models/profile_viewmodel.dart';
 import 'package:chatting/views/app.dart';
 import 'package:chatting/views/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +36,9 @@ Future<void> main() async {
         ChangeNotifierProvider(
           create: (context) => DrawerHomeViewmodel(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => ProfileViewModel(),
+        )
       ],
       child: const MyApp(),
     ),

@@ -69,6 +69,7 @@ class StoreServices {
         Users user = Users(
           uid: userData['uid'] ?? '',
           email: userData['email'] ?? '',
+          role: userData['role'] ?? false,
           name: userData['name'] ?? '',
           username: userData['username'],
           urlAvatar: userData['urlAvatar'] ?? '',
