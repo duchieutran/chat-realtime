@@ -1,3 +1,4 @@
+import 'package:chatting/views/admin_cpanel/admin_cpanel.dart';
 import 'package:chatting/views/auth/login.dart';
 import 'package:chatting/views/auth/signup.dart';
 import 'package:chatting/views/chat/chat_screen.dart';
@@ -36,12 +37,13 @@ class AppRouters {
         return const Home();
       case profile:
         return const Profile();
-
       case friends:
         // return const Friends();
         return const FriendScreen();
       case chat:
         return const ChatScreen();
+      case admin:
+        return const AdminCpanel();
       default:
         throw "$nameRouters is not define";
     }
@@ -55,4 +57,5 @@ class AppRouters {
   static const String profile = '/profile';
   static const String friends = '/friends';
   static const String chat = '/chat';
+  static const String admin = '/admin';
 }

@@ -24,18 +24,18 @@ class DrawerFeature extends StatelessWidget {
           onTap: onTap ?? () {},
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             width: size.width * 0.55,
             decoration: const BoxDecoration(
-                color: AppColors.blue40,
+                color: AppColors.blue50,
                 borderRadius: BorderRadius.all(
-                  Radius.circular(15),
+                  Radius.circular(10),
                 )),
             child: Row(
               children: [
                 Icon(
                   icon,
-                  size: 27,
+                  size: 18,
                   color: AppColors.light,
                 ),
                 const SizedBox(width: 10),
@@ -43,8 +43,8 @@ class DrawerFeature extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     color: AppColors.light,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
                   ),
                 ),
               ],
@@ -52,7 +52,7 @@ class DrawerFeature extends StatelessWidget {
           ),
         ),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           width: size.width * 0.55,
           height: 2,
           decoration: const BoxDecoration(

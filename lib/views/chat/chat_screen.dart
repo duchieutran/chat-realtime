@@ -1,5 +1,6 @@
 import 'package:chatting/models/chat_room_model.dart';
 import 'package:chatting/models/users_model.dart';
+import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
@@ -22,6 +23,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final auth = FirebaseAuth.instance;
   FriendViewModel friends = FriendViewModel();
   List<Users> users = [];
+  TextEditingController searchController = TextEditingController();
+  List<ChatRoomModel> filteredRooms = [];
 
   @override
   void initState() {
@@ -30,6 +33,12 @@ class _ChatScreenState extends State<ChatScreen> {
       getFriends();
       Provider.of<MessageViewModel>(context, listen: false).getChatRoom();
     });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   void getFriends() async {
@@ -50,29 +59,27 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final chatViewModel = Provider.of<MessageViewModel>(context);
+    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-        title: const Text("Messages",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        elevation: 2,
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.group_add, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => UpdateGroup(users: users)),
-              );
-            },
-          ),
+      body: Column(
+        children: [
+          // app bar
+          _buildAppBar(size, context),
+          // TODO : notifications
+          // _buildNotifications(size),
+          // list chat room
+          _buildListChat(size, chatViewModel),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+    );
+  }
+
+  Widget _buildListChat(Size size, MessageViewModel chatViewModel) {
+    return Expanded(
+      child: Container(
+        width: size.width,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         child: StreamBuilder<List<ChatRoomModel>>(
           stream: chatViewModel.listRoom,
           builder: (context, snapshot) {
@@ -91,6 +98,8 @@ class _ChatScreenState extends State<ChatScreen> {
             List<ChatRoomModel> rooms = snapshot.data!;
 
             return ListView.separated(
+              physics: BouncingScrollPhysics(),
+              shrinkWrap: true,
               itemCount: rooms.length,
               separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
@@ -137,6 +146,79 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
+  Widget _buildNotifications(Size size) {
+    return Container(
+      width: size.width,
+      height: 30,
+      decoration: BoxDecoration(
+        color: AppColors.violet10,
+      ),
+      child: Center(
+        child: Text(
+          "Chuc ban ngay moi tot lanh",
+          style: TextStyle(
+            color: AppColors.dark,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppBar(Size size, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 25, left: 16, right: 16, bottom: 15),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      width: size.width,
+      height: size.height * 0.08,
+      decoration: BoxDecoration(
+          color: AppColors.light,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.grey40,
+              spreadRadius: 5,
+              blurRadius: 15,
+              offset: Offset(0, 0), // Bóng đều ở cả 4 cạnh
+            ),
+          ]),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // back
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.dark,
+            ),
+          ),
+          // avatar
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UpdateGroup(users: users)),
+                  );
+                },
+                child: const Icon(
+                  Icons.group_add,
+                ),
+              ),
+              const SizedBox(width: 15),
+            ],
+          )
+        ],
+      ),
+    );
+  }
 }
 
 class ChatTile extends StatelessWidget {
@@ -159,7 +241,7 @@ class ChatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.push(
           context,
@@ -175,13 +257,14 @@ class ChatTile extends StatelessWidget {
         );
       },
       child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 4),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 6,
               spreadRadius: 1,
             ),

@@ -13,8 +13,10 @@ class DrawerHomeViewmodel with ChangeNotifier {
 
   void toggleDrawer() {
     _isOpen = !_isOpen;
-    _xOffset = _isOpen ? 250 : 0;
-    _yOffset = _isOpen ? 100 : 0;
+    // _xOffset = _isOpen ? 250 : 0;
+    // _yOffset = _isOpen ? 100 : 0;
+    _xOffset = _isOpen ? 230 : 0;
+    _yOffset = _isOpen ? 80 : 0;
     notifyListeners();
   }
 }

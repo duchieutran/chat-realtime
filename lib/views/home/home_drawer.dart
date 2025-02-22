@@ -1,4 +1,3 @@
-import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/app_routers.dart';
 import 'package:chatting/view_models/auth_viewmodel.dart';
 import 'package:chatting/view_models/drawer_home_viewmodel.dart';
@@ -8,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'widgets/drawer_future.dart';
 
 class HomeDrawer extends StatelessWidget {
-  const HomeDrawer({super.key});
+  const HomeDrawer({super.key, this.isAdmin = true});
+
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class HomeDrawer extends StatelessWidget {
     return Container(
       width: size.width,
       height: size.height,
-      color: AppColors.grey10,
+      color: Color(0xFF001F3F).withOpacity(0.6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -39,6 +40,15 @@ class HomeDrawer extends StatelessWidget {
               title: "Log out"),
           // cai dat
           DrawerFeature(size: size, icon: Icons.settings, title: "setting"),
+          if (isAdmin) ...[
+            DrawerFeature(
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRouters.admin);
+                },
+                size: size,
+                icon: Icons.admin_panel_settings,
+                title: "Admin Panel")
+          ],
         ],
       ),
     );

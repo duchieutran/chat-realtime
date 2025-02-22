@@ -35,6 +35,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
   void updateAvatar() async {
     try {
       if (!mounted) return;
+      FocusScope.of(context).unfocus();
       appLoading(context: context, gif: gifBatman);
       String url = await profileViewModel.upLoadImage();
       if (mounted) Navigator.pop(context);

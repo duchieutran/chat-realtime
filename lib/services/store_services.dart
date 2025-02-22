@@ -25,6 +25,7 @@ class StoreServices {
           'urlAvatar': user.urlAvatar,
           'friends': user.friends,
           'friendRequests': user.friendRequests,
+          'role': user.role,
         }, SetOptions(merge: true));
       } else {
         print("User không tồn tại!");

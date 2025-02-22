@@ -44,8 +44,11 @@ class _LoginState extends State<Login> {
     }
     await auth.signIn(
         controllerEmail.text.trim(), controllerPassword.text.trim());
-    bool check = await profileViewModel.checkUIDExist();
 
+    bool check = false;
+    if (auth.status) {
+      check = await profileViewModel.checkUIDExist();
+    }
     if (mounted) {
       appDialog(
           context: context,
@@ -55,9 +58,10 @@ class _LoginState extends State<Login> {
           onConfirm: auth.status
               ? (check ? navigatorHome : navigatorProfileUpdate)
               : () {
-                  Navigator.pop(context);
-                });
+            Navigator.pop(context);
+          });
     }
+
   }
 
   // function handle navigator signup

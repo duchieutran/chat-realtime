@@ -67,7 +67,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                     width: size.width,
-                    height: size.height * 0.10,
+                    height: size.height * 0.08,
                     decoration: BoxDecoration(
                         color: AppColors.light,
                         borderRadius: BorderRadius.circular(20),

@@ -4,7 +4,6 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
-import 'package:chatting/views/chat/update_group.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -75,11 +74,12 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     final messageViewModel = Provider.of<MessageViewModel>(context);
-
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _buildAppBar(),
+      // appBar: _buildAppBar(),
       body: Column(
         children: [
+          _buildAppBarMessage(size, context),
           Expanded(child: _buildMessageList(messageViewModel)),
           _buildMessageInput(messageViewModel, friends),
         ],
@@ -87,69 +87,101 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 
-  AppBar _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 1,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
+  Widget _buildAppBarMessage(Size size, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 25, left: 16, right: 16, bottom: 15),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      width: size.width,
+      height: size.height * 0.08,
+      decoration: BoxDecoration(
+          color: AppColors.light,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.grey40,
+              spreadRadius: 5,
+              blurRadius: 15,
+              offset: Offset(0, 0), // Bóng đều ở cả 4 cạnh
+            ),
+          ]),
+      child: Row(
         children: [
-          CircleAvatar(backgroundImage: NetworkImage(widget.receiverAvatar)),
-          const SizedBox(width: 10),
-          Text(
-            widget.receiverName,
-            style: const TextStyle(
-                color: Colors.black, fontWeight: FontWeight.w600),
+          // back
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.dark,
+            ),
           ),
+          // avatar
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: size.width * 0.08,
+                height: size.width * 0.08,
+                decoration: BoxDecoration(
+                    color: AppColors.blue20,
+                    border: Border.all(color: AppColors.dark, width: 1),
+                    borderRadius: BorderRadius.circular(size.width * 0.1)),
+                child: CircleAvatar(
+                    backgroundImage: NetworkImage(widget.receiverAvatar)),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                widget.receiverName,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          )
         ],
       ),
-      actions: widget.isAdmin
-          ? [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => UpdateGroup(
-                        users: friends,
-                        isUpdate: true,
-                        groupName: widget.receiverName,
-                        uidGroup: widget.chatId,
-                        usersInGroup: memberInGroup,
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.group_add),
-              )
-            ]
-          : [],
     );
   }
 
   Widget _buildMessageList(MessageViewModel messageViewModel) {
-    return StreamBuilder<List<MessageModel>>(
-      stream: messageViewModel.getMessageStream(widget.chatId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: Image(image: AssetImage(gifLoading)));
-        }
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text("No messages yet."));
-        }
-        var messages = snapshot.data!;
-        return ListView.builder(
-          reverse: true,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          itemCount: messages.length,
-          itemBuilder: (context, index) {
-            return _buildMessageBubble(messages[index], messageViewModel);
-          },
-        );
-      },
+    return Container(
+      margin: const EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 15),
+      decoration: BoxDecoration(
+        color: AppColors.light,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.blue20, width: 4),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.grey40,
+            spreadRadius: 7,
+            blurRadius: 15,
+            offset: Offset(0, 0), // Bóng đều ở cả 4 cạnh
+          ),
+        ],
+      ),
+      child: StreamBuilder<List<MessageModel>>(
+        stream: messageViewModel.getMessageStream(widget.chatId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: Image(image: AssetImage(gifLoading)));
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("No messages yet."));
+          }
+          var messages = snapshot.data!;
+          return ListView.builder(
+            reverse: true,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              return _buildMessageBubble(messages[index], messageViewModel);
+            },
+          );
+        },
+      ),
     );
   }
 
