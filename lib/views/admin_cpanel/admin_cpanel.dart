@@ -5,6 +5,7 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/profile_viewmodel.dart';
 import 'package:chatting/views/admin_cpanel/admin_cpanel_user.dart';
+import 'package:chatting/views/admin_cpanel/admin_feedback.dart';
 import 'package:chatting/views/admin_cpanel/admin_notification.dart';
 import 'package:chatting/views/widgets/app_dialog.dart';
 import 'package:flutter/material.dart';
@@ -171,7 +172,17 @@ class _AdminCpanelState extends State<AdminCpanel> {
                               },
                             ),
                             _buildFeature(
-                                size: size, icon: Icons.message, title: "Feedback", subTitle: "100", onTap: () {}),
+                                size: size,
+                                icon: Icons.message,
+                                title: "Feedback",
+                                subTitle: "100",
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AdminFeedBack(),
+                                      ));
+                                }),
                             FutureBuilder<int>(
                               future: NotificationService().getNotificationCount(),
                               builder: (context, snapshot) {
