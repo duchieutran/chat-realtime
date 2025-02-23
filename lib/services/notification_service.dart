@@ -25,20 +25,21 @@ class NotificationService {
   }
 
   /// Đánh dấu thông báo là đã xem bởi một user
-  Future<void> markAsSeen(String notificationId, String userId) async {
+  Future<void> markAsSeen(String notificationId) async {
     await _notificationsRef.doc(notificationId).update({
-      'seenBy': FieldValue.arrayUnion([userId])
+      'seenBy': FieldValue.arrayUnion([_auth.currentUser!.uid])
     });
   }
 
-  /// Lấy danh sách thông báo còn hiệu lực (có thể lọc theo user nhận)
+  /// Lấy danh sách thông báo cho user (có thể lọc theo user nhận)
+  /// Lấy danh sách thông báo có chứa UID của người đăng nhập trong `receivers`
   Stream<List<NotificationModel>> getActiveNotifications() {
-    Query query = _notificationsRef.orderBy('createdAt', descending: true);
-    if (_auth.currentUser != null) {
-      query = query.where('receivers', arrayContainsAny: [null, _auth.currentUser!.uid]);
-    }
+    String? currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) return Stream.value([]);
 
-    return query
+    return _notificationsRef
+        .where('receivers', arrayContains: currentUserId) // Lọc thông báo chứa UID người dùng
+        .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => NotificationModel.fromFirestore(doc)).toList());
   }
