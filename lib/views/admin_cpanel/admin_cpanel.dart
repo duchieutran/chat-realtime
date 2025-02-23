@@ -5,8 +5,8 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/profile_viewmodel.dart';
 import 'package:chatting/views/admin_cpanel/admin_cpanel_user.dart';
+import 'package:chatting/views/admin_cpanel/admin_notification.dart';
 import 'package:chatting/views/widgets/app_dialog.dart';
-import 'package:chatting/views/widgets/app_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,10 +19,12 @@ class AdminCpanel extends StatefulWidget {
 
 class _AdminCpanelState extends State<AdminCpanel> {
   final TextEditingController notificationController = TextEditingController();
+  final TextEditingController _notificationForUser = TextEditingController();
 
   final FocusNode focusNode = FocusNode();
   final NotificationService notificationService = NotificationService();
   bool isLoading = true;
+  Set<String> selectedUserIds = {};
   late Users users;
 
   @override
@@ -34,6 +36,7 @@ class _AdminCpanelState extends State<AdminCpanel> {
   @override
   void dispose() {
     notificationController.dispose();
+    _notificationForUser.dispose();
     super.dispose();
   }
 
@@ -51,203 +54,290 @@ class _AdminCpanelState extends State<AdminCpanel> {
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          width: size.width,
-          height: size.height,
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: Color(0xff44518a),
-          ),
-          child: isLoading
-              ? Center(
-                  child: Image(image: AssetImage(gifBatman)),
-                )
-              : Column(
-                  children: [
-                    // app bar
-                    SizedBox(height: size.height * 0.05),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Container(
+        width: size.width,
+        height: size.height,
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Color(0xff44518a),
+        ),
+        child: isLoading
+            ? Center(
+                child: Image(image: AssetImage(gifBatman)),
+              )
+            : Column(
+                children: [
+                  // app bar
+                  SizedBox(height: size.height * 0.05),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(Icons.arrow_back_ios, color: AppColors.grey30)),
+                      Text(
+                        "Dashboard",
+                        style: TextStyle(
+                          color: AppColors.light,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.1,
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(users.urlAvatar),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.05),
+                  // info
+                  Expanded(
+                      child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
                       children: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Icon(Icons.arrow_back_ios, color: AppColors.grey30)),
-                        Text(
-                          "Dashboard",
-                          style: TextStyle(
-                            color: AppColors.light,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: size.width * 0.09),
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                          width: size.width,
+                          height: size.height * 0.1,
+                          decoration: BoxDecoration(
+                            color: Color(0xff596def),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                users.name,
+                                style: TextStyle(
+                                  color: AppColors.light,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Text(
+                                users.email,
+                                style: TextStyle(
+                                  color: AppColors.light,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(
-                          width: size.width * 0.1,
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(users.urlAvatar),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: size.height * 0.05),
-                    // info
-                    SingleChildScrollView(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: size.width * 0.09),
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                        width: size.width,
-                        height: size.height * 0.1,
-                        decoration: BoxDecoration(
-                          color: Color(0xff596def),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Column(
+                        SizedBox(height: size.height * 0.05),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(
-                              users.name,
-                              style: TextStyle(
-                                color: AppColors.light,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                            FutureBuilder<int>(
+                              future: AdminService().getUserCount(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return _buildFeature(
+                                    size: size,
+                                    icon: Icons.person_outline,
+                                    title: "User",
+                                    subTitle: "...",
+                                    onTap: () {},
+                                  );
+                                }
+                                if (snapshot.hasError || !snapshot.hasData) {
+                                  return _buildFeature(
+                                    size: size,
+                                    icon: Icons.person_outline,
+                                    title: "User",
+                                    subTitle: "0",
+                                    onTap: () {},
+                                  );
+                                }
+                                return _buildFeature(
+                                  size: size,
+                                  icon: Icons.person_outline,
+                                  title: "User",
+                                  subTitle: "${snapshot.data}",
+                                  onTap: snapshot.data == 0
+                                      ? () {}
+                                      : () {
+                                          Navigator.push(
+                                              context, MaterialPageRoute(builder: (context) => AdminCpanelUser()));
+                                        },
+                                );
+                              },
                             ),
-                            Text(
-                              users.email,
-                              style: TextStyle(
-                                color: AppColors.light,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            _buildFeature(
+                                size: size, icon: Icons.message, title: "Feedback", subTitle: "100", onTap: () {}),
+                            FutureBuilder<int>(
+                              future: NotificationService().getNotificationCount(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return _buildFeature(
+                                    size: size,
+                                    icon: Icons.notifications,
+                                    title: "Notification",
+                                    subTitle: "...",
+                                    // Hiển thị dấu chấm lửng khi đang load
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => AdminNotification()),
+                                      );
+                                    },
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return _buildFeature(
+                                    size: size,
+                                    icon: Icons.notifications,
+                                    title: "Notification",
+                                    subTitle: "Error",
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => AdminNotification()),
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  return _buildFeature(
+                                    size: size,
+                                    icon: Icons.notifications,
+                                    title: "Notification",
+                                    subTitle: snapshot.data.toString(),
+                                    // Số lượng thông báo
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => AdminNotification()),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.05),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        FutureBuilder<int>(
-                          future: AdminService().getUserCount(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return _buildFeature(
-                                size: size,
-                                icon: Icons.person_outline,
-                                title: "User",
-                                subTitle: "...",
-                                onTap: () {},
-                              );
-                            }
-                            if (snapshot.hasError || !snapshot.hasData) {
-                              return _buildFeature(
-                                size: size,
-                                icon: Icons.person_outline,
-                                title: "User",
-                                subTitle: "0",
-                                onTap: () {},
-                              );
-                            }
-                            return _buildFeature(
-                              size: size,
-                              icon: Icons.person_outline,
-                              title: "User",
-                              subTitle: "${snapshot.data}",
-                              onTap: snapshot.data == 0
-                                  ? () {}
-                                  : () {
-                                      Navigator.push(
-                                          context, MaterialPageRoute(builder: (context) => AdminCpanelUser()));
-                                    },
-                            );
-                          },
+                        SizedBox(height: size.height * 0.05),
+                        Container(
+                          width: size.width,
+                          height: size.height * 0.18,
+                          decoration: BoxDecoration(
+                            color: Color(0xff313a66),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            children: [
+                              // header
+                              Text(
+                                "Notification",
+                                style: TextStyle(
+                                  color: AppColors.light,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                ),
+                              ),
+                              // input
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                child: TextField(
+                                  controller: notificationController,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: "Input notification ...",
+                                    hintStyle: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                                    filled: true,
+                                    fillColor: Colors.white10,
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (notificationController.text.isEmpty) {
+                                    FocusScope.of(context).unfocus();
+                                    appDialog(
+                                      context: context,
+                                      title: "Error",
+                                      content: "Notification cannot be empty.",
+                                      confirmText: "Try again !",
+                                      onConfirm: () {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  } else {
+                                    FocusScope.of(context).unfocus();
+
+                                    notificationService.sendNotification(
+                                        content: notificationController.text, adminUid: users.uid);
+                                    appDialog(
+                                      context: context,
+                                      title: "Success",
+                                      content: "Add notification success.",
+                                      confirmText: "Okey !",
+                                      onConfirm: () {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  width: size.width * 0.35,
+                                  height: size.width * 0.09,
+                                  decoration:
+                                      BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10)),
+                                  child: Center(
+                                    child: Text(
+                                      "Add Notification",
+                                      style: TextStyle(
+                                        color: AppColors.light,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        _buildFeature(
-                            size: size, icon: Icons.message, title: "Feedback", subTitle: "100", onTap: () {}),
-                        _buildFeature(size: size, icon: Icons.report, title: "Report", subTitle: "100", onTap: () {}),
-                      ],
-                    ),
-                    SizedBox(height: size.height * 0.05),
-                    Container(
-                      width: size.width,
-                      height: size.height * 0.18,
-                      decoration: BoxDecoration(
-                        color: Color(0xff313a66),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          // header
-                          Text(
-                            "Notification",
-                            style: TextStyle(
-                              color: AppColors.light,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
-                            ),
+                        SizedBox(height: size.height * 0.05),
+                        Container(
+                          width: size.width,
+                          height: size.height * 0.5,
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Color(0xff313a66),
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          // input
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            child: TextField(
-                              controller: notificationController,
-                              focusNode: focusNode,
-                              style: TextStyle(
-                                color: AppColors.light,
-                                fontSize: 20,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: "Input notification ...",
-                                hintStyle: TextStyle(
-                                  color: AppColors.grey40,
-                                  fontSize: 18,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: AppColors.blue50),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: AppColors.green50),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // TextField nhập nội dung thông báo
+                              TextField(
+                                controller: _notificationForUser,
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                decoration: InputDecoration(
+                                  hintText: "Input notification ...",
+                                  hintStyle: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                                  filled: true,
+                                  fillColor: Colors.white10,
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 ),
                               ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (notificationController.text.isEmpty) {
-                                // Bỏ focus trước khi mở dialog
-                                FocusScope.of(context).unfocus();
+                              SizedBox(height: 10),
 
-                                appDialog(
-                                  context: context,
-                                  title: "Error",
-                                  content: "Notification cannot be empty.",
-                                  confirmText: "Try again !",
-                                  onConfirm: () {
-                                    Navigator.pop(context);
-                                  },
-                                );
-                              } else {
-                                // Bỏ focus trước khi hiển thị loading
-                                FocusScope.of(context).unfocus();
-
-                                appLoading(context: context, gif: gifBatman);
-                                notificationService.sendNotification(
-                                    content: notificationController.text, adminUid: users.uid);
-                                Navigator.pop(context);
-                              }
-                            },
-                            child: Container(
-                              width: size.width * 0.35,
-                              height: size.width * 0.09,
-                              decoration:
-                                  BoxDecoration(color: AppColors.blue50, borderRadius: BorderRadius.circular(10)),
-                              child: Center(
+                              // Nút Add Notification
+                              ElevatedButton(
+                                onPressed: _sendNotification,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                ),
                                 child: Text(
                                   "Add Notification",
                                   style: TextStyle(
@@ -256,16 +346,124 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                   ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-        ),
+                              SizedBox(height: 10),
+
+                              // Danh sách người dùng có thể chọn
+                              Expanded(
+                                child: FutureBuilder<List<Users>>(
+                                  future: AdminService().getAllUsers(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Center(child: CircularProgressIndicator());
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                          child: Text("Lỗi khi lấy dữ liệu", style: TextStyle(color: Colors.white)));
+                                    }
+                                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                      return Center(
+                                          child:
+                                              Text("Không có người dùng nào", style: TextStyle(color: Colors.white)));
+                                    }
+
+                                    List<Users> users = snapshot.data!;
+                                    return ListView.builder(
+                                      itemCount: users.length,
+                                      itemBuilder: (context, index) {
+                                        Users user = users[index];
+                                        bool isSelected = selectedUserIds.contains(user.uid);
+
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (isSelected) {
+                                                selectedUserIds.remove(user.uid);
+                                              } else {
+                                                selectedUserIds.add(user.uid);
+                                              }
+                                            });
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(vertical: 4),
+                                            padding: EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              color: isSelected ? Colors.blueAccent.withOpacity(0.7) : Colors.white10,
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                // Avatar
+                                                CircleAvatar(
+                                                  radius: 24,
+                                                  backgroundImage: NetworkImage(user.urlAvatar),
+                                                ),
+                                                SizedBox(width: 12),
+
+                                                // Thông tin User
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        user.name,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 16),
+                                                      ),
+                                                      SizedBox(height: 4),
+                                                      Text(user.username,
+                                                          style: TextStyle(color: Colors.white70, fontSize: 14)),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                // Dấu tích bên phải nếu được chọn
+                                                if (isSelected)
+                                                  Icon(Icons.check_circle, color: Colors.greenAccent, size: 28),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+                ],
+              ),
       ),
     );
+  }
+
+  void _sendNotification() {
+    String message = _notificationForUser.text.trim();
+    if (message.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Vui lòng nhập nội dung thông báo!")));
+      return;
+    }
+    if (selectedUserIds.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Vui lòng chọn ít nhất một người dùng!")));
+      return;
+    }
+
+    notificationService.sendNotification(content: message, adminUid: users.uid, receivers: selectedUserIds.toList());
+    appDialog(
+        context: context,
+        title: "Success",
+        content: "Send notification success !",
+        confirmText: "Okey Admin",
+        onConfirm: () {
+          Navigator.pop(context);
+          _notificationForUser.clear();
+          selectedUserIds.clear();
+        });
   }
 
   Widget _buildFeature({
