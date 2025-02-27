@@ -53,9 +53,7 @@ class _FriendAppbarState extends State<FriendAppbar> {
             name: user.name,
             email: user.email,
             statusAdd: isPending,
-            onAddFriend: isPending
-                ? () {}
-                : () => friendVM.sendFriend(receiverUid: user.uid),
+            onAddFriend: isPending ? () {} : () => friendVM.sendFriend(receiverUid: user.uid),
           ),
         );
       }
@@ -77,8 +75,7 @@ class _FriendAppbarState extends State<FriendAppbar> {
   Widget build(BuildContext context) {
     final size = widget.size;
     return Container(
-      padding:
-          EdgeInsets.symmetric(horizontal: 20, vertical: size.height * 0.035),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: size.height * 0.035),
       width: size.width,
       height: size.height * 0.15,
       decoration: BoxDecoration(
@@ -131,29 +128,23 @@ class _FriendAppbarState extends State<FriendAppbar> {
                               controller: searchController,
                               decoration: InputDecoration(
                                 hintText: 'Username',
-                                suffixIcon: GestureDetector(
-                                    onTap: _searchFriend,
-                                    child: const Icon(Icons.search_outlined)),
-                                hintStyle:
-                                    const TextStyle(color: AppColors.grey60),
+                                suffixIcon:
+                                    GestureDetector(onTap: _searchFriend, child: const Icon(Icons.search_outlined)),
+                                hintStyle: const TextStyle(color: AppColors.grey60),
                                 fillColor: AppColors.light,
                                 filled: true,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide:
-                                      const BorderSide(color: AppColors.grey60),
+                                  borderSide: const BorderSide(color: AppColors.grey60),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide:
-                                      const BorderSide(color: AppColors.grey60),
+                                  borderSide: const BorderSide(color: AppColors.grey60),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide:
-                                      const BorderSide(color: AppColors.grey60),
+                                  borderSide: const BorderSide(color: AppColors.grey60),
                                 ),
                               ),
                               cursorColor: AppColors.dark,
@@ -184,35 +175,34 @@ class _FriendAppbarState extends State<FriendAppbar> {
                     ),
                   ),
                   // thong bao
-                  Stack(
-                    children: [
-                      Icon(
-                        Icons.notifications_outlined,
-                        color: AppColors.dark,
-                        size: size.height * 0.03,
-                      ),
-                      Positioned(
-                        top: size.height * 0.004,
-                        right: size.height * 0.004,
-                        child: Container(
-                          width: size.height * 0.01,
-                          height: size.height * 0.01,
-                          decoration: BoxDecoration(
-                            color: AppColors.red50,
-                            borderRadius:
-                                BorderRadius.circular(size.height * 0.01),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                  // Stack(
+                  //   children: [
+                  //     Icon(
+                  //       Icons.notifications_outlined,
+                  //       color: AppColors.dark,
+                  //       size: size.height * 0.03,
+                  //     ),
+                  //     Positioned(
+                  //       top: size.height * 0.004,
+                  //       right: size.height * 0.004,
+                  //       child: Container(
+                  //         width: size.height * 0.01,
+                  //         height: size.height * 0.01,
+                  //         decoration: BoxDecoration(
+                  //           color: AppColors.red50,
+                  //           borderRadius:
+                  //               BorderRadius.circular(size.height * 0.01),
+                  //         ),
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
                   //logo
                   Container(
                     height: size.height * 0.04,
                     width: size.height * 0.04,
                     decoration: BoxDecoration(
-                      image:
-                          const DecorationImage(image: AssetImage(gifBatman)),
+                      image: const DecorationImage(image: AssetImage(gifBatman)),
                       color: AppColors.blue10,
                       borderRadius: BorderRadius.all(
                         Radius.circular(size.height * 0.04),

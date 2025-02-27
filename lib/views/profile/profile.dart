@@ -101,7 +101,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => FeedbackScreen(),
+                                      builder: (context) => FeedbackScreen(
+                                        senderUserName: users.username,
+                                      ),
                                     ));
                               },
                               child: RotationTransition(

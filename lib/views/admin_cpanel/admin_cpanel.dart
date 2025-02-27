@@ -1,5 +1,6 @@
 import 'package:chatting/models/users_model.dart';
 import 'package:chatting/services/admin_service.dart';
+import 'package:chatting/services/feedback_service.dart';
 import 'package:chatting/services/notification_service.dart';
 import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
@@ -19,7 +20,7 @@ class AdminCpanel extends StatefulWidget {
 }
 
 class _AdminCpanelState extends State<AdminCpanel> {
-  final TextEditingController notificationController = TextEditingController();
+  final TextEditingController _notificationController = TextEditingController();
   final TextEditingController _notificationForUser = TextEditingController();
 
   final FocusNode focusNode = FocusNode();
@@ -36,7 +37,7 @@ class _AdminCpanelState extends State<AdminCpanel> {
 
   @override
   void dispose() {
-    notificationController.dispose();
+    _notificationController.dispose();
     _notificationForUser.dispose();
     super.dispose();
   }
@@ -171,18 +172,53 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                 );
                               },
                             ),
-                            _buildFeature(
-                                size: size,
-                                icon: Icons.message,
-                                title: "Feedback",
-                                subTitle: "100",
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AdminFeedBack(),
-                                      ));
-                                }),
+                            FutureBuilder<int>(
+                              future: FeedbackService().getFeedbacksService(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return _buildFeature(
+                                      size: size,
+                                      icon: Icons.message,
+                                      title: "Feedback",
+                                      subTitle: "...",
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AdminFeedBack(),
+                                            ));
+                                      });
+                                } else if (snapshot.hasError) {
+                                  return _buildFeature(
+                                      size: size,
+                                      icon: Icons.message,
+                                      title: "Feedback",
+                                      subTitle: "Error",
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AdminFeedBack(),
+                                            ));
+                                      });
+                                } else {
+                                  return _buildFeature(
+                                    size: size,
+                                    icon: Icons.notifications,
+                                    title: "Feedback",
+                                    subTitle: snapshot.data.toString(),
+                                    // Số lượng thông báo
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AdminFeedBack(),
+                                          ));
+                                    },
+                                  );
+                                }
+                              },
+                            ),
                             FutureBuilder<int>(
                               future: NotificationService().getNotificationCount(),
                               builder: (context, snapshot) {
@@ -255,7 +291,7 @@ class _AdminCpanelState extends State<AdminCpanel> {
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 child: TextField(
-                                  controller: notificationController,
+                                  controller: _notificationController,
                                   style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     hintText: "Input notification ...",
@@ -269,7 +305,7 @@ class _AdminCpanelState extends State<AdminCpanel> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  if (notificationController.text.isEmpty) {
+                                  if (_notificationController.text.isEmpty) {
                                     FocusScope.of(context).unfocus();
                                     appDialog(
                                       context: context,
@@ -284,7 +320,7 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                     FocusScope.of(context).unfocus();
 
                                     notificationService.sendNotification(
-                                        content: notificationController.text, adminUid: users.uid);
+                                        content: _notificationController.text, adminUid: users.uid);
                                     appDialog(
                                       context: context,
                                       title: "Success",
@@ -294,6 +330,7 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                         Navigator.pop(context);
                                       },
                                     );
+                                    _notificationController.clear();
                                   }
                                 },
                                 child: Container(

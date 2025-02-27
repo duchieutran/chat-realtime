@@ -3,7 +3,9 @@ import 'package:chatting/services/feedback_service.dart';
 import 'package:flutter/material.dart';
 
 class FeedbackScreen extends StatefulWidget {
-  const FeedbackScreen({super.key});
+  const FeedbackScreen({super.key, required this.senderUserName});
+
+  final String senderUserName;
 
   @override
   State<FeedbackScreen> createState() => _FeedbackScreenState();
@@ -37,6 +39,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       title: _titleController.text,
       content: _contentController.text,
       category: _selectedCategory,
+      senderName: widget.senderUserName,
     );
 
     _titleController.clear();

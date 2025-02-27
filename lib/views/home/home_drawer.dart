@@ -25,19 +25,7 @@ class HomeDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: size.height * 0.12),
-          // Dang xuat
-          DrawerFeature(
-              size: size,
-              onTap: () {
-                drawerViewModel.toggleDrawer();
-                AuthViewmodel().logout();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  AppRouters.login,
-                  (Route<dynamic> route) => false,
-                );
-              },
-              icon: Icons.logout_outlined,
-              title: "Log out"),
+
           // cai dat
           DrawerFeature(size: size, icon: Icons.settings, title: "setting"),
           FutureBuilder<bool>(
@@ -60,7 +48,20 @@ class HomeDrawer extends StatelessWidget {
                 );
               }
             },
-          )
+          ),
+          // Dang xuat
+          DrawerFeature(
+              size: size,
+              onTap: () {
+                drawerViewModel.toggleDrawer();
+                AuthViewmodel().logout();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppRouters.login,
+                  (Route<dynamic> route) => false,
+                );
+              },
+              icon: Icons.logout_outlined,
+              title: "Log out"),
         ],
       ),
     );

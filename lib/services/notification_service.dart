@@ -31,7 +31,6 @@ class NotificationService {
     });
   }
 
-  /// Lấy danh sách thông báo cho user (có thể lọc theo user nhận)
   /// Lấy danh sách thông báo có chứa UID của người đăng nhập trong `receivers`
   Stream<List<NotificationModel>> getActiveNotifications() {
     String? currentUserId = _auth.currentUser?.uid;
@@ -90,5 +89,18 @@ class NotificationService {
   Future<int> getNotificationCount() async {
     final snapshot = await _notificationsRef.get();
     return snapshot.docs.length;
+  }
+
+  // lấy số lượng thông báo cho (user)
+  Stream<int> getUnreadNotificationCount() {
+    String? currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) return Stream.value(0);
+
+    return _notificationsRef.where('receivers', arrayContains: currentUserId).snapshots().map((snapshot) {
+      return snapshot.docs.where((doc) {
+        List<dynamic> seenBy = doc['seenBy'] ?? [];
+        return !seenBy.contains(currentUserId);
+      }).length;
+    });
   }
 }

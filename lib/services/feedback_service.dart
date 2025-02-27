@@ -11,10 +11,9 @@ class FeedbackService {
     required String title,
     required String content,
     required String category,
+    required String senderName,
   }) async {
-    final String uid = FirebaseAuth.instance.currentUser?.uid ?? 'Anonymous';
-    final String senderName = FirebaseAuth.instance.currentUser?.displayName ?? 'Unknown';
-
+    final String uid = FirebaseAuth.instance.currentUser!.uid;
     final feedback = FeedbackModel(
       id: '',
       uid: uid,
@@ -28,6 +27,12 @@ class FeedbackService {
     );
 
     await _firestore.collection('feedbacks').add(feedback.toMap());
+  }
+
+  /// Lấy số lượng feedback
+  Future<int> getFeedbacksService() async {
+    final snapshot = await _firestore.collection('feedbacks').get();
+    return snapshot.docs.length;
   }
 
   /// Lấy danh sách phản hồi của người dùng (User)

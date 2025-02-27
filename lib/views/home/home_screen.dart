@@ -51,21 +51,45 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             // app bar
-            HomeAppbar(
-              size: size,
-              iconLeading: value.isOpen ? Icons.arrow_back_ios : Icons.menu,
-              iconAction: Icons.notifications,
-              onTapLeading: () {
-                value.toggleDrawer();
-              },
-              onTapAction: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NotificationScreen(),
-                    ));
+            // HomeAppbar(
+            //   size: size,
+            //   iconLeading: value.isOpen ? Icons.arrow_back_ios : Icons.menu,
+            //   iconAction: Icons.notifications,
+            //   onTapLeading: () {
+            //     value.toggleDrawer();
+            //   },
+            //   onTapAction: () {
+            //     Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => NotificationScreen(),
+            //         ));
+            //   },
+            // ),
+            StreamBuilder<int>(
+              stream: NotificationService().getUnreadNotificationCount(),
+              builder: (context, snapshot) {
+                int unreadCount = snapshot.data ?? 0;
+
+                return HomeAppbar(
+                  size: MediaQuery.of(context).size,
+                  onTapLeading: () {
+                    value.toggleDrawer();
+                  },
+                  onTapAction: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationScreen(),
+                        ));
+                  },
+                  iconLeading: value.isOpen ? Icons.arrow_back_ios : Icons.menu,
+                  iconAction: Icons.notifications,
+                  notificationCount: unreadCount,
+                );
               },
             ),
+
             // body
             Container(
               width: size.width,

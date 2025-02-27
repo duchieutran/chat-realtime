@@ -4,6 +4,7 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
+import 'package:chatting/views/chat/update_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -53,8 +54,7 @@ class _MessageScreenState extends State<MessageScreen> {
   // get user trong nhom
   Future<void> getMemberInGroup() async {
     try {
-      List<Users>? user =
-          await messageViewModel.getUser(uidGroup: widget.chatId);
+      List<Users>? user = await messageViewModel.getUser(uidGroup: widget.chatId);
       setState(() {
         memberInGroup = user;
       });
@@ -94,17 +94,14 @@ class _MessageScreenState extends State<MessageScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
       width: size.width,
       height: size.height * 0.08,
-      decoration: BoxDecoration(
-          color: AppColors.light,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: const [
-            BoxShadow(
-              color: AppColors.grey40,
-              spreadRadius: 5,
-              blurRadius: 15,
-              offset: Offset(0, 0), // Bóng đều ở cả 4 cạnh
-            ),
-          ]),
+      decoration: BoxDecoration(color: AppColors.light, borderRadius: BorderRadius.circular(20), boxShadow: const [
+        BoxShadow(
+          color: AppColors.grey40,
+          spreadRadius: 5,
+          blurRadius: 15,
+          offset: Offset(0, 0), // Bóng đều ở cả 4 cạnh
+        ),
+      ]),
       child: Row(
         children: [
           // back
@@ -128,8 +125,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     color: AppColors.blue20,
                     border: Border.all(color: AppColors.dark, width: 1),
                     borderRadius: BorderRadius.circular(size.width * 0.1)),
-                child: CircleAvatar(
-                    backgroundImage: NetworkImage(widget.receiverAvatar)),
+                child: CircleAvatar(backgroundImage: NetworkImage(widget.receiverAvatar)),
               ),
               const SizedBox(width: 10),
               Text(
@@ -141,7 +137,27 @@ class _MessageScreenState extends State<MessageScreen> {
                 ),
               ),
             ],
-          )
+          ),
+          Expanded(child: Container()),
+          if (widget.isAdmin) ...[
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UpdateGroup(
+                      users: friends,
+                      isUpdate: true,
+                      groupName: widget.receiverName,
+                      uidGroup: widget.chatId,
+                      usersInGroup: memberInGroup,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.group_add),
+            )
+          ]
         ],
       ),
     );
@@ -186,16 +202,14 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 
-  Widget _buildMessageBubble(
-      MessageModel message, MessageViewModel messageViewModel) {
+  Widget _buildMessageBubble(MessageModel message, MessageViewModel messageViewModel) {
     bool isMe = message.senderId == messageViewModel.auth.currentUser!.uid;
     String urlAvatar = message.senderAvatar;
     String name = message.senderName;
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
-        crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -219,15 +233,11 @@ class _MessageScreenState extends State<MessageScreen> {
                 isMe
                     ? const SizedBox()
                     : Text(name,
-                        style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.grey40))
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.grey40))
               ]),
               // ảnh đại diện + tin nhắn
               Row(
-                mainAxisAlignment:
-                    isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
                 children: [
                   isMe
                       ? const SizedBox()
@@ -236,9 +246,7 @@ class _MessageScreenState extends State<MessageScreen> {
                           width: 30,
                           height: 30,
                           decoration: const BoxDecoration(
-                              color: AppColors.blue40,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
+                              color: AppColors.blue40, borderRadius: BorderRadius.all(Radius.circular(30))),
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(urlAvatar),
                           ),
@@ -249,16 +257,14 @@ class _MessageScreenState extends State<MessageScreen> {
                         context: context,
                         isDismissible: true,
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20)),
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                         ),
                         builder: (context) {
                           return Container(
                             padding: EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20)),
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                             ),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -266,26 +272,24 @@ class _MessageScreenState extends State<MessageScreen> {
                                 // Button Copy
                                 ListTile(
                                   leading: Icon(Icons.copy, color: Colors.blue),
-                                  title: Text("Copy",
-                                      style: TextStyle(fontSize: 16)),
+                                  title: Text("Copy", style: TextStyle(fontSize: 16)),
                                   onTap: () {
-                                    Clipboard.setData(
-                                        ClipboardData(text: message.text));
+                                    Clipboard.setData(ClipboardData(text: message.text));
                                     Navigator.pop(context);
                                   },
                                 ),
                                 Divider(),
 
-                                ListTile(
-                                  leading:
-                                      Icon(Icons.report, color: Colors.red),
-                                  title: Text("Report",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.red)),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
+                                // ListTile(
+                                //   leading:
+                                //       Icon(Icons.report, color: Colors.red),
+                                //   title: Text("Report",
+                                //       style: TextStyle(
+                                //           fontSize: 16, color: Colors.red)),
+                                //   onTap: () {
+                                //     Navigator.pop(context);
+                                //   },
+                                // ),
                               ],
                             ),
                           );
@@ -304,8 +308,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       ),
                       child: Text(
                         message.text,
-                        style: TextStyle(
-                            color: isMe ? Colors.white : Colors.black),
+                        style: TextStyle(color: isMe ? Colors.white : Colors.black),
                       ),
                     ),
                   ),
@@ -319,8 +322,7 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   // widget gui tin nhan
-  Widget _buildMessageInput(
-      MessageViewModel messageViewModel, List<Users> users) {
+  Widget _buildMessageInput(MessageViewModel messageViewModel, List<Users> users) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
@@ -339,8 +341,7 @@ class _MessageScreenState extends State<MessageScreen> {
             child: TextField(
               controller: messageController,
               decoration: InputDecoration(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 hintText: "Enter a message...",
                 filled: true,
                 fillColor: Colors.grey[100],
