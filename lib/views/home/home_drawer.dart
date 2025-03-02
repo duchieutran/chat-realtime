@@ -14,7 +14,8 @@ class HomeDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drawerViewModel = Provider.of<DrawerHomeViewmodel>(context, listen: true);
+    final drawerViewModel =
+        Provider.of<DrawerHomeViewmodel>(context, listen: true);
 
     final Size size = MediaQuery.of(context).size;
     return Container(
@@ -27,9 +28,10 @@ class HomeDrawer extends StatelessWidget {
           SizedBox(height: size.height * 0.12),
 
           // cai dat
-          DrawerFeature(size: size, icon: Icons.settings, title: "setting"),
+          // DrawerFeature(size: size, icon: Icons.settings, title: "setting"),
           FutureBuilder<bool>(
-            future: Provider.of<ProfileViewModel>(context, listen: false).checkAdmin(),
+            future: Provider.of<ProfileViewModel>(context, listen: false)
+                .checkAdmin(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return SizedBox();

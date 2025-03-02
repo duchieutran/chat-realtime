@@ -91,7 +91,7 @@ class NotificationService {
     return snapshot.docs.length;
   }
 
-  // lấy số lượng thông báo cho (user)
+  /// lấy số lượng thông báo cho (user)
   Stream<int> getUnreadNotificationCount() {
     String? currentUserId = _auth.currentUser?.uid;
     if (currentUserId == null) return Stream.value(0);

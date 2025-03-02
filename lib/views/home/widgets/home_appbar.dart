@@ -54,7 +54,8 @@ class HomeAppbar extends StatelessWidget {
               fontSize: 25,
             ),
           ),
-          // Action với badge thông báo
+
+          /// Action với badge thông báo
           GestureDetector(
             onTap: onTapAction,
             child: Stack(
