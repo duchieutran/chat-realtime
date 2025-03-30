@@ -260,7 +260,6 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                   ),
                 ),
               ),
-              // TODO : format lai
               Positioned(
                   top: 240,
                   left: size.width / 2 + 20,

@@ -28,16 +28,20 @@ class _AdminFeedBackState extends State<AdminFeedBack> {
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           backgroundColor: Colors.white,
-          title: Text(feedback.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(feedback.title,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(feedback.content, style: const TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(height: 10),
-              Text("Ngày tạo: ${DateFormat('HH:mm dd/MM/yyyy').format(feedback.createdAt.toDate())}",
+              Text(feedback.content,
                   style: const TextStyle(fontWeight: FontWeight.w500)),
-              Text("Người gửi: ${feedback.senderName}", style: const TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(height: 10),
+              Text(
+                  "Ngày tạo: ${DateFormat('HH:mm dd/MM/yyyy').format(feedback.createdAt.toDate())}",
+                  style: const TextStyle(fontWeight: FontWeight.w500)),
+              Text("Người gửi: ${feedback.senderName}",
+                  style: const TextStyle(fontWeight: FontWeight.w500)),
             ],
           ),
           actions: [
@@ -47,7 +51,8 @@ class _AdminFeedBackState extends State<AdminFeedBack> {
                 onPressed: () => Navigator.of(context).pop(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -65,7 +70,8 @@ class _AdminFeedBackState extends State<AdminFeedBack> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Feedbacks', style: TextStyle(color: Colors.white)),
+        title: const Text('Admin Feedbacks',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xff44518a),
       ),
       backgroundColor: const Color(0xff44518a),
@@ -79,7 +85,9 @@ class _AdminFeedBackState extends State<AdminFeedBack> {
             }
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(
-                child: Text("No feedbacks found", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                child: Text("No feedbacks found",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w500)),
               );
             }
 
@@ -94,11 +102,13 @@ class _AdminFeedBackState extends State<AdminFeedBack> {
                   isResolved ? Icons.check_circle : Icons.pending,
                   color: isResolved ? Colors.green : Colors.yellow,
                 );
-                final formattedDate = DateFormat('HH:mm dd/MM/yyyy').format(feedback.createdAt.toDate());
+                final formattedDate = DateFormat('HH:mm dd/MM/yyyy')
+                    .format(feedback.createdAt.toDate());
 
                 return Card(
                   color: const Color(0xff596def),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: InkWell(
                     onTap: () => _showFeedbackDetails(feedback),
@@ -114,8 +124,10 @@ class _AdminFeedBackState extends State<AdminFeedBack> {
                               Expanded(
                                 child: Text(
                                   feedback.title,
-                                  style:
-                                      const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
                                 ),
                               ),
                               statusIcon,
@@ -123,11 +135,18 @@ class _AdminFeedBackState extends State<AdminFeedBack> {
                           ),
                           const SizedBox(height: 5),
                           Text("Category: ${feedback.category}",
-                              style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w500)),
+                              style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w500)),
                           Text("Status: ${feedback.status}",
-                              style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w500)),
+                              style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w500)),
                           Text("Sent: $formattedDate",
-                              style: const TextStyle(fontSize: 12, color: Colors.white60, fontWeight: FontWeight.w500)),
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white60,
+                                  fontWeight: FontWeight.w500)),
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,19 +155,25 @@ class _AdminFeedBackState extends State<AdminFeedBack> {
                                 onPressed: () => _markAsResolved(feedback.id),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
                                 ),
                                 child: const Text("Resolve",
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500)),
                               ),
                               ElevatedButton(
                                 onPressed: () => _deleteFeedback(feedback.id),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
                                 ),
                                 child: const Text("Delete",
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500)),
                               ),
                             ],
                           ),

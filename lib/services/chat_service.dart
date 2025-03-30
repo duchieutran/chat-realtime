@@ -48,7 +48,6 @@ class ChatService {
         await chatRef.update(dataToUpdate);
       }
     } catch (e) {
-      print("Lỗi khi cập nhật chat: $e");
       throw Exception("Không thể cập nhật thông tin chat");
     }
   }
@@ -112,7 +111,6 @@ class ChatService {
       }
       return [];
     } catch (e) {
-      print("Lỗi khi lấy danh sách UID: $e");
       throw Exception("Không thể lấy danh sách UID của nhóm");
     }
   }

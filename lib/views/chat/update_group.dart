@@ -36,8 +36,12 @@ class _UpdateGroupState extends State<UpdateGroup> {
   @override
   void initState() {
     super.initState();
-    selectedUsers = widget.isUpdate ? ((widget.usersInGroup != null) ? widget.usersInGroup! : []) : [];
-    groupNameController = widget.isUpdate ? TextEditingController(text: widget.groupName) : TextEditingController();
+    selectedUsers = widget.isUpdate
+        ? ((widget.usersInGroup != null) ? widget.usersInGroup! : [])
+        : [];
+    groupNameController = widget.isUpdate
+        ? TextEditingController(text: widget.groupName)
+        : TextEditingController();
   }
 
   @override
@@ -79,7 +83,8 @@ class _UpdateGroupState extends State<UpdateGroup> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Select Group Avatar", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        const Text("Select Group Avatar",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 10),
         SizedBox(
           height: 80,
@@ -95,7 +100,9 @@ class _UpdateGroupState extends State<UpdateGroup> {
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: chooseImg == index ? AppColors.blue70 : Colors.transparent,
+                      color: chooseImg == index
+                          ? AppColors.blue70
+                          : Colors.transparent,
                       width: 3,
                     ),
                     shape: BoxShape.circle,
@@ -128,7 +135,8 @@ class _UpdateGroupState extends State<UpdateGroup> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(widget.isUpdate ? "Add Members" : "Select Members",
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
@@ -164,7 +172,9 @@ class _UpdateGroupState extends State<UpdateGroup> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: isSelected ? AppColors.blue40.withOpacity(0.6) : Colors.grey.withOpacity(0.4),
+                            color: isSelected
+                                ? AppColors.blue40.withOpacity(0.6)
+                                : Colors.grey.withOpacity(0.4),
                             blurRadius: 10,
                             spreadRadius: 2,
                             offset: const Offset(0, 4),
@@ -172,16 +182,20 @@ class _UpdateGroupState extends State<UpdateGroup> {
                         ],
                       ),
                       child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
                         leading: CircleAvatar(
                           radius: 28,
                           backgroundImage: NetworkImage(user.urlAvatar),
                         ),
-                        title: Text(user.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        title: Text(user.name,
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600)),
                         trailing: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 300),
                           child: isSelected
-                              ? const Icon(Icons.check_circle, color: Colors.green, size: 28)
+                              ? const Icon(Icons.check_circle,
+                                  color: Colors.green, size: 28)
                               : const SizedBox.shrink(),
                         ),
                       ),
@@ -197,17 +211,22 @@ class _UpdateGroupState extends State<UpdateGroup> {
   }
 
   Widget _buildCreateButton() {
-    final bool isEnabled = selectedUsers.length >= (widget.isUpdate ? 1 : 2) && groupNameController.text.isNotEmpty;
+    final bool isEnabled = selectedUsers.length >= (widget.isUpdate ? 1 : 2) &&
+        groupNameController.text.isNotEmpty;
 
     return Center(
       child: ElevatedButton.icon(
-        onPressed: isEnabled ? (widget.isUpdate ? updateGroup : createGroup) : null,
-        icon: Icon(widget.isUpdate ? Icons.upcoming_sharp : Icons.group_add, color: AppColors.light),
-        label: Text(widget.isUpdate ? "Update Group" : "Create Group", style: const TextStyle(color: AppColors.light)),
+        onPressed:
+            isEnabled ? (widget.isUpdate ? updateGroup : createGroup) : null,
+        icon: Icon(widget.isUpdate ? Icons.upcoming_sharp : Icons.group_add,
+            color: AppColors.light),
+        label: Text(widget.isUpdate ? "Update Group" : "Create Group",
+            style: const TextStyle(color: AppColors.light)),
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           backgroundColor: isEnabled ? AppColors.blue40 : Colors.grey[400],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
     );

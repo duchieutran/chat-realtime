@@ -40,9 +40,7 @@ class AuthServices {
     try {
       await setOffline();
       await auth.signOut();
-    } catch (e) {
-      print('Error during registration: $e');
-    }
+    } catch (e) {}
   }
 
   // cập nhật trạng thái người dùng

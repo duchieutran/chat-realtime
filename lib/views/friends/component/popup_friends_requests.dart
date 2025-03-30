@@ -67,7 +67,10 @@ class _FriendRequestDialogState extends State<FriendRequestDialog> {
                 const SizedBox(height: 20),
                 Text(
                   widget.name,
-                  style: const TextStyle(color: AppColors.grey70, fontSize: 20, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                      color: AppColors.grey70,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -75,7 +78,10 @@ class _FriendRequestDialogState extends State<FriendRequestDialog> {
                 Text(
                   widget.email,
                   style: const TextStyle(
-                      color: AppColors.grey50, fontSize: 16, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
+                      color: AppColors.grey50,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -106,8 +112,10 @@ class _FriendRequestDialogState extends State<FriendRequestDialog> {
                               widget.onAddFriend();
                             },
                       style: TextButton.styleFrom(
-                        backgroundColor: isAdded ? AppColors.grey30 : AppColors.green60,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        backgroundColor:
+                            isAdded ? AppColors.grey30 : AppColors.green60,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -127,7 +135,8 @@ class _FriendRequestDialogState extends State<FriendRequestDialog> {
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: AppColors.red50,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

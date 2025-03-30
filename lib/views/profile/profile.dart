@@ -65,7 +65,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                   // appbar
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 20),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                     width: size.width,
                     height: size.height * 0.08,
                     decoration: BoxDecoration(
@@ -123,7 +124,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 ),
                                 color: AppColors.blue20,
                                 borderRadius: BorderRadius.circular(39),
-                                border: Border.all(color: AppColors.blue40, width: 1),
+                                border: Border.all(
+                                    color: AppColors.blue40, width: 1),
                               ),
                             ),
                           ],
@@ -159,23 +161,34 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         const SizedBox(height: 12),
                         Text(
                           users.name,
-                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.light),
+                          style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.light),
                         ),
                         GestureDetector(
                           onTap: () {
-                            Clipboard.setData(ClipboardData(text: users.username));
+                            Clipboard.setData(
+                                ClipboardData(text: users.username));
                           },
                           child: Text(
                             "@${users.username}",
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.light),
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.light),
                           ),
                         ),
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            infoCard("Friends", users.friends!.length.toString(), Icons.person),
-                            infoCard("Requests", users.friendRequests!.length.toString(), Icons.person_add),
+                            infoCard("Friends",
+                                users.friends!.length.toString(), Icons.person),
+                            infoCard(
+                                "Requests",
+                                users.friendRequests!.length.toString(),
+                                Icons.person_add),
                           ],
                         ),
                       ],
@@ -218,11 +231,17 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.light),
+          style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.light),
         ),
         Text(
           title,
-          style: const TextStyle(fontSize: 14, color: AppColors.light, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+              fontSize: 14,
+              color: AppColors.light,
+              fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -246,7 +265,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
             child: GestureDetector(
               onTap: () {
                 Clipboard.setData(ClipboardData(text: content));
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied UID to clipboard.")));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Copied UID to clipboard.")));
               },
               child: Align(
                 alignment: Alignment.centerRight,

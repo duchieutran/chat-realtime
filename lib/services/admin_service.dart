@@ -16,7 +16,6 @@ class AdminService {
 
       return users;
     } catch (e) {
-      print("Error fetching users: $e");
       return [];
     }
   }
@@ -27,7 +26,6 @@ class AdminService {
       QuerySnapshot snapshot = await _firestore.collection('users').get();
       return snapshot.size; // Trả về số lượng tài liệu trong collection
     } catch (e) {
-      print("Error fetching user count: $e");
       return 0; // Trả về 0 nếu có lỗi
     }
   }
@@ -38,9 +36,7 @@ class AdminService {
       await _firestore.collection('users').doc(uid).update({
         'role': isAdmin, // Cập nhật trường role
       });
-      print("User role updated successfully!");
-    } catch (e) {
-      print("Error updating user role: $e");
-    }
+      // ignore: empty_catches
+    } catch (e) {}
   }
 }

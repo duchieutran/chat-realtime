@@ -34,7 +34,8 @@ class NotificationScreen extends StatelessWidget {
                   itemCount: notifications.length,
                   itemBuilder: (context, index) {
                     final notification = notifications[index];
-                    final bool isSeen = notification.seenBy.contains(currentUserId);
+                    final bool isSeen =
+                        notification.seenBy.contains(currentUserId);
 
                     return NotificationCard(
                         notification: notification,
@@ -59,14 +60,17 @@ class NotificationScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
       width: size.width,
       height: size.height * 0.08,
-      decoration: BoxDecoration(color: AppColors.light, borderRadius: BorderRadius.circular(20), boxShadow: const [
-        BoxShadow(
-          color: AppColors.grey40,
-          spreadRadius: 5,
-          blurRadius: 15,
-          offset: Offset(0, 0), // Bóng đều ở cả 4 cạnh
-        ),
-      ]),
+      decoration: BoxDecoration(
+          color: AppColors.light,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.grey40,
+              spreadRadius: 5,
+              blurRadius: 15,
+              offset: Offset(0, 0), // Bóng đều ở cả 4 cạnh
+            ),
+          ]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -82,7 +86,10 @@ class NotificationScreen extends StatelessWidget {
           ),
           Text(
             "Notification",
-            style: TextStyle(color: AppColors.dark, fontWeight: FontWeight.bold, fontSize: 24),
+            style: TextStyle(
+                color: AppColors.dark,
+                fontWeight: FontWeight.bold,
+                fontSize: 24),
           ),
           Icon(
             Icons.arrow_back_ios,
@@ -93,15 +100,18 @@ class NotificationScreen extends StatelessWidget {
     );
   }
 
-  void showNotificationPopup(Size size, BuildContext context, NotificationModel notification) {
+  void showNotificationPopup(
+      Size size, BuildContext context, NotificationModel notification) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           title: const Text(
             "Notification",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
             textAlign: TextAlign.center,
           ),
           content: Column(
@@ -111,7 +121,10 @@ class NotificationScreen extends StatelessWidget {
               // Greeting message
               const Text(
                 "Hello! You have a new notification.",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87),
               ),
               const SizedBox(height: 10),
 
@@ -125,7 +138,10 @@ class NotificationScreen extends StatelessWidget {
                 ),
                 child: Text(
                   notification.content,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87),
                 ),
               ),
               const SizedBox(height: 12),
@@ -133,14 +149,20 @@ class NotificationScreen extends StatelessWidget {
               // Time sent
               Text(
                 "Sent at: ${DateFormat('dd/MM/yyyy HH:mm').format(notification.createdAt.toDate())}",
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey),
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey),
               ),
               const SizedBox(height: 4),
 
               // Sender info
               const Text(
                 "Sent by: Admin",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey),
               ),
             ],
           ),
@@ -150,12 +172,17 @@ class NotificationScreen extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 ),
                 child: const Text(
                   "Close",
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
                 ),
               ),
             ),
@@ -231,8 +258,12 @@ class NotificationCard extends StatelessWidget {
 
                   // Thời gian gửi
                   Text(
-                    DateFormat('dd/MM/yyyy HH:mm').format(notification.createdAt.toDate()),
-                    style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+                    DateFormat('dd/MM/yyyy HH:mm')
+                        .format(notification.createdAt.toDate()),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -240,7 +271,9 @@ class NotificationCard extends StatelessWidget {
             // isSeen
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: (isSeen) ? SizedBox() : const Icon(Icons.circle, color: Colors.red, size: 15),
+              child: (isSeen)
+                  ? SizedBox()
+                  : const Icon(Icons.circle, color: Colors.red, size: 15),
             ),
           ],
         ),

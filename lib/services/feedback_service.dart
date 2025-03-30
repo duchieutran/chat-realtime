@@ -44,7 +44,9 @@ class FeedbackService {
         .where('uid', isEqualTo: uid)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => FeedbackModel.fromDocument(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => FeedbackModel.fromDocument(doc))
+            .toList());
   }
 
   /// Lấy tất cả phản hồi của người dùng (Admin)
@@ -53,7 +55,9 @@ class FeedbackService {
         .collection('feedbacks')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => FeedbackModel.fromDocument(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => FeedbackModel.fromDocument(doc))
+            .toList());
   }
 
   /// Lấy phản hồi theo trạng thái (Admin)
@@ -63,7 +67,9 @@ class FeedbackService {
         .where('status', isEqualTo: status)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => FeedbackModel.fromDocument(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => FeedbackModel.fromDocument(doc))
+            .toList());
   }
 
   /// Cập nhật trạng thái phản hồi (Admin)

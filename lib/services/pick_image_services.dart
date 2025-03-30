@@ -9,7 +9,8 @@ class PickImageServices {
   // chọn ảnh trong máy
   Future<File?> pickImage() async {
     try {
-      final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+      final XFile? image =
+          await imagePicker.pickImage(source: ImageSource.gallery);
       if (image != null) {
         imageFile = File(image.path);
         return imageFile;

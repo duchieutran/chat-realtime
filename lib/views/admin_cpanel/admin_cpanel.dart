@@ -43,7 +43,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
   }
 
   Future<void> _loadData() async {
-    final friendViewModel = Provider.of<ProfileViewModel>(context, listen: false);
+    final friendViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
     Users? user = await friendViewModel.getUserProfile();
     (user != null) ? users = user : users = Users();
     setState(() {
@@ -78,7 +79,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: Icon(Icons.arrow_back_ios, color: AppColors.grey30)),
+                          child: Icon(Icons.arrow_back_ios,
+                              color: AppColors.grey30)),
                       Text(
                         "Dashboard",
                         style: TextStyle(
@@ -103,8 +105,10 @@ class _AdminCpanelState extends State<AdminCpanel> {
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: size.width * 0.09),
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.09),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                           width: size.width,
                           height: size.height * 0.1,
                           decoration: BoxDecoration(
@@ -140,7 +144,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
                             FutureBuilder<int>(
                               future: AdminService().getUserCount(),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
                                   return _buildFeature(
                                     size: size,
                                     icon: Icons.person_outline,
@@ -167,7 +172,10 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                       ? () {}
                                       : () {
                                           Navigator.push(
-                                              context, MaterialPageRoute(builder: (context) => AdminCpanelUser()));
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AdminCpanelUser()));
                                         },
                                 );
                               },
@@ -175,7 +183,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
                             FutureBuilder<int>(
                               future: FeedbackService().getFeedbacksService(),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
                                   return _buildFeature(
                                       size: size,
                                       icon: Icons.message,
@@ -185,7 +194,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => AdminFeedBack(),
+                                              builder: (context) =>
+                                                  AdminFeedBack(),
                                             ));
                                       });
                                 } else if (snapshot.hasError) {
@@ -198,7 +208,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => AdminFeedBack(),
+                                              builder: (context) =>
+                                                  AdminFeedBack(),
                                             ));
                                       });
                                 } else {
@@ -212,7 +223,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => AdminFeedBack(),
+                                            builder: (context) =>
+                                                AdminFeedBack(),
                                           ));
                                     },
                                   );
@@ -220,9 +232,11 @@ class _AdminCpanelState extends State<AdminCpanel> {
                               },
                             ),
                             FutureBuilder<int>(
-                              future: NotificationService().getNotificationCount(),
+                              future:
+                                  NotificationService().getNotificationCount(),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
                                   return _buildFeature(
                                     size: size,
                                     icon: Icons.notifications,
@@ -232,7 +246,9 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => AdminNotification()),
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AdminNotification()),
                                       );
                                     },
                                   );
@@ -245,7 +261,9 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => AdminNotification()),
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AdminNotification()),
                                       );
                                     },
                                   );
@@ -259,7 +277,9 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => AdminNotification()),
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AdminNotification()),
                                       );
                                     },
                                   );
@@ -289,17 +309,23 @@ class _AdminCpanelState extends State<AdminCpanel> {
                               ),
                               // input
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
                                 child: TextField(
                                   controller: _notificationController,
                                   style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     hintText: "Input notification ...",
-                                    hintStyle: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                                    hintStyle: TextStyle(
+                                        color: Colors.white54,
+                                        fontWeight: FontWeight.bold),
                                     filled: true,
                                     fillColor: Colors.white10,
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
                                   ),
                                 ),
                               ),
@@ -320,7 +346,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                     FocusScope.of(context).unfocus();
 
                                     notificationService.sendNotification(
-                                        content: _notificationController.text, adminUid: users.uid);
+                                        content: _notificationController.text,
+                                        adminUid: users.uid);
                                     appDialog(
                                       context: context,
                                       title: "Success",
@@ -336,8 +363,9 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                 child: Container(
                                   width: size.width * 0.35,
                                   height: size.width * 0.09,
-                                  decoration:
-                                      BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10)),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(10)),
                                   child: Center(
                                     child: Text(
                                       "Add Notification",
@@ -367,14 +395,20 @@ class _AdminCpanelState extends State<AdminCpanel> {
                               // TextField nhập nội dung thông báo
                               TextField(
                                 controller: _notificationForUser,
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                                 decoration: InputDecoration(
                                   hintText: "Input notification ...",
-                                  hintStyle: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+                                  hintStyle: TextStyle(
+                                      color: Colors.white54,
+                                      fontWeight: FontWeight.bold),
                                   filled: true,
                                   fillColor: Colors.white10,
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
                                 ),
                               ),
                               SizedBox(height: 10),
@@ -384,7 +418,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                 onPressed: _sendNotification,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blueAccent,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
                                 ),
                                 child: Text(
                                   "Add Notification",
@@ -401,17 +436,23 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                 child: FutureBuilder<List<Users>>(
                                   future: AdminService().getAllUsers(),
                                   builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Center(child: CircularProgressIndicator());
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
                                     }
                                     if (snapshot.hasError) {
                                       return Center(
-                                          child: Text("Lỗi khi lấy dữ liệu", style: TextStyle(color: Colors.white)));
+                                          child: Text("Lỗi khi lấy dữ liệu",
+                                              style: TextStyle(
+                                                  color: Colors.white)));
                                     }
-                                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                    if (!snapshot.hasData ||
+                                        snapshot.data!.isEmpty) {
                                       return Center(
-                                          child:
-                                              Text("Không có người dùng nào", style: TextStyle(color: Colors.white)));
+                                          child: Text("Không có người dùng nào",
+                                              style: TextStyle(
+                                                  color: Colors.white)));
                                     }
 
                                     List<Users> users = snapshot.data!;
@@ -419,56 +460,72 @@ class _AdminCpanelState extends State<AdminCpanel> {
                                       itemCount: users.length,
                                       itemBuilder: (context, index) {
                                         Users user = users[index];
-                                        bool isSelected = selectedUserIds.contains(user.uid);
+                                        bool isSelected =
+                                            selectedUserIds.contains(user.uid);
 
                                         return GestureDetector(
                                           onTap: () {
                                             setState(() {
                                               if (isSelected) {
-                                                selectedUserIds.remove(user.uid);
+                                                selectedUserIds
+                                                    .remove(user.uid);
                                               } else {
                                                 selectedUserIds.add(user.uid);
                                               }
                                             });
                                           },
                                           child: Container(
-                                            margin: EdgeInsets.symmetric(vertical: 4),
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 4),
                                             padding: EdgeInsets.all(12),
                                             decoration: BoxDecoration(
-                                              color: isSelected ? Colors.blueAccent.withOpacity(0.7) : Colors.white10,
-                                              borderRadius: BorderRadius.circular(12),
+                                              color: isSelected
+                                                  ? Colors.blueAccent
+                                                      .withOpacity(0.7)
+                                                  : Colors.white10,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             child: Row(
                                               children: [
                                                 // Avatar
                                                 CircleAvatar(
                                                   radius: 24,
-                                                  backgroundImage: NetworkImage(user.urlAvatar),
+                                                  backgroundImage: NetworkImage(
+                                                      user.urlAvatar),
                                                 ),
                                                 SizedBox(width: 12),
 
                                                 // Thông tin User
                                                 Expanded(
                                                   child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       Text(
                                                         user.name,
                                                         style: TextStyle(
                                                             color: Colors.white,
-                                                            fontWeight: FontWeight.bold,
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                             fontSize: 16),
                                                       ),
                                                       SizedBox(height: 4),
                                                       Text(user.username,
-                                                          style: TextStyle(color: Colors.white70, fontSize: 14)),
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white70,
+                                                              fontSize: 14)),
                                                     ],
                                                   ),
                                                 ),
 
                                                 // Dấu tích bên phải nếu được chọn
                                                 if (isSelected)
-                                                  Icon(Icons.check_circle, color: Colors.greenAccent, size: 28),
+                                                  Icon(Icons.check_circle,
+                                                      color: Colors.greenAccent,
+                                                      size: 28),
                                               ],
                                             ),
                                           ),
@@ -493,15 +550,20 @@ class _AdminCpanelState extends State<AdminCpanel> {
   void _sendNotification() {
     String message = _notificationForUser.text.trim();
     if (message.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Vui lòng nhập nội dung thông báo!")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Vui lòng nhập nội dung thông báo!")));
       return;
     }
     if (selectedUserIds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Vui lòng chọn ít nhất một người dùng!")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Vui lòng chọn ít nhất một người dùng!")));
       return;
     }
 
-    notificationService.sendNotification(content: message, adminUid: users.uid, receivers: selectedUserIds.toList());
+    notificationService.sendNotification(
+        content: message,
+        adminUid: users.uid,
+        receivers: selectedUserIds.toList());
     appDialog(
         context: context,
         title: "Success",
@@ -527,7 +589,8 @@ class _AdminCpanelState extends State<AdminCpanel> {
         padding: EdgeInsets.all(8),
         width: size.width * 0.29,
         height: size.width * 0.25,
-        decoration: BoxDecoration(color: Color(0xff313a66), borderRadius: BorderRadius.circular(15)),
+        decoration: BoxDecoration(
+            color: Color(0xff313a66), borderRadius: BorderRadius.circular(15)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -541,11 +604,17 @@ class _AdminCpanelState extends State<AdminCpanel> {
             ),
             Text(
               title,
-              style: TextStyle(color: Color(0xff737ead), fontWeight: FontWeight.bold, fontSize: 15),
+              style: TextStyle(
+                  color: Color(0xff737ead),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
             ),
             Text(
               subTitle,
-              style: TextStyle(color: AppColors.light, fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(
+                  color: AppColors.light,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
             ),
           ],
         ),

@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 
 class WidgetsCard extends StatelessWidget {
   const WidgetsCard(
-      {super.key, this.width = 150, this.height = 150, this.onTap, this.color = AppColors.light, this.child});
+      {super.key,
+      this.width = 150,
+      this.height = 150,
+      this.onTap,
+      this.color = AppColors.light,
+      this.child});
   final double width, height;
   final VoidCallback? onTap;
   final Color color;

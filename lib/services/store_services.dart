@@ -13,7 +13,6 @@ class StoreServices {
         String uid = auth.currentUser!.uid;
         bool available = await isUsernameAvailable(user.username);
         if (!available) {
-          print("Username đã tồn tại!");
           return;
         }
 
@@ -27,9 +26,7 @@ class StoreServices {
           'friendRequests': user.friendRequests,
           'role': user.role,
         }, SetOptions(merge: true));
-      } else {
-        print("User không tồn tại!");
-      }
+      } else {}
     } catch (e) {
       rethrow;
     }
@@ -79,11 +76,9 @@ class StoreServices {
 
         return user;
       } else {
-        print("Người dùng không tồn tại trong Firestore !");
         return null;
       }
     } catch (e) {
-      print("Lỗi khi lấy thông tin người dùng: $e");
       return null;
     }
   }
@@ -112,9 +107,7 @@ class StoreServices {
           'friendRequests': FieldValue.arrayUnion([uid])
         });
       }
-    } catch (e) {
-      print("Lỗi khi gửi lời mời kết bạn: $e");
-    }
+    } catch (e) {}
   }
 
   // hiển thị bạn bè gửi lời mời

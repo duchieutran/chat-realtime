@@ -4,6 +4,7 @@ import 'package:chatting/utils/app_colors.dart';
 import 'package:chatting/utils/assets.dart';
 import 'package:chatting/view_models/friend_viewmodel.dart';
 import 'package:chatting/view_models/message_vm.dart';
+import 'package:chatting/views/chat/chatgenimi.dart';
 import 'package:chatting/views/chat/update_group.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -62,12 +63,22 @@ class _ChatScreenState extends State<ChatScreen> {
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        elevation: 10,
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatGenimi(),
+              ));
+        },
+        backgroundColor: Color(0xff74a99b),
+        child: Image.asset(logoChatGPT),
+      ),
       body: Column(
         children: [
           // app bar
           _buildAppBar(size, context),
-          // TODO : notifications
-          // _buildNotifications(size),
           // list chat room
           _buildListChat(size, chatViewModel),
         ],
@@ -129,7 +140,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     },
                   );
                 }
-
                 return ChatTile(
                   uid: rooms[index].chatId,
                   urlAvatar: rooms[index].urlAvatar,
@@ -147,24 +157,24 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildNotifications(Size size) {
-    return Container(
-      width: size.width,
-      height: 30,
-      decoration: BoxDecoration(
-        color: AppColors.violet10,
-      ),
-      child: Center(
-        child: Text(
-          "Chuc ban ngay moi tot lanh",
-          style: TextStyle(
-            color: AppColors.dark,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildNotifications(Size size) {
+  //   return Container(
+  //     width: size.width,
+  //     height: 30,
+  //     decoration: BoxDecoration(
+  //       color: AppColors.violet10,
+  //     ),
+  //     child: Center(
+  //       child: Text(
+  //         "Chuc ban ngay moi tot lanh",
+  //         style: TextStyle(
+  //           color: AppColors.dark,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildAppBar(Size size, BuildContext context) {
     return Container(

@@ -52,13 +52,15 @@ class _AdminCpanelUserState extends State<AdminCpanelUser> {
                 margin: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 width: size.width,
-                decoration:
-                    BoxDecoration(color: Color(0xff596def).withOpacity(0.8), borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(
+                    color: Color(0xff596def).withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(20)),
                 child: FutureBuilder<List<Users>>(
                   future: AdminService().getAllUsers(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: Image(image: AssetImage(gifBatman)));
+                      return const Center(
+                          child: Image(image: AssetImage(gifBatman)));
                     }
                     if (snapshot.hasError) {
                       return Text(
@@ -67,7 +69,8 @@ class _AdminCpanelUserState extends State<AdminCpanelUser> {
                       );
                     }
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Text("Không có người dùng nào", style: TextStyle(color: AppColors.light));
+                      return Text("Không có người dùng nào",
+                          style: TextStyle(color: AppColors.light));
                     }
 
                     List<Users> users = snapshot.data!;
@@ -95,7 +98,9 @@ class _AdminCpanelUserState extends State<AdminCpanelUser> {
           padding: EdgeInsets.all(8),
           width: size.width,
           height: size.height * 0.1,
-          decoration: BoxDecoration(color: Color(0xff44518a), borderRadius: BorderRadius.circular(20)),
+          decoration: BoxDecoration(
+              color: Color(0xff44518a),
+              borderRadius: BorderRadius.circular(20)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -154,7 +159,8 @@ class _AdminCpanelUserState extends State<AdminCpanelUser> {
                     isScrollControlled: true,
                     // Full width
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20)),
                     ),
                     builder: (context) {
                       bool isAdmin = user.role; // Lấy giá trị role từ user
@@ -164,14 +170,16 @@ class _AdminCpanelUserState extends State<AdminCpanelUser> {
                         padding: EdgeInsets.all(20), // Padding tổng thể
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               "Update Admin Role",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 20),
 
@@ -182,7 +190,9 @@ class _AdminCpanelUserState extends State<AdminCpanelUser> {
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      AdminService().updateUserRole(user.uid, !isAdmin).then((_) {
+                                      AdminService()
+                                          .updateUserRole(user.uid, !isAdmin)
+                                          .then((_) {
                                         setState(() {
                                           user.role = !isAdmin;
                                         });
@@ -192,15 +202,19 @@ class _AdminCpanelUserState extends State<AdminCpanelUser> {
                                       });
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: isAdmin ? Colors.red : Colors.green,
+                                      backgroundColor:
+                                          isAdmin ? Colors.red : Colors.green,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12), // Bo góc
+                                        borderRadius:
+                                            BorderRadius.circular(12), // Bo góc
                                       ),
-                                      padding: EdgeInsets.symmetric(vertical: 12),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 12),
                                     ),
                                     child: Text(
                                       isAdmin ? "Remove Admin" : "Grant Admin",
-                                      style: TextStyle(fontSize: 16, color: Colors.white),
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
                                     ),
                                   ),
                                 ),
@@ -211,16 +225,20 @@ class _AdminCpanelUserState extends State<AdminCpanelUser> {
                                   child: OutlinedButton(
                                     onPressed: () => Navigator.pop(context),
                                     style: OutlinedButton.styleFrom(
-                                      side: BorderSide(color: Colors.grey.shade400),
+                                      side: BorderSide(
+                                          color: Colors.grey.shade400),
                                       // Viền
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12), // Bo góc
+                                        borderRadius:
+                                            BorderRadius.circular(12), // Bo góc
                                       ),
-                                      padding: EdgeInsets.symmetric(vertical: 12),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 12),
                                     ),
                                     child: Text(
                                       "Cancel",
-                                      style: TextStyle(fontSize: 16, color: Colors.black87),
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black87),
                                     ),
                                   ),
                                 ),

@@ -13,6 +13,7 @@ const String vectorProfile = 'assets/images/vector.png';
 const String iconClose = 'assets/images/icon_close.png';
 const String welcome = 'assets/images/welcome.svg';
 const String question = 'assets/images/question.jpg';
+const String logoChatGPT = 'assets/images/chatgpt.png';
 
 // gif
 const String gifBatman = 'assets/gif/batman.gif';

@@ -27,7 +27,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     if (_titleController.text.isEmpty || _contentController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please fill in all fields', style: TextStyle(fontWeight: FontWeight.w500)),
+          content: Text('Please fill in all fields',
+              style: TextStyle(fontWeight: FontWeight.w500)),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.redAccent,
         ),
@@ -47,7 +48,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Feedback sent successfully', style: TextStyle(fontWeight: FontWeight.w500)),
+        content: Text('Feedback sent successfully',
+            style: TextStyle(fontWeight: FontWeight.w500)),
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.green,
       ),
@@ -57,7 +59,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Feedback', style: TextStyle(fontWeight: FontWeight.bold))),
+      appBar: AppBar(
+          title: const Text('Feedback',
+              style: TextStyle(fontWeight: FontWeight.bold))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -73,12 +77,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             DropdownButtonFormField<String>(
               value: _selectedCategory,
               items: categories
-                  .map((cat) =>
-                      DropdownMenuItem(value: cat, child: Text(cat, style: TextStyle(fontWeight: FontWeight.w500))))
+                  .map((cat) => DropdownMenuItem(
+                      value: cat,
+                      child: Text(cat,
+                          style: TextStyle(fontWeight: FontWeight.w500))))
                   .toList(),
               onChanged: (value) => setState(() => _selectedCategory = value!),
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 filled: true,
                 fillColor: Colors.grey.shade100,
                 labelText: 'Category',
@@ -91,7 +98,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 filled: true,
                 fillColor: Colors.grey.shade100,
                 labelText: 'Title',
@@ -105,7 +113,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               controller: _contentController,
               maxLines: 4,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 filled: true,
                 fillColor: Colors.grey.shade100,
                 labelText: 'Feedback Content',
@@ -120,12 +129,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               child: ElevatedButton(
                 onPressed: _sendFeedback,
                 style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   backgroundColor: Colors.blueAccent,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 child: const Text("Submit Feedback",
-                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500)),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500)),
               ),
             ),
             const SizedBox(height: 20),
@@ -146,7 +159,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   }
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(
-                        child: Text("No feedbacks found", style: TextStyle(fontWeight: FontWeight.w500)));
+                        child: Text("No feedbacks found",
+                            style: TextStyle(fontWeight: FontWeight.w500)));
                   }
 
                   final feedbacks = snapshot.data!;
@@ -156,30 +170,43 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     itemBuilder: (context, index) {
                       final feedback = feedbacks[index];
                       return Card(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
                         elevation: 4,
                         margin: const EdgeInsets.symmetric(vertical: 6),
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(12),
-                          title: Text(feedback.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                          title: Text(feedback.title,
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("Category: ${feedback.category}",
-                                  style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w500)),
+                                  style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontWeight: FontWeight.w500)),
                               Text("Status: ${feedback.status}",
                                   style: TextStyle(
-                                      color: feedback.status == "Resolved" ? Colors.green : Colors.orange,
+                                      color: feedback.status == "Resolved"
+                                          ? Colors.green
+                                          : Colors.orange,
                                       fontWeight: FontWeight.w500)),
                               Text(
                                 "Sent: ${feedback.createdAt.toDate()}",
-                                style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                           trailing: Icon(
-                            feedback.status == "Resolved" ? Icons.check_circle : Icons.pending_actions,
-                            color: feedback.status == "Resolved" ? Colors.green : Colors.orange,
+                            feedback.status == "Resolved"
+                                ? Icons.check_circle
+                                : Icons.pending_actions,
+                            color: feedback.status == "Resolved"
+                                ? Colors.green
+                                : Colors.orange,
                           ),
                         ),
                       );

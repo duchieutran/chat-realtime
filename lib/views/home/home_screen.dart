@@ -95,7 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
               width: size.width,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.white.withOpacity(0.8), Colors.white.withOpacity(0.9)],
+                  colors: [
+                    Colors.white.withOpacity(0.8),
+                    Colors.white.withOpacity(0.9)
+                  ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -103,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   // slide
-                  HomeCarouselSlider(size: size, carouselImages: carouselImages),
+                  HomeCarouselSlider(
+                      size: size, carouselImages: carouselImages),
                   FutureBuilder<NotificationModel?>(
                     future: NotificationService().getLatestActiveNotification(),
                     builder: (context, snapshot) {
@@ -111,12 +115,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         return SizedBox();
                       }
 
-                      if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+                      if (snapshot.hasError ||
+                          !snapshot.hasData ||
+                          snapshot.data == null) {
                         return SizedBox();
                       }
                       final notification = snapshot.data!;
                       return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.04,
@@ -142,8 +149,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      HomeCategoryCard(context: context, route: AppRouters.friends, image: friends, title: "Friends"),
-                      HomeCategoryCard(context: context, route: AppRouters.profile, image: profiles, title: "Profile"),
+                      HomeCategoryCard(
+                          context: context,
+                          route: AppRouters.friends,
+                          image: friends,
+                          title: "Friends"),
+                      HomeCategoryCard(
+                          context: context,
+                          route: AppRouters.profile,
+                          image: profiles,
+                          title: "Profile"),
                     ],
                   ),
                   const SizedBox(height: 30),

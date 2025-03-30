@@ -47,10 +47,6 @@ class AuthErrorModel {
         return AuthErrorModel(code: e.code, message: 'Missing continue URI.');
       case 'invalid-continue-uri':
         return AuthErrorModel(code: e.code, message: 'Invalid continue URI.');
-      case 'operation-not-allowed':
-        return AuthErrorModel(
-            code: e.code, message: 'Email/password sign-up is not enabled.');
-
       default:
         return AuthErrorModel(
             code: e.code, message: 'An error occurred. Please try again.');

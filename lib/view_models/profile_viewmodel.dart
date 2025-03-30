@@ -30,12 +30,20 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   // func update full
-  updateProfile({required String name, required String image, required String username}) async {
+  updateProfile(
+      {required String name,
+      required String image,
+      required String username}) async {
     User? currentUser = auth.currentUser;
     if (currentUser != null) {
       String uid = currentUser.uid;
       String? email = currentUser.email;
-      Users users = Users(uid: uid, email: email ?? "", name: name, urlAvatar: image, username: username);
+      Users users = Users(
+          uid: uid,
+          email: email ?? "",
+          name: name,
+          urlAvatar: image,
+          username: username);
       await storeServices.saveUser(user: users);
     }
   }
@@ -68,7 +76,8 @@ class ProfileViewModel extends ChangeNotifier {
 
   // check uid
   Future<bool> checkUIDExist() async {
-    bool uidExist = await storeServices.isUserUIDExist(uid: auth.currentUser!.uid);
+    bool uidExist =
+        await storeServices.isUserUIDExist(uid: auth.currentUser!.uid);
     return uidExist;
   }
 

@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class NotificationService {
-  final CollectionReference _notificationsRef = FirebaseFirestore.instance.collection('notifications');
+  final CollectionReference _notificationsRef =
+      FirebaseFirestore.instance.collection('notifications');
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// Gửi thông báo từ Admin (có thể gửi cho tất cả hoặc một số người nhất định)
@@ -37,25 +38,32 @@ class NotificationService {
     if (currentUserId == null) return Stream.value([]);
 
     return _notificationsRef
-        .where('receivers', arrayContains: currentUserId) // Lọc thông báo chứa UID người dùng
+        .where('receivers',
+            arrayContains: currentUserId) // Lọc thông báo chứa UID người dùng
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => NotificationModel.fromFirestore(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => NotificationModel.fromFirestore(doc))
+            .toList());
   }
 
   /// Lấy tất cả thông báo (không phân biệt trạng thái isActive)
   Stream<List<NotificationModel>> getAllNotifications() {
     return _notificationsRef
-        .orderBy('createdAt', descending: true) // Sắp xếp theo thời gian mới nhất
+        .orderBy('createdAt',
+            descending: true) // Sắp xếp theo thời gian mới nhất
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => NotificationModel.fromFirestore(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => NotificationModel.fromFirestore(doc))
+            .toList());
   }
 
   /// Lấy thông báo cuối cùng (mới nhất) còn hiệu lực
   Future<NotificationModel?> getLatestActiveNotification() async {
     final snapshot = await _notificationsRef
         .where('isActive', isEqualTo: true)
-        .where('receivers', isNull: true) // Lọc thông báo không có receivers (null)
+        .where('receivers',
+            isNull: true) // Lọc thông báo không có receivers (null)
         .orderBy('createdAt', descending: true)
         .limit(1)
         .get();
@@ -81,7 +89,8 @@ class NotificationService {
   }
 
   /// Cập nhật trạng thái thông báo (cho phép kích hoạt hoặc vô hiệu hóa)
-  Future<void> updateNotificationStatus(String notificationId, bool isActive) async {
+  Future<void> updateNotificationStatus(
+      String notificationId, bool isActive) async {
     await _notificationsRef.doc(notificationId).update({'isActive': isActive});
   }
 
@@ -96,7 +105,10 @@ class NotificationService {
     String? currentUserId = _auth.currentUser?.uid;
     if (currentUserId == null) return Stream.value(0);
 
-    return _notificationsRef.where('receivers', arrayContains: currentUserId).snapshots().map((snapshot) {
+    return _notificationsRef
+        .where('receivers', arrayContains: currentUserId)
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.where((doc) {
         List<dynamic> seenBy = doc['seenBy'] ?? [];
         return !seenBy.contains(currentUserId);
